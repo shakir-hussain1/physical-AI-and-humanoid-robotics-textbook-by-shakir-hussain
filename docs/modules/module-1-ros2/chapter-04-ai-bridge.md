@@ -449,8 +449,8 @@ graph TB
     end
 
     subgraph "ROS 2 Interfaces"
-        TOPIC[/commands topic]
-        SRV[/interpret service]
+        TOPIC["commands topic"]
+        SRV["interpret service"]
         ACT[Action Clients]
     end
 

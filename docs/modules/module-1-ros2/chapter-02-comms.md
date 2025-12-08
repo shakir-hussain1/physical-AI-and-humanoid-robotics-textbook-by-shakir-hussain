@@ -97,7 +97,7 @@ graph LR
     end
 
     subgraph Topic
-        T[/sensor_data]
+        T["/sensor_data"]
     end
 
     subgraph Subscribers
@@ -770,11 +770,11 @@ graph TB
     end
 
     subgraph Topics
-        JT[/joint_states]
+        JT["/joint_states"]
     end
 
     subgraph Services
-        MS[/enable_motors]
+        MS["/enable_motors"]
     end
 
     JP -->|publish| JT

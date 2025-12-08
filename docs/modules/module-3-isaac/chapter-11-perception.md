@@ -51,9 +51,9 @@ flowchart TD
     end
 
     subgraph Output["ROS 2 Output"]
-        POSE[/tf, /odom]
-        MAP[/costmap]
-        DETECT[/detections]
+        POSE["tf, odom"]
+        MAP["costmap"]
+        DETECT["detections"]
     end
 
     Sensors --> NITROS

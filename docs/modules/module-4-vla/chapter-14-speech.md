@@ -674,7 +674,7 @@ flowchart TD
     end
 
     subgraph ROS2["ROS 2 Pipeline"]
-        CMD_TOPIC[/voice_command]
+        CMD_TOPIC["voice_command"]
         ACTION_CLIENT[Action Client]
         BEHAVIOR[Behavior Server]
     end

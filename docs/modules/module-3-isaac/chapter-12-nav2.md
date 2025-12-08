@@ -456,9 +456,9 @@ flowchart LR
     end
 
     subgraph Bridge["Data Bridge"]
-        TF[/tf]
-        COSTMAP_TOPIC[/costmap]
-        ODOM[/odom]
+        TF["tf"]
+        COSTMAP_TOPIC["costmap"]
+        ODOM["odom"]
     end
 
     subgraph Nav2Stack["Nav2"]
