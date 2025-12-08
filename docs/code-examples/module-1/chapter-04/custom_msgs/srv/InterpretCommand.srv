@@ -1,0 +1,36 @@
+# Physical AI & Humanoid Robotics Textbook
+# Module 1, Chapter 4: Command Interpretation Service
+# Description: Service to interpret natural language into robot commands
+# Usage: AI systems call this to translate utterances to executable commands
+
+# ==================== Request ====================
+# Natural language input
+string utterance           # The natural language command (e.g., "walk forward 2 meters")
+string language            # Language code (e.g., "en", "es", "ja")
+
+# Context for better interpretation
+string[] context_hints     # Hints about current context (e.g., ["indoor", "manipulation_task"])
+string previous_command_id # ID of previous command for contextual understanding
+
+# Interpretation options
+bool use_conversation_history  # Consider previous interactions
+float32 confidence_threshold   # Minimum confidence to return result [0.0, 1.0]
+uint32 max_interpretations     # Maximum number of interpretations to return
+
+---
+# ==================== Response ====================
+# Success flag
+bool success               # Whether interpretation succeeded
+string message             # Human-readable result message
+
+# Interpreted command(s)
+AICommand[] commands       # List of possible command interpretations
+float32[] confidences      # Confidence for each interpretation
+
+# Clarification (if needed)
+bool needs_clarification   # True if input is ambiguous
+string[] clarification_options  # Suggested clarifications to present to user
+
+# Processing info
+float32 processing_time_ms # Time taken to interpret
+string model_used          # AI model that performed interpretation

@@ -1,0 +1,34 @@
+# Physical AI & Humanoid Robotics Textbook
+# Module 1, Chapter 4: Command Validation Service
+# Description: Service to validate commands before execution
+# Usage: Safety check before dispatching commands to robot controllers
+
+# ==================== Request ====================
+# Command to validate
+AICommand command          # The command to validate
+
+# Validation context
+RobotState current_state   # Current robot state for context
+bool check_safety          # Perform safety validation
+bool check_feasibility     # Check if physically possible
+bool check_collision       # Run collision detection
+
+---
+# ==================== Response ====================
+# Overall result
+bool is_valid              # Whether command is valid and safe
+string[] warnings          # Non-blocking warnings
+string[] errors            # Blocking errors that prevent execution
+
+# Detailed validation results
+bool safety_passed         # Safety checks passed
+bool feasibility_passed    # Feasibility checks passed
+bool collision_free        # No predicted collisions
+
+# Suggested modifications
+AICommand suggested_command  # Modified command if original invalid
+bool has_suggestion        # Whether a suggestion is provided
+
+# Risk assessment
+float32 risk_score         # Overall risk score [0.0, 1.0]
+string[] risk_factors      # Identified risk factors
