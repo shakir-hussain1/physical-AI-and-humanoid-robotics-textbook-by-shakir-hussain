@@ -64,10 +64,10 @@ flowchart TD
 
 | Component | Purpose | Example |
 |-----------|---------|---------|
-| **Intent History** | Track conversation goals | [find_object, grasp_object] |
-| **Entity Memory** | Remember mentioned objects | {ball: red_ball_on_table} |
+| **Intent History** | Track conversation goals | `[find_object, grasp_object]` |
+| **Entity Memory** | Remember mentioned objects | `{ball: red_ball_on_table}` |
 | **Task Context** | Current task progress | step 2/5 of "make coffee" |
-| **User Model** | User preferences/history | prefers_verbose_responses |
+| **User Model** | User preferences/history | `prefers_verbose_responses` |
 
 ### Dialogue State Machine
 
