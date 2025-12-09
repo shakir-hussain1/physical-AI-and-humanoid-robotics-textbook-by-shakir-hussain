@@ -98,7 +98,7 @@ sequenceDiagram
     L->>L: Calculate distance (d = c×t/2)
     L->>P: Add point (angle, distance)
 
-    Note over L,P: Repeat for all angles<br/>at scan rate
+    Note over L,P: Repeat for all angles at scan rate
 ```
 
 ### 2D LiDAR (Planar Scanner)
@@ -233,14 +233,14 @@ Depth cameras provide per-pixel distance measurements, creating depth images and
 ```mermaid
 flowchart TD
     subgraph Types["Depth Camera Types"]
-        SL[Structured Light<br/>Intel RealSense D4xx]
-        TOF[Time of Flight<br/>Intel RealSense L515]
-        STEREO[Stereo Vision<br/>ZED Camera]
+        SL[Structured Light Intel RealSense D4xx]
+        TOF[Time of Flight Intel RealSense L515]
+        STEREO[Stereo Vision ZED Camera]
     end
 
-    SL --> SLPRO[+ Indoor accuracy<br/>- Sunlight interference]
-    TOF --> TOFPRO[+ Fast<br/>- Lower resolution]
-    STEREO --> STPRO[+ Outdoor capable<br/>- Texture dependent]
+    SL --> SLPRO[+ Indoor accuracy - Sunlight interference]
+    TOF --> TOFPRO[+ Fast - Lower resolution]
+    STEREO --> STPRO[+ Outdoor capable - Texture dependent]
 
     style Types fill:#3b82f6,stroke:#2563eb,color:#fff
 ```
@@ -369,15 +369,15 @@ The **IMU** (Inertial Measurement Unit) measures acceleration and angular veloci
 ```mermaid
 flowchart LR
     subgraph IMU["IMU Sensor"]
-        ACCEL[Accelerometer<br/>3-axis linear acceleration]
-        GYRO[Gyroscope<br/>3-axis angular velocity]
-        MAG[Magnetometer<br/>3-axis magnetic field]
+        ACCEL[Accelerometer 3-axis linear acceleration]
+        GYRO[Gyroscope 3-axis angular velocity]
+        MAG[Magnetometer 3-axis magnetic field]
     end
 
     subgraph Output["Measurements"]
-        A[a_x, a_y, a_z<br/>m/s²]
-        W[ω_x, ω_y, ω_z<br/>rad/s]
-        M[m_x, m_y, m_z<br/>μT]
+        A[a_x, a_y, a_z m/s²]
+        W[ω_x, ω_y, ω_z rad/s]
+        M[m_x, m_y, m_z μT]
     end
 
     ACCEL --> A
@@ -556,11 +556,11 @@ Strategic sensor placement maximizes perception capability while minimizing inte
 ```mermaid
 flowchart TD
     subgraph Humanoid["Humanoid Sensor Layout"]
-        HEAD[Head<br/>- RGB camera<br/>- Depth camera<br/>- Microphones]
-        CHEST[Chest/Torso<br/>- IMU primary<br/>- Depth camera<br/>- LiDAR 3D]
-        HANDS[Hands<br/>- Force/torque<br/>- Tactile sensors]
-        FEET[Feet<br/>- Force/torque<br/>- Contact sensors]
-        LEGS[Legs<br/>- IMU secondary]
+        HEAD[Head - RGB camera - Depth camera - Microphones]
+        CHEST[Chest/Torso - IMU primary - Depth camera - LiDAR 3D]
+        HANDS[Hands - Force/torque - Tactile sensors]
+        FEET[Feet - Force/torque - Contact sensors]
+        LEGS[Legs - IMU secondary]
     end
 
     HEAD --> |Look ahead| VISION[Visual Perception]

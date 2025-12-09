@@ -39,10 +39,10 @@ flowchart TD
     end
 
     subgraph Process["Import Process"]
-        IMPORT[Isaac Sim<br/>URDF Importer]
-        CONVERT[Articulation<br/>Configuration]
-        PHYSICS[Physics<br/>Properties]
-        MATERIALS[Material<br/>Assignment]
+        IMPORT[Isaac Sim URDF Importer]
+        CONVERT[Articulation Configuration]
+        PHYSICS[Physics Properties]
+        MATERIALS[Material Assignment]
     end
 
     subgraph Output["Output"]
@@ -148,8 +148,8 @@ flowchart TD
     subgraph Rendering["RTX Rendering Pipeline"]
         GEOM[Geometry]
         MAT[PBR Materials]
-        LIGHT[Lighting<br/>HDR, Area Lights]
-        RAY[Ray Tracing<br/>Reflections, GI]
+        LIGHT[Lighting HDR, Area Lights]
+        RAY[Ray Tracing Reflections, GI]
     end
 
     subgraph Output["Outputs"]
@@ -309,11 +309,11 @@ Scene Hierarchy:
 ```mermaid
 flowchart TD
     subgraph Parameters["Randomizable Parameters"]
-        LIGHT[Lighting<br/>Intensity, Color, Position]
-        TEX[Textures<br/>Materials, Colors]
-        POSE[Object Poses<br/>Position, Rotation]
-        CAM[Camera<br/>FOV, Noise, Exposure]
-        PHYS[Physics<br/>Friction, Mass]
+        LIGHT[Lighting Intensity, Color, Position]
+        TEX[Textures Materials, Colors]
+        POSE[Object Poses Position, Rotation]
+        CAM[Camera FOV, Noise, Exposure]
+        PHYS[Physics Friction, Mass]
     end
 
     subgraph Pipeline["DR Pipeline"]
@@ -442,7 +442,7 @@ flowchart LR
     end
 
     subgraph DR["Domain Rand"]
-        RAND[Randomize<br/>Parameters]
+        RAND[Randomize Parameters]
     end
 
     subgraph Render["Rendering"]

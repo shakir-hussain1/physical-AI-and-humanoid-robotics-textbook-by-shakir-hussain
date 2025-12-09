@@ -141,10 +141,10 @@ For students without RTX GPUs:
 
 ```mermaid
 flowchart LR
-    M1["Module 1<br/>ROS 2"] --> M3["Module 3<br/>Isaac"]
-    M2["Module 2<br/>Digital Twin"] --> M3
-    M3 --> M4["Module 4<br/>VLA Systems"]
-    M3 --> CAP["Capstone<br/>Project"]
+    M1["Module 1 ROS 2"] --> M3["Module 3 Isaac"]
+    M2["Module 2 Digital Twin"] --> M3
+    M3 --> M4["Module 4 VLA Systems"]
+    M3 --> CAP["Capstone Project"]
 
     style M3 fill:#76b900,stroke:#5a8f00,color:#fff
 ```

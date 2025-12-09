@@ -176,9 +176,9 @@ Complete at least the Basic and Intermediate exercises before moving to the next
 
 ```mermaid
 flowchart LR
-    M1["Module 1<br/>ROS 2 Foundations"] --> M2["Module 2<br/>Simulation"]
-    M1 --> M3["Module 3<br/>Perception"]
-    M1 --> M4["Module 4<br/>VLA Systems"]
+    M1["Module 1 ROS 2 Foundations"] --> M2["Module 2 Simulation"]
+    M1 --> M3["Module 3 Perception"]
+    M1 --> M4["Module 4 VLA Systems"]
 
     style M1 fill:#2563eb,stroke:#1d4ed8,color:#fff
     style M2 fill:#64748b,stroke:#475569,color:#fff

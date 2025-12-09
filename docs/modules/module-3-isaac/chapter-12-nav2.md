@@ -40,11 +40,11 @@ flowchart TD
     end
 
     subgraph Nav2["Nav2 Stack"]
-        BT[BT Navigator<br/>Behavior Tree]
-        PLANNER[Planner Server<br/>Global Path]
-        CONTROLLER[Controller Server<br/>Local Control]
-        RECOVERY[Recovery Server<br/>Failure Handling]
-        COSTMAP[Costmap Server<br/>Obstacle Layers]
+        BT[BT Navigator Behavior Tree]
+        PLANNER[Planner Server Global Path]
+        CONTROLLER[Controller Server Local Control]
+        RECOVERY[Recovery Server Failure Handling]
+        COSTMAP[Costmap Server Obstacle Layers]
     end
 
     subgraph Output["Outputs"]
@@ -211,10 +211,10 @@ Path planners must generate smooth, walkable paths.
 ```mermaid
 flowchart TD
     subgraph Planners["Planner Options"]
-        NAVFN[NavFn<br/>Dijkstra/A*]
-        SMAC[SMAC 2D<br/>Smoother]
-        THETA[Theta*<br/>Any-angle]
-        HYBRID[Smac Hybrid<br/>Non-holonomic]
+        NAVFN[NavFn Dijkstra/A*]
+        SMAC[SMAC 2D Smoother]
+        THETA[Theta* Any-angle]
+        HYBRID[Smac Hybrid Non-holonomic]
     end
 
     subgraph Criteria["Bipedal Criteria"]

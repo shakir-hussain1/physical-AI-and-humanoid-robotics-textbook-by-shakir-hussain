@@ -68,11 +68,11 @@ graph LR
 
 ```mermaid
 graph TB
-    subgraph "Abstraction Levels"
-        L1[Natural Language<br/>"Get me a coffee"]
-        L2[Semantic Commands<br/>navigate_to kitchen<br/>find object cup<br/>pick object cup]
-        L3[ROS 2 Actions<br/>NavigateToPose<br/>DetectObjects<br/>PickObject]
-        L4[Motion Primitives<br/>JointTrajectory<br/>Gripper commands]
+    subgraph Abstraction["Abstraction Levels"]
+        L1["Natural Language: Get me a coffee"]
+        L2["Semantic Commands"]
+        L3["ROS 2 Actions"]
+        L4["Motion Primitives"]
     end
 
     L1 --> L2

@@ -33,15 +33,15 @@ By the end of this chapter, you will be able to:
 ```mermaid
 flowchart LR
     subgraph Traditional["Traditional Robotics"]
-        T1[Hard-coded<br/>Commands]
-        T2[Fixed<br/>Behaviors]
-        T3[Brittle<br/>Execution]
+        T1[Hard-coded Commands]
+        T2[Fixed Behaviors]
+        T3[Brittle Execution]
     end
 
     subgraph VLA["VLA Robotics"]
-        V1[Natural<br/>Language]
-        V2[Visual<br/>Understanding]
-        V3[Adaptive<br/>Actions]
+        V1[Natural Language]
+        V2[Visual Understanding]
+        V3[Adaptive Actions]
     end
 
     Traditional --> |"Evolution"| VLA
@@ -106,10 +106,10 @@ flowchart TD
     end
 
     subgraph VLM["Vision-Language Model"]
-        VE[Vision Encoder<br/>ViT, ResNet]
-        TE[Text Encoder<br/>Transformer]
-        FUSION[Cross-Modal<br/>Fusion]
-        DECODER[Output<br/>Decoder]
+        VE[Vision Encoder ViT, ResNet]
+        TE[Text Encoder Transformer]
+        FUSION[Cross-Modal Fusion]
+        DECODER[Output Decoder]
     end
 
     subgraph Output["Outputs"]
@@ -334,15 +334,15 @@ flowchart TD
     end
 
     subgraph Grounding["Grounding Process"]
-        G1[Object<br/>Recognition]
-        G2[Spatial<br/>Reasoning]
-        G3[Reference<br/>Resolution]
+        G1[Object Recognition]
+        G2[Spatial Reasoning]
+        G3[Reference Resolution]
     end
 
     subgraph Physical["Physical World"]
-        P1[Ball at<br/>x=0.5, y=0.3]
-        P2[Table Surface<br/>z=0.75m]
-        P3[Left of Robot<br/>y > 0]
+        P1[Ball at x=0.5, y=0.3]
+        P2[Table Surface z=0.75m]
+        P3[Left of Robot y > 0]
     end
 
     L1 --> G1 --> P1
@@ -445,15 +445,15 @@ Two approaches exist for building VLA systems:
 ```mermaid
 flowchart TB
     subgraph Modular["Modular Architecture"]
-        M1[Speech<br/>Recognition] --> M2[Language<br/>Understanding]
-        M2 --> M3[Task<br/>Planning]
-        M3 --> M4[Action<br/>Execution]
-        M5[Vision<br/>Processing] --> M3
+        M1[Speech Recognition] --> M2[Language Understanding]
+        M2 --> M3[Task Planning]
+        M3 --> M4[Action Execution]
+        M5[Vision Processing] --> M3
     end
 
     subgraph EndToEnd["End-to-End Architecture"]
-        E1[Raw Inputs<br/>Audio + Image] --> E2[Large<br/>Foundation Model]
-        E2 --> E3[Direct<br/>Action Output]
+        E1[Raw Inputs Audio + Image] --> E2[Large Foundation Model]
+        E2 --> E3[Direct Action Output]
     end
 
     style Modular fill:#3b82f6,stroke:#2563eb,color:#fff
@@ -552,17 +552,17 @@ Humanoid robots have unique VLA considerations.
 ```mermaid
 flowchart TD
     subgraph Humanoid["Humanoid-Specific VLA"]
-        H1[Bipedal<br/>Balance]
-        H2[Dexterous<br/>Manipulation]
-        H3[Social<br/>Interaction]
-        H4[Human-like<br/>Motion]
+        H1[Bipedal Balance]
+        H2[Dexterous Manipulation]
+        H3[Social Interaction]
+        H4[Human-like Motion]
     end
 
     subgraph Integration["VLA Integration Points"]
-        I1[Gait-Aware<br/>Planning]
-        I2[Fine Motor<br/>Control]
-        I3[Gesture &<br/>Expression]
-        I4[Natural<br/>Movement]
+        I1[Gait-Aware Planning]
+        I2[Fine Motor Control]
+        I3[Gesture & Expression]
+        I4[Natural Movement]
     end
 
     H1 --> I1

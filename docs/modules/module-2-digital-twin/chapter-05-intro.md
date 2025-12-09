@@ -162,7 +162,7 @@ flowchart TD
     end
 
     subgraph Physics["Physics Simulation"]
-        ENGINE[Physics Engine<br/>ODE/Bullet/DART]
+        ENGINE[Physics Engine ODE/Bullet/DART]
         DYNAMICS[Rigid Body Dynamics]
         CONTACTS[Contact Resolution]
     end

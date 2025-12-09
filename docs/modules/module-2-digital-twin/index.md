@@ -167,9 +167,9 @@ Each chapter includes exercises at three difficulty levels:
 
 ```mermaid
 flowchart LR
-    M1["Module 1<br/>ROS 2 Foundations"] --> M2["Module 2<br/>Digital Twin"]
-    M2 --> M3["Module 3<br/>NVIDIA Isaac"]
-    M2 --> M4["Module 4<br/>VLA Systems"]
+    M1["Module 1 ROS 2 Foundations"] --> M2["Module 2 Digital Twin"]
+    M2 --> M3["Module 3 NVIDIA Isaac"]
+    M2 --> M4["Module 4 VLA Systems"]
 
     style M2 fill:#2563eb,stroke:#1d4ed8,color:#fff
     style M1 fill:#64748b,stroke:#475569,color:#fff

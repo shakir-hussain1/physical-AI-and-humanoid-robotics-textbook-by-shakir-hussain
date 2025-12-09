@@ -37,13 +37,13 @@ flowchart LR
     end
 
     subgraph LLM["LLM Planner"]
-        UNDERSTAND[Understand<br/>Intent]
-        DECOMPOSE[Decompose<br/>Task]
-        GROUND[Ground in<br/>Capabilities]
+        UNDERSTAND[Understand Intent]
+        DECOMPOSE[Decompose Task]
+        GROUND[Ground in Capabilities]
     end
 
     subgraph Output["Robot Plan"]
-        PLAN["1. Navigate to kitchen<br/>2. Open fridge<br/>3. Get bread<br/>4. Get ingredients<br/>..."]
+        PLAN["1. Navigate to kitchen 2. Open fridge 3. Get bread 4. Get ingredients ..."]
     end
 
     NL --> UNDERSTAND
@@ -68,17 +68,17 @@ flowchart LR
 ```mermaid
 flowchart TB
     subgraph Direct["Direct Planning"]
-        D1[User Command] --> D2[LLM generates<br/>action sequence]
+        D1[User Command] --> D2[LLM generates action sequence]
         D2 --> D3[Execute actions]
     end
 
     subgraph Code["Code Generation"]
-        C1[User Command] --> C2[LLM generates<br/>Python code]
+        C1[User Command] --> C2[LLM generates Python code]
         C2 --> C3[Execute code]
     end
 
     subgraph Tool["Tool Use"]
-        T1[User Command] --> T2[LLM calls<br/>robot functions]
+        T1[User Command] --> T2[LLM calls robot functions]
         T2 --> T3[Functions execute]
     end
 
@@ -668,10 +668,10 @@ flowchart TD
     end
 
     subgraph Safety["Safety Layer"]
-        SYN[Syntax<br/>Validation]
-        SEM[Semantic<br/>Validation]
-        PHYS[Physical<br/>Safety Check]
-        HUMAN[Human-in-Loop<br/>for Critical]
+        SYN[Syntax Validation]
+        SEM[Semantic Validation]
+        PHYS[Physical Safety Check]
+        HUMAN[Human-in-Loop for Critical]
     end
 
     subgraph Execution["Execution"]

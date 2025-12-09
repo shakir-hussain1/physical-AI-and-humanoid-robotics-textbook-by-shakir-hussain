@@ -33,16 +33,16 @@ By the end of this chapter, you will be able to:
 ```mermaid
 flowchart TD
     subgraph IsaacPlatform["NVIDIA Isaac Platform"]
-        SIM[Isaac Sim<br/>Photorealistic Simulation]
-        ROS[Isaac ROS<br/>GPU Perception]
-        SDK[Isaac SDK<br/>Robot Development]
-        CLOUD[Omniverse Cloud<br/>Scalable Simulation]
+        SIM[Isaac Sim Photorealistic Simulation]
+        ROS[Isaac ROS GPU Perception]
+        SDK[Isaac SDK Robot Development]
+        CLOUD[Omniverse Cloud Scalable Simulation]
     end
 
     subgraph Foundation["Foundation Technologies"]
-        OMNI[Omniverse<br/>USD, Collaboration]
-        CUDA[CUDA/TensorRT<br/>GPU Compute]
-        ROS2[ROS 2<br/>Robot Middleware]
+        OMNI[Omniverse USD, Collaboration]
+        CUDA[CUDA/TensorRT GPU Compute]
+        ROS2[ROS 2 Robot Middleware]
     end
 
     subgraph Output["Outputs"]
@@ -150,10 +150,10 @@ Many professional projects use both:
 
 ```mermaid
 flowchart LR
-    DEV[Algorithm<br/>Development] -->|Gazebo| VALIDATE[Validation<br/>Testing]
-    VALIDATE -->|Isaac Sim| TRAIN[ML Training<br/>Domain Rand]
-    TRAIN --> EVAL[Evaluation<br/>Both Sims]
-    EVAL --> DEPLOY[Real Robot<br/>Deployment]
+    DEV[Algorithm Development] -->|Gazebo| VALIDATE[Validation Testing]
+    VALIDATE -->|Isaac Sim| TRAIN[ML Training Domain Rand]
+    TRAIN --> EVAL[Evaluation Both Sims]
+    EVAL --> DEPLOY[Real Robot Deployment]
 
     style DEV fill:#ef4444,stroke:#dc2626,color:#fff
     style TRAIN fill:#76b900,stroke:#5a8f00,color:#fff
@@ -178,10 +178,10 @@ flowchart LR
 flowchart TD
     subgraph USD["USD Composition"]
         ROOT[Root Stage]
-        ROBOT[Robot Layer<br/>humanoid.usd]
-        ENV[Environment Layer<br/>warehouse.usd]
-        LIGHT[Lighting Layer<br/>studio_lights.usd]
-        MAT[Materials Layer<br/>materials.usd]
+        ROBOT[Robot Layer humanoid.usd]
+        ENV[Environment Layer warehouse.usd]
+        LIGHT[Lighting Layer studio_lights.usd]
+        MAT[Materials Layer materials.usd]
     end
 
     ROOT --> ROBOT
@@ -232,10 +232,10 @@ flowchart TD
     end
 
     subgraph IsaacROS["Isaac ROS (GPU)"]
-        VSLAM[cuVSLAM<br/>Visual SLAM]
-        NVBLOX[nvblox<br/>3D Reconstruction]
-        DNN[DNN Inference<br/>TensorRT]
-        NITROS[NITROS<br/>Zero-copy Transport]
+        VSLAM[cuVSLAM Visual SLAM]
+        NVBLOX[nvblox 3D Reconstruction]
+        DNN[DNN Inference TensorRT]
+        NITROS[NITROS Zero-copy Transport]
     end
 
     subgraph Output["ROS 2 Output"]

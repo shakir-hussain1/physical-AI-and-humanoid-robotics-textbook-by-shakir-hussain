@@ -35,17 +35,17 @@ By the end of this chapter, you will be able to:
 ```mermaid
 flowchart TD
     subgraph Gazebo["Gazebo - Physics Focus"]
-        GPHYS[Accurate Physics<br/>ODE, Bullet, DART]
-        GSENS[Comprehensive Sensors<br/>LiDAR, Camera, IMU]
-        GROS[Native ROS 2<br/>Integration]
-        GALG[Algorithm<br/>Development]
+        GPHYS[Accurate Physics ODE, Bullet, DART]
+        GSENS[Comprehensive Sensors LiDAR, Camera, IMU]
+        GROS[Native ROS 2 Integration]
+        GALG[Algorithm Development]
     end
 
     subgraph Unity["Unity - Visualization Focus"]
-        UVIS[Photorealistic<br/>Rendering]
-        UHR[Human-Robot<br/>Interaction]
-        USYN[Synthetic Data<br/>Generation]
-        UVRAR[VR/AR<br/>Support]
+        UVIS[Photorealistic Rendering]
+        UHR[Human-Robot Interaction]
+        USYN[Synthetic Data Generation]
+        UVRAR[VR/AR Support]
     end
 
     GALG -->|Validated Algorithm| DEPLOY[Deployment]
@@ -85,9 +85,9 @@ Unity can import robot models from various formats. The most common workflow is 
 flowchart LR
     URDF[URDF File]
 
-    URDF --> OPT1[Unity URDF Importer<br/>Official Package]
-    URDF --> OPT2[ROS-TCP-Connector<br/>Runtime Import]
-    URDF --> OPT3[Manual Conversion<br/>FBX/OBJ Export]
+    URDF --> OPT1[Unity URDF Importer Official Package]
+    URDF --> OPT2[ROS-TCP-Connector Runtime Import]
+    URDF --> OPT3[Manual Conversion FBX/OBJ Export]
 
     OPT1 --> UNITY[Unity Scene]
     OPT2 --> UNITY
@@ -155,11 +155,11 @@ Unity uses PBR materials for realistic appearance:
 ```mermaid
 flowchart TD
     subgraph PBR["PBR Material Properties"]
-        ALBEDO[Albedo<br/>Base Color]
-        METAL[Metallic<br/>0-1 Metal vs Non-metal]
-        SMOOTH[Smoothness<br/>0-1 Rough vs Smooth]
-        NORMAL[Normal Map<br/>Surface Detail]
-        AO[Ambient Occlusion<br/>Crevice Shadows]
+        ALBEDO[Albedo Base Color]
+        METAL[Metallic 0-1 Metal vs Non-metal]
+        SMOOTH[Smoothness 0-1 Rough vs Smooth]
+        NORMAL[Normal Map Surface Detail]
+        AO[Ambient Occlusion Crevice Shadows]
     end
 
     LIGHT[Light] --> PBR
@@ -748,7 +748,7 @@ flowchart LR
     end
 
     subgraph Bridge["ROS TCP Endpoint"]
-        TCP[TCP Server<br/>Port 10000]
+        TCP[TCP Server Port 10000]
     end
 
     subgraph Unity["Unity Application"]

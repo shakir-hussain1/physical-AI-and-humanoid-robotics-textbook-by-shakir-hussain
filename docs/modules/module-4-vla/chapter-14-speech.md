@@ -38,15 +38,15 @@ flowchart LR
     end
 
     subgraph ASR["ASR Pipeline"]
-        FEAT[Feature<br/>Extraction]
-        AM[Acoustic<br/>Model]
-        LM[Language<br/>Model]
+        FEAT[Feature Extraction]
+        AM[Acoustic Model]
+        LM[Language Model]
         DEC[Decoder]
     end
 
     subgraph Output["Output"]
-        TEXT[Transcribed<br/>Text]
-        CONF[Confidence<br/>Score]
+        TEXT[Transcribed Text]
+        CONF[Confidence Score]
     end
 
     MIC --> WAVE
@@ -76,10 +76,10 @@ Modern systems like Whisper use end-to-end transformers:
 ```mermaid
 flowchart LR
     subgraph Whisper["Whisper Architecture"]
-        AUD[Audio<br/>Input]
-        ENC[Encoder<br/>Transformer]
-        DEC[Decoder<br/>Transformer]
-        TXT[Text<br/>Output]
+        AUD[Audio Input]
+        ENC[Encoder Transformer]
+        DEC[Decoder Transformer]
+        TXT[Text Output]
     end
 
     AUD --> |"Mel Spectrogram"| ENC
@@ -339,9 +339,9 @@ class NoiseReducer:
 ```mermaid
 flowchart TB
     subgraph Batch["Batch Processing"]
-        B1[Record Complete<br/>Utterance]
+        B1[Record Complete Utterance]
         B2[Send to ASR]
-        B3[Get Full<br/>Transcription]
+        B3[Get Full Transcription]
     end
 
     subgraph Streaming["Streaming Processing"]
@@ -500,17 +500,17 @@ Transform transcribed text into structured robot commands.
 ```mermaid
 flowchart LR
     subgraph Input["Transcription"]
-        TEXT["pick up the red<br/>ball on the table"]
+        TEXT["pick up the red ball on the table"]
     end
 
     subgraph Parsing["Intent Parsing"]
-        NER[Entity<br/>Extraction]
-        INTENT[Intent<br/>Classification]
-        SLOT[Slot<br/>Filling]
+        NER[Entity Extraction]
+        INTENT[Intent Classification]
+        SLOT[Slot Filling]
     end
 
     subgraph Output["Structured Command"]
-        CMD["action: grasp<br/>object: red_ball<br/>location: table"]
+        CMD["action: grasp object: red_ball location: table"]
     end
 
     TEXT --> NER

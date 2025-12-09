@@ -38,15 +38,15 @@ flowchart TD
     end
 
     subgraph DM["Dialogue Manager"]
-        NLU[Natural Language<br/>Understanding]
-        STATE[Dialogue<br/>State]
-        POLICY[Response<br/>Policy]
-        NLG[Natural Language<br/>Generation]
+        NLU[Natural Language Understanding]
+        STATE[Dialogue State]
+        POLICY[Response Policy]
+        NLG[Natural Language Generation]
     end
 
     subgraph Output["Robot Output"]
-        ACTION[Physical<br/>Action]
-        SPEAK[Spoken<br/>Response]
+        ACTION[Physical Action]
+        SPEAK[Spoken Response]
     end
 
     SPEECH --> NLU
@@ -872,9 +872,9 @@ class NegotiationHandler:
 ```mermaid
 flowchart TD
     subgraph Error["Error Types"]
-        ASR[Speech Recognition<br/>Error]
-        NLU[Understanding<br/>Error]
-        EXEC[Execution<br/>Error]
+        ASR[Speech Recognition Error]
+        NLU[Understanding Error]
+        EXEC[Execution Error]
     end
 
     subgraph Recovery["Recovery Strategies"]
@@ -1083,24 +1083,24 @@ flowchart TD
     end
 
     subgraph Speech["Speech Pipeline"]
-        ASR[Speech<br/>Recognition]
-        TTS[Text-to-<br/>Speech]
+        ASR[Speech Recognition]
+        TTS[Text-to- Speech]
     end
 
     subgraph Language["Language Pipeline"]
-        NLU[Natural Language<br/>Understanding]
-        DM[Dialogue<br/>Manager]
-        REF[Reference<br/>Resolver]
+        NLU[Natural Language Understanding]
+        DM[Dialogue Manager]
+        REF[Reference Resolver]
     end
 
     subgraph Vision["Vision Pipeline"]
-        PERCEPT[Object<br/>Detection]
-        SCENE[Scene<br/>Understanding]
+        PERCEPT[Object Detection]
+        SCENE[Scene Understanding]
     end
 
     subgraph Action["Action Pipeline"]
-        PLAN[Task<br/>Planner]
-        EXEC[Behavior<br/>Executor]
+        PLAN[Task Planner]
+        EXEC[Behavior Executor]
     end
 
     MIC --> ASR

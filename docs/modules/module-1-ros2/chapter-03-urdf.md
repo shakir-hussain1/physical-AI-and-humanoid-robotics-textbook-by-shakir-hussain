@@ -185,10 +185,10 @@ A link describes a rigid body:
 ```mermaid
 graph LR
     subgraph "URDF Geometry Types"
-        BOX[Box<br/>size: x y z]
-        CYL[Cylinder<br/>radius, length]
-        SPH[Sphere<br/>radius]
-        MESH[Mesh<br/>filename]
+        BOX[Box size: x y z]
+        CYL[Cylinder radius, length]
+        SPH[Sphere radius]
+        MESH[Mesh filename]
     end
 
     style BOX fill:#e1f5fe
@@ -224,12 +224,12 @@ graph LR
 ```mermaid
 graph TB
     subgraph "Joint Types"
-        REV[Revolute<br/>Rotation with limits]
-        CONT[Continuous<br/>Unlimited rotation]
-        PRIS[Prismatic<br/>Linear sliding]
-        FIXED[Fixed<br/>No motion]
-        FLOAT[Floating<br/>6 DOF free]
-        PLAN[Planar<br/>2D motion]
+        REV[Revolute Rotation with limits]
+        CONT[Continuous Unlimited rotation]
+        PRIS[Prismatic Linear sliding]
+        FIXED[Fixed No motion]
+        FLOAT[Floating 6 DOF free]
+        PLAN[Planar 2D motion]
     end
 
     style REV fill:#c8e6c9

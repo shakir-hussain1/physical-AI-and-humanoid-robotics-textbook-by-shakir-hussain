@@ -33,10 +33,10 @@ By the end of this chapter, you will be able to:
 ```mermaid
 flowchart TD
     subgraph Core["Gazebo Core"]
-        SIM[Simulation Server<br/>gz-sim]
-        PHYS[Physics Plugin<br/>gz-physics]
-        RENDER[Rendering<br/>gz-rendering]
-        SENS[Sensors<br/>gz-sensors]
+        SIM[Simulation Server gz-sim]
+        PHYS[Physics Plugin gz-physics]
+        RENDER[Rendering gz-rendering]
+        SENS[Sensors gz-sensors]
     end
 
     subgraph Plugins["Plugin System"]
@@ -104,10 +104,10 @@ Gazebo uses **SDF (Simulation Description Format)** natively, which offers more 
 
 ```mermaid
 flowchart LR
-    URDF[URDF File<br/>humanoid.urdf] --> SPAWN[Spawn Entity]
+    URDF[URDF File humanoid.urdf] --> SPAWN[Spawn Entity]
     SPAWN --> CONVERT{Conversion}
-    CONVERT --> SDF[Internal SDF<br/>Representation]
-    SDF --> GAZEBO[Gazebo<br/>Simulation]
+    CONVERT --> SDF[Internal SDF Representation]
+    SDF --> GAZEBO[Gazebo Simulation]
 
     XACRO[XACRO File] --> PROCESS[xacro process]
     PROCESS --> URDF
@@ -246,10 +246,10 @@ Gazebo supports multiple physics engines, each with different characteristics:
 ```mermaid
 flowchart TD
     subgraph Engines["Physics Engine Selection"]
-        DART[DART Engine<br/>Accurate Dynamics]
-        ODE[ODE Engine<br/>Fast & Stable]
-        BULLET[Bullet Engine<br/>Good Contacts]
-        TPE[TPE Engine<br/>Very Fast]
+        DART[DART Engine Accurate Dynamics]
+        ODE[ODE Engine Fast & Stable]
+        BULLET[Bullet Engine Good Contacts]
+        TPE[TPE Engine Very Fast]
     end
 
     subgraph UseCase["Recommended Use Cases"]
@@ -382,8 +382,8 @@ flowchart TD
     COM -->|Projects down| PROJ
     PROJ -->|Must be inside| SUPPORT
 
-    STABLE[Stable:<br/>Projection inside polygon]
-    UNSTABLE[Unstable:<br/>Projection outside polygon]
+    STABLE[Stable: Projection inside polygon]
+    UNSTABLE[Unstable: Projection outside polygon]
 
     PROJ --> CHECK{Inside polygon?}
     CHECK -->|Yes| STABLE
@@ -554,15 +554,15 @@ Collision detection ensures the robot interacts properly with the environment.
 ```mermaid
 flowchart TD
     subgraph Detection["Collision Detection"]
-        BROAD[Broad Phase<br/>AABB overlap test]
-        NARROW[Narrow Phase<br/>Exact geometry test]
-        CONTACT[Contact Points<br/>Penetration depth]
+        BROAD[Broad Phase AABB overlap test]
+        NARROW[Narrow Phase Exact geometry test]
+        CONTACT[Contact Points Penetration depth]
     end
 
     subgraph Response["Collision Response"]
-        NORMAL[Normal Force<br/>Prevents penetration]
-        FRICTION[Friction Force<br/>Prevents sliding]
-        IMPULSE[Impulse<br/>Velocity correction]
+        NORMAL[Normal Force Prevents penetration]
+        FRICTION[Friction Force Prevents sliding]
+        IMPULSE[Impulse Velocity correction]
     end
 
     BROAD --> NARROW

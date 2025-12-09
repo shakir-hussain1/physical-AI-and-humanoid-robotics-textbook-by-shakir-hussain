@@ -44,10 +44,10 @@ flowchart TD
     end
 
     subgraph Perception["Isaac ROS Perception"]
-        VSLAM[cuVSLAM<br/>Visual SLAM]
-        NVBLOX[nvblox<br/>3D Reconstruction]
-        DNN[DNN Inference<br/>TensorRT]
-        DEPTH_PROC[Depth Processing<br/>GPU Accelerated]
+        VSLAM[cuVSLAM Visual SLAM]
+        NVBLOX[nvblox 3D Reconstruction]
+        DNN[DNN Inference TensorRT]
+        DEPTH_PROC[Depth Processing GPU Accelerated]
     end
 
     subgraph Output["ROS 2 Output"]
@@ -99,11 +99,11 @@ flowchart LR
     end
 
     subgraph cuVSLAM["cuVSLAM Pipeline"]
-        FEAT[Feature Extraction<br/>GPU]
-        MATCH[Feature Matching<br/>GPU]
-        POSE[Pose Estimation<br/>GPU]
-        BA[Bundle Adjustment<br/>GPU]
-        LOOP[Loop Closure<br/>GPU]
+        FEAT[Feature Extraction GPU]
+        MATCH[Feature Matching GPU]
+        POSE[Pose Estimation GPU]
+        BA[Bundle Adjustment GPU]
+        LOOP[Loop Closure GPU]
     end
 
     subgraph Output["Output"]
@@ -198,15 +198,15 @@ flowchart TD
     end
 
     subgraph nvblox["nvblox Pipeline"]
-        TSDF[TSDF Integration<br/>GPU]
-        MESH[Mesh Extraction<br/>GPU]
-        ESDF[ESDF Computation<br/>GPU]
-        SLICE[2D Slice<br/>Costmap]
+        TSDF[TSDF Integration GPU]
+        MESH[Mesh Extraction GPU]
+        ESDF[ESDF Computation GPU]
+        SLICE[2D Slice Costmap]
     end
 
     subgraph Output["Output"]
         MESH_OUT[3D Mesh]
-        COSTMAP[Costmap<br/>for Nav2]
+        COSTMAP[Costmap for Nav2]
         DIST[Distance Field]
     end
 
@@ -272,15 +272,15 @@ Isaac ROS accelerates DNN inference with TensorRT.
 flowchart LR
     subgraph Model["Model Pipeline"]
         ONNX[ONNX Model]
-        CONVERT[TensorRT<br/>Conversion]
-        ENGINE[TRT Engine<br/>.plan file]
+        CONVERT[TensorRT Conversion]
+        ENGINE[TRT Engine .plan file]
     end
 
     subgraph Runtime["Inference"]
         INPUT[Image Input]
-        PREPROC[Preprocessing<br/>GPU]
-        INFER[TensorRT<br/>Inference]
-        POSTPROC[Postprocessing<br/>GPU]
+        PREPROC[Preprocessing GPU]
+        INFER[TensorRT Inference]
+        POSTPROC[Postprocessing GPU]
     end
 
     subgraph Output["Output"]

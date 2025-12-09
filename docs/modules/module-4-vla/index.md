@@ -126,10 +126,10 @@ Build conversational interfaces with dialogue management and context tracking.
 
 ```mermaid
 flowchart LR
-    M1["Module 1<br/>ROS 2"] --> M4["Module 4<br/>VLA"]
-    M2["Module 2<br/>Digital Twin"] --> M4
-    M3["Module 3<br/>Isaac"] --> M4
-    M4 --> CAP["Capstone<br/>Project"]
+    M1["Module 1 ROS 2"] --> M4["Module 4 VLA"]
+    M2["Module 2 Digital Twin"] --> M4
+    M3["Module 3 Isaac"] --> M4
+    M4 --> CAP["Capstone Project"]
 
     style M4 fill:#8b5cf6,stroke:#7c3aed,color:#fff
 ```
