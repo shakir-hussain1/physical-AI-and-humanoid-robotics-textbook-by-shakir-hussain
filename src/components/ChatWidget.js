@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 
-//const API_URL = 'https://localhost:8001' // local API_URL;  
-const API_URL = 'physical-ai-and-humanoid-robotics-textbook-by-sh-production.up.railway.app' // deployed API_URL
-
+//const API_URL = 'https://localhost:8001' // local API_URL;
+const API_URL = 'https://physical-ai-and-humanoid-robotics-textbook-by-sh-production.up.railway.app' // deployed API_URL
 
 export default function ChatWidget() {
   const [open, setOpen] = useState(false);
@@ -26,10 +25,16 @@ export default function ChatWidget() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ question: input, selected_text: selectedText })
       });
+
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
+
       const data = await res.json();
       setMessages(prev => [...prev, { role: 'assistant', content: data.answer }]);
     } catch (e) {
-      setMessages(prev => [...prev, { role: 'assistant', content: 'Error connecting to server' }]);
+      console.error('Chat error:', e);
+      setMessages(prev => [...prev, { role: 'assistant', content: `Error connecting to server: ${e.message || 'Unknown error'}` }]);
     }
     setLoading(false);
   };
