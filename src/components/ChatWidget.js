@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const API_URL = 'http://localhost:8001'; // Local: http://localhost:8001, Deployed: your-api-url
+const API_URL = 'https://railway.com/project/097b0de9-4899-41b4-8f15-e0f913dcfd5f?environmentId=94977753-4271-4b66-aadf-9b2db161ae2e'; // Local: http://localhost:8001, Deployed: your-api-url
 
 export default function ChatWidget() {
   const [open, setOpen] = useState(false);
