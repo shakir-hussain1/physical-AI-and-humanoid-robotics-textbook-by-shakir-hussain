@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const API_URL = 'https://localhost:8001' // local API_URL;
+//const API_URL = 'https://localhost:8001' // local API_URL;
 const API_URL = 'https://physical-ai-and-humanoid-robotics-textbook-by-sh-production.up.railway.app' // deployed API_URL
 
 export default function ChatWidget() {
