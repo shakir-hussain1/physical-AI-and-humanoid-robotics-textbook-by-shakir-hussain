@@ -1,0 +1,472 @@
+openapi: 3.0.3
+info:
+  title: RAG Chatbot Backend API
+  description: Retrieval-Augmented Generation chatbot for Physical AI & Humanoid Robotics textbook
+  version: 1.0.0
+  contact:
+    name: Backend Engineering Team
+servers:
+  - url: http://localhost:8000
+    description: Local development
+  - url: https://api.example.com
+    description: Production
+
+paths:
+  /chat/query:
+    post:
+      summary: Submit query to RAG chatbot (full-book search)
+      operationId: submitQuery
+      tags:
+        - Chat
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QueryRequest'
+            examples:
+              student_question:
+                summary: Student asking about robot control
+                value:
+                  query: "What is the difference between hierarchical and decentralized robot control?"
+              educator_fact_check:
+                summary: Educator verifying fact
+                value:
+                  query: "What page discusses passive compliance in robotics?"
+      responses:
+        '200':
+          description: Query answered successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QueryResponse'
+              examples:
+                success:
+                  summary: Successful answer with citations
+                  value:
+                    answer_id: "550e8400-e29b-41d4-a716-446655440000"
+                    answer: "Hierarchical robot control uses a centralized decision-maker [Source: Control Architectures (Page 89) - \"hierarchical systems employ a central controller that coordinates all subsystems\"] while decentralized control distributes decision-making across nodes [Source: Distributed Control Paradigms (Page 102) - \"decentralized approaches empower individual agents to make local decisions\"]."
+                    sources:
+                      - id: "chunk-001"
+                        excerpt: "hierarchical systems employ a central controller that coordinates all subsystems"
+                        page: 89
+                        section: "Control Architectures"
+                      - id: "chunk-002"
+                        excerpt: "decentralized approaches empower individual agents to make local decisions"
+                        page: 102
+                        section: "Distributed Control Paradigms"
+                    confidence: 0.93
+                    confidence_level: "high"
+                    status: "success"
+        '400':
+          description: Invalid query format
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                empty_query:
+                  summary: Empty query
+                  value:
+                    error:
+                      code: "INVALID_QUERY"
+                      message: "Query must be 1-1000 characters"
+                      details: "Provided: empty string (0 characters)"
+                query_too_long:
+                  summary: Query exceeds 1000 characters
+                  value:
+                    error:
+                      code: "INVALID_QUERY"
+                      message: "Query must be 1-1000 characters"
+                      details: "Provided: 1200 characters"
+        '401':
+          description: Unauthorized (invalid API key)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '504':
+          description: Query timeout (exceeded 5 seconds)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                timeout:
+                  summary: Query processing timeout
+                  value:
+                    error:
+                      code: "TIMEOUT"
+                      message: "Query processing timed out"
+                      details: "Exceeded 5 second limit. Try a simpler question."
+
+  /chat/context-restricted:
+    post:
+      summary: Submit query restricted to user-selected passage
+      operationId: submitContextRestrictedQuery
+      tags:
+        - Chat
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContextRestrictedQueryRequest'
+            examples:
+              passage_explanation:
+                summary: Researcher asking for passage explanation
+                value:
+                  query: "What is proprioception in simple terms?"
+                  selected_passage: "Proprioception is the ability of a robot to sense its own joint positions and velocities without external sensors. This is achieved through internal feedback loops that measure actuator commands and compare them with observed outcomes."
+      responses:
+        '200':
+          description: Query answered from selected passage
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContextRestrictedQueryResponse'
+        '400':
+          description: Query cannot be answered from provided passage
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                out_of_scope:
+                  summary: Question not answerable from passage
+                  value:
+                    error:
+                      code: "PASSAGE_INSUFFICIENT"
+                      message: "This question cannot be fully answered from your selected passage"
+                      details: "The selected passage does not contain sufficient information. Would you like to expand to the full chapter?"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '504':
+          description: Query timeout
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /content/ingest:
+    post:
+      summary: Upload and index book chapter(s)
+      operationId: ingestContent
+      tags:
+        - Content Management
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/IngestRequest'
+      responses:
+        '202':
+          description: Ingestion queued (async mode)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IngestResponse'
+              examples:
+                queued:
+                  summary: Ingest job queued for processing
+                  value:
+                    ingest_id: "ingest-550e8400-e29b-41d4-a716"
+                    status: "queued"
+                    message: "Content ingestion queued. Poll /content/ingest/{ingest_id} for status."
+        '200':
+          description: Ingestion completed (sync mode)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  chunks_created:
+                    type: integer
+                    example: 24
+                  document_id:
+                    type: string
+                    format: uuid
+                  message:
+                    type: string
+        '400':
+          description: Invalid content format or metadata
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /health:
+    get:
+      summary: Liveness and readiness checks
+      operationId: healthCheck
+      tags:
+        - System
+      responses:
+        '200':
+          description: System healthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+              examples:
+                healthy:
+                  summary: All systems operational
+                  value:
+                    status: "healthy"
+                    timestamp: "2025-12-16T14:30:00Z"
+                    services:
+                      postgres: true
+                      qdrant: true
+                      claude_api: true
+        '503':
+          description: System degraded or unhealthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+              examples:
+                degraded:
+                  summary: Qdrant unavailable
+                  value:
+                    status: "degraded"
+                    timestamp: "2025-12-16T14:30:00Z"
+                    services:
+                      postgres: true
+                      qdrant: false
+                      claude_api: true
+
+components:
+  schemas:
+    # Request schemas
+    QueryRequest:
+      type: object
+      required:
+        - query
+      properties:
+        query:
+          type: string
+          minLength: 1
+          maxLength: 1000
+          description: User question in natural language
+          example: "What is passive compliance in robotics?"
+        conversation_id:
+          type: string
+          format: uuid
+          description: Optional conversation ID for multi-turn support (future)
+        mode:
+          type: string
+          enum: [full-book]
+          default: full-book
+          description: Retrieval mode (always full-book for this endpoint)
+
+    ContextRestrictedQueryRequest:
+      type: object
+      required:
+        - query
+        - selected_passage
+      properties:
+        query:
+          type: string
+          minLength: 1
+          maxLength: 1000
+          description: User question
+        selected_passage:
+          type: string
+          minLength: 50
+          maxLength: 5000
+          description: User-selected text passage to restrict search
+
+    IngestRequest:
+      type: object
+      required:
+        - file
+        - chapter_id
+      properties:
+        file:
+          type: string
+          format: binary
+          description: Markdown or plaintext chapter file
+        chapter_id:
+          type: string
+          pattern: '^[a-zA-Z0-9_]{3,50}$'
+          description: Unique chapter identifier (e.g., ch01, ch02_section3)
+        metadata:
+          type: object
+          description: Optional metadata (author, publication_date, tags, etc.)
+          properties:
+            author:
+              type: string
+            publication_date:
+              type: string
+              format: date
+            tags:
+              type: array
+              items:
+                type: string
+
+    # Response schemas
+    QueryResponse:
+      type: object
+      required:
+        - answer_id
+        - answer
+        - sources
+        - confidence
+        - status
+      properties:
+        answer_id:
+          type: string
+          format: uuid
+          description: Unique answer identifier
+        answer:
+          type: string
+          description: Generated response with inline citations
+        sources:
+          type: array
+          items:
+            $ref: '#/components/schemas/Source'
+          description: List of cited sources
+        confidence:
+          type: number
+          format: float
+          minimum: 0.0
+          maximum: 1.0
+          description: Confidence score (0.0-1.0)
+        confidence_level:
+          type: string
+          enum: [high, medium, low]
+          description: Qualitative confidence level
+        status:
+          type: string
+          enum: [success, partial, out_of_scope, error]
+          description: Answer status
+
+    ContextRestrictedQueryResponse:
+      allOf:
+        - $ref: '#/components/schemas/QueryResponse'
+        - type: object
+          properties:
+            source_mode:
+              type: string
+              enum: [context-restricted]
+              description: Answer restricted to user-selected passage
+
+    Source:
+      type: object
+      required:
+        - id
+        - excerpt
+        - page
+        - section
+      properties:
+        id:
+          type: string
+          description: Unique chunk identifier
+        excerpt:
+          type: string
+          description: Relevant passage from source
+        page:
+          type: integer
+          description: Page number where excerpt appears
+        section:
+          type: string
+          description: Section heading for navigation
+
+    IngestResponse:
+      type: object
+      required:
+        - ingest_id
+        - status
+      properties:
+        ingest_id:
+          type: string
+          description: Job ID for status polling
+        status:
+          type: string
+          enum: [queued, processing, completed, failed]
+        message:
+          type: string
+        chunks_created:
+          type: integer
+          description: Number of chunks created (populated when completed)
+
+    HealthResponse:
+      type: object
+      required:
+        - status
+        - timestamp
+      properties:
+        status:
+          type: string
+          enum: [healthy, degraded, unhealthy]
+        timestamp:
+          type: string
+          format: date-time
+        services:
+          type: object
+          properties:
+            postgres:
+              type: boolean
+            qdrant:
+              type: boolean
+            claude_api:
+              type: boolean
+
+    ErrorResponse:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: object
+          required:
+            - code
+            - message
+          properties:
+            code:
+              type: string
+              enum:
+                - INVALID_QUERY
+                - LOW_CONFIDENCE
+                - TIMEOUT
+                - NO_MATCH
+                - PASSAGE_INSUFFICIENT
+                - UNAUTHORIZED
+                - SERVER_ERROR
+            message:
+              type: string
+              description: Human-readable error message
+            details:
+              type: string
+              description: Additional context for debugging
+
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: API key as bearer token
+
+tags:
+  - name: Chat
+    description: Chatbot query endpoints
+  - name: Content Management
+    description: Content ingestion and management
+  - name: System
+    description: System health and diagnostics
