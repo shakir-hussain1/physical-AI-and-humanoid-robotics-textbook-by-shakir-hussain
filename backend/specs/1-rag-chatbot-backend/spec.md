@@ -78,7 +78,7 @@ A researcher is deeply reading a complex section. They highlight a specific para
 - **FR-010**: System MUST support book content ingestion: upload chapters → parse → chunk → embed → index in vector database
 - **FR-011**: System MUST enforce response timeout: all queries must complete within 5 seconds or return graceful error
 - **FR-012**: System MUST validate prompt injection: queries that attempt jailbreak/instruction override treated as literal book search queries
-- **FR-013**: System MUST maintain fact-checking audit trail: sample 20% of answers, enable domain expert review + grading (PASS/FAIL/HALLUCINATION)
+- **FR-013**: System MUST maintain fact-checking audit trail: sample 20–30 answers per month, enable domain expert review + grading (PASS/FAIL/HALLUCINATION)
 
 ### Key Entities
 
@@ -126,19 +126,29 @@ A researcher is deeply reading a complex section. They highlight a specific para
 - Fine-tuning of LLM on book content (use base model with RAG retrieval only)
 - Real-time content updates (batch indexing only; weekly schedule)
 
+## Clarifications
+
+### Session 2025-12-16
+
+- Q: Which LLM model should RAG backend use? → A: Claude 3.5 Sonnet
+- Q: At what hallucination rate triggers instant rollback? → A: >5% hallucination rate
+- Q: How many answers per month fact-checked by domain expert? → A: 20–30 answers/month
+- Q: Which embedding model for semantic search? → A: Cohere Embed
+- Q: What monitoring alert thresholds beyond hallucination? → A: Latency (p95 >3s), Accuracy drop (>2%), Retrieval failure (>10%)
+
 ## Assumptions
 
 - **Book Content Format**: Chapters provided as Markdown or plain text with page metadata; structure: Chapter > Section > Subsection > Paragraph
-- **Embedding Model**: Use existing open-source embedding model (e.g., sentence-transformers) compatible with Qdrant; no training on book-specific data required for MVP
-- **LLM Choice**: Use Claude API or similar proprietary LLM with strong instruction-following; assumed to support system prompts for RAG grounding
+- **LLM Choice**: Claude 3.5 Sonnet via Anthropic API; supports system prompts for RAG grounding and strong instruction-following for zero-hallucination enforcement
+- **Embedding Model**: Cohere Embed for semantic search in vector database (Qdrant/ERIA); balances accuracy and cost for academic text retrieval
 - **User Base Scale**: Initial MVP targets ≤500 concurrent users; performance targets (2s latency) assume this scale
-- **Fact-Checking Reviewer Availability**: Assume domain expert (book author/editor) available for sampling 20% of answers monthly
+- **Fact-Checking Sampling**: Domain expert (book author/editor) available to review 20–30 answers per month (20% sampling baseline)
 - **Query Complexity**: Initial version handles single-turn queries; multi-turn conversation out of scope
-- **Confidence Scoring**: Confidence score derived from (a) retrieval similarity score and (b) LLM's self-assessment; no external fact-checking model used for MVP
+- **Confidence Scoring**: Confidence score derived from (a) retrieval similarity score and (b) Claude's self-assessment; no external fact-checking model used for MVP
 
 ## Non-Functional Requirements
 
-- **Reliability**: System availability ≥99.5% during business hours (monitored 24/7, instant rollback on hallucination spike)
+- **Reliability**: System availability ≥99.5% during business hours; monitored 24/7 with instant rollback triggered when hallucination rate exceeds 5%; operational alerts triggered on: latency (p95 >3s), accuracy drop (>2%), or retrieval failure rate (>10%)
 - **Security**: No PII in logs; queries/answers anonymous; access restricted to trusted Docusaurus plugin only
-- **Auditability**: 100% of answers traceable to source chunks + grading records; audit logs retained for 1 year minimum
+- **Auditability**: 100% of answers traceable to source chunks + grading records; audit logs retained for 1 year minimum; fact-checking reviews conducted on 20–30 answers per month
 - **Testability**: All answer-generation code paths covered by unit + integration tests; regression test suite confirms no accuracy degradation post-update
