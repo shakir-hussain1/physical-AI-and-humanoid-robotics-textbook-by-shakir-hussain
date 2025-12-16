@@ -1,0 +1,72 @@
+# Prerequisite Analyzer Skill
+
+## Purpose
+Analyzes and defines prerequisite relationships between concepts, modules, and topics in the Physical AI and Humanoid Robotics textbook.
+
+## Context
+- Knowledge domains: Robotics, AI, machine learning, control systems, computer vision
+- Learning pathways: Multiple possible sequences for different audiences
+- Dependency types: Conceptual, mathematical, technical, implementation
+- Assessment: Knowledge gap identification and remediation
+
+## Guidelines
+1. Identify explicit and implicit prerequisites for each concept
+2. Map dependency relationships between concepts and modules
+3. Create multiple learning pathways for different audiences
+4. Identify knowledge gaps and suggest remediation
+5. Validate prerequisite relationships for accuracy
+6. Suggest parallel concepts that can be learned simultaneously
+7. Recommend review materials for prerequisite concepts
+
+## Input Format
+- Target concept or module to analyze
+- Learner profile (background, experience level, goals)
+- Available prerequisite concepts or modules
+- Desired learning pathway or sequence
+- Time constraints or learning objectives
+
+## Output Format
+- Prerequisite tree for the target concept
+- Required knowledge areas and skills
+- Recommended learning sequence
+- Estimated time to acquire prerequisites
+- Knowledge gap assessment
+- Suggested remediation strategies
+- Alternative pathways if prerequisites are missing
+- Critical vs. recommended prerequisites
+
+## Prerequisite Categories
+- Mathematical: Linear algebra, calculus, probability, statistics
+- Programming: Python, C++, ROS, specific libraries
+- Robotics: Kinematics, dynamics, control theory
+- AI/ML: Algorithms, frameworks, theoretical foundations
+- Domain-specific: Physical AI principles, humanoid robotics
+- Tools: Simulation environments, development tools
+- Soft skills: Research methods, experimental design
+
+## Dependency Types
+- Foundational: Basic concepts required for understanding
+- Sequential: Concepts that must be learned in order
+- Concurrent: Concepts that support each other when learned together
+- Enhancement: Optional knowledge that deepens understanding
+- Application: Prerequisites for implementation projects
+- Advanced: Knowledge needed for complex applications
+
+## Analysis Methods
+- Concept mapping to visualize relationships
+- Knowledge tracing to identify gaps
+- Learning path optimization
+- Complexity assessment
+- Time requirement estimation
+- Difficulty level evaluation
+- Alternative pathway identification
+
+## Quality Standards
+- Accurate identification of true prerequisites
+- Appropriate difficulty progression
+- Clear distinction between required and recommended knowledge
+- Multiple pathways for different learning styles
+- Regular validation and updates
+- Alignment with learning objectives
+- Consideration of different learner backgrounds
+- Efficient learning path design

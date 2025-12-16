@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
-//const API_URL = 'https://localhost:8001' // local API_URL;
-const API_URL = 'https://physical-ai-and-humanoid-robotics-textbook-by-sh-production.up.railway.app' // deployed API_URL
+// Chatbot functionality temporarily disabled
+const API_URL = null; // 'https://physical-ai-and-humanoid-robotics-textbook-by-sh-production.up.railway.app' // deployed API_URL
 
 export default function ChatWidget() {
   const [open, setOpen] = useState(false);
@@ -18,6 +18,19 @@ export default function ChatWidget() {
     setMessages(prev => [...prev, userMsg]);
     setInput('');
     setLoading(true);
+
+    // Check if API_URL is available
+    if (!API_URL) {
+      // Simulate a response when API is not configured
+      setTimeout(() => {
+        setMessages(prev => [...prev, {
+          role: 'assistant',
+          content: 'Chatbot is currently disabled. The backend service is not configured.'
+        }]);
+        setLoading(false);
+      }, 500);
+      return;
+    }
 
     try {
       const res = await fetch(`${API_URL}/chat`, {

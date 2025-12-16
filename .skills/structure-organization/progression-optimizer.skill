@@ -1,0 +1,75 @@
+# Progression Optimizer Skill
+
+## Purpose
+Optimizes the learning progression and sequence of concepts in the Physical AI and Humanoid Robotics textbook for maximum educational effectiveness.
+
+## Context
+- Learning science principles: Cognitive load theory, spaced repetition, interleaving
+- Audience diversity: Different backgrounds, learning styles, and goals
+- Content complexity: Balancing difficulty with engagement
+- Retention optimization: Long-term learning and skill development
+
+## Guidelines
+1. Apply cognitive load theory to manage complexity
+2. Use spaced repetition for key concepts and skills
+3. Implement interleaving of related concepts
+4. Balance challenge with learner capability
+5. Create feedback loops for reinforcement
+6. Optimize for different learning pathways
+7. Ensure retention and transfer of knowledge
+
+## Input Format
+- Available content modules and concepts
+- Target audience characteristics
+- Learning objectives and constraints
+- Time allocation for each topic
+- Assessment methods available
+- Prerequisite relationships
+
+## Output Format
+- Optimized sequence of topics and modules
+- Timing recommendations for each concept
+- Suggested review and reinforcement points
+- Assessment schedule and types
+- Difficulty progression curve
+- Engagement optimization strategies
+- Alternative pathways for different learners
+- Cognitive load management plan
+
+## Optimization Principles
+- Cognitive Load Theory: Manage intrinsic, extraneous, and germane load
+- Spaced Repetition: Optimal timing for concept reinforcement
+- Interleaving: Mixing related concepts for better retention
+- Desirable Difficulties: Challenges that enhance learning
+- Elaboration: Connecting new concepts to existing knowledge
+- Concrete Examples: Balancing abstract and concrete concepts
+- Feedback Timing: Optimal moments for feedback and correction
+
+## Progression Patterns
+- Spiral: Revisiting concepts with increasing depth
+- Building blocks: Foundation concepts supporting advanced topics
+- Parallel tracks: Multiple concept streams that converge
+- Just-in-time: Prerequisites introduced as needed
+- Adaptive: Adjusting based on learner performance
+- Mastery-based: Advancing only after achieving mastery
+- Project-driven: Learning through implementation projects
+
+## Quality Metrics
+- Learning rate: Speed of concept acquisition
+- Retention rate: Long-term memory of concepts
+- Transfer ability: Application to new situations
+- Engagement level: Sustained interest and motivation
+- Difficulty satisfaction: Appropriate challenge level
+- Concept connectivity: Integration of related concepts
+- Skill development: Practical ability improvement
+- Assessment performance: Success on evaluations
+
+## Adaptation Strategies
+- Difficulty adjustment based on performance
+- Alternative explanations for complex concepts
+- Additional practice for struggling learners
+- Acceleration for advanced learners
+- Different modalities for different learning styles
+- Personalized feedback and support
+- Just-in-time remediation
+- Flexible pacing options

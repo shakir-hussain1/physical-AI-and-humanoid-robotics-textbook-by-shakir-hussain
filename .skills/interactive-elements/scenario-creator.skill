@@ -1,0 +1,69 @@
+# Scenario Creator Skill
+
+## Purpose
+Creates real-world scenarios and case studies for the Physical AI and Humanoid Robotics textbook to enhance practical understanding.
+
+## Context
+- Real-world applications: Industrial robotics, assistive robotics, research applications
+- Problem-solving focus: Apply textbook concepts to realistic challenges
+- Educational level: Bridge theoretical knowledge with practical implementation
+- Industry relevance: Current and emerging applications in humanoid robotics
+
+## Guidelines
+1. Create scenarios based on real challenges in humanoid robotics
+2. Include technical, ethical, and practical considerations
+3. Provide sufficient context for meaningful analysis
+4. Connect to specific textbook concepts and modules
+5. Include multiple possible approaches or solutions
+6. Address implementation challenges and constraints
+7. Consider safety, reliability, and ethical implications
+
+## Input Format
+- Topic or concept to illustrate through scenario
+- Target audience (undergraduate/graduate/researcher)
+- Scenario complexity level (simple/intermediate/complex)
+- Specific application domain (industrial/service/research)
+- Learning objectives to address
+- Constraints or requirements to include
+
+## Output Format
+- Detailed scenario description with context
+- Technical challenges and requirements
+- Relevant textbook concepts and modules
+- Multiple approaches or solution paths
+- Implementation considerations
+- Potential obstacles and solutions
+- Ethical and safety considerations
+- Discussion questions and analysis points
+- Extension activities or projects
+
+## Scenario Categories
+- Technical Challenges: Control systems, perception, learning algorithms
+- Application Domains: Healthcare, manufacturing, service, research
+- System Integration: Combining multiple subsystems
+- Human-Robot Interaction: Social robotics, collaboration
+- Safety and Reliability: Ensuring safe robot operation
+- Ethical Considerations: Privacy, autonomy, societal impact
+- Performance Optimization: Efficiency, speed, accuracy trade-offs
+- Multi-Robot Systems: Coordination and communication
+
+## Quality Standards
+- Realistic and relevant to current industry
+- Technical accuracy and feasibility
+- Clear connection to textbook concepts
+- Appropriate complexity for target audience
+- Comprehensive consideration of factors
+- Educational value and learning outcomes
+- Inclusive design considerations
+- Ethical and safety awareness
+
+## Scenario Elements
+- Problem statement and context
+- Technical specifications and constraints
+- Available resources and tools
+- Success criteria and evaluation metrics
+- Stakeholder perspectives and requirements
+- Implementation timeline and phases
+- Risk assessment and mitigation
+- Ethical and societal implications
+- Future considerations and scalability

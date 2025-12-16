@@ -1,104 +1,195 @@
-# Implementation Plan: [FEATURE]
+# [FEATURE_NAME] Implementation Plan
 
-**Branch**: `[###-feature-name]` | **Date**: [DATE] | **Spec**: [link]
-**Input**: Feature specification from `/specs/[###-feature-name]/spec.md`
+## Version
+**Plan Version:** 1.0.0
+**Created:** [DATE_ISO]
+**Last Updated:** [DATE_ISO]
 
-**Note**: This template is filled in by the `/sp.plan` command. See `.specify/templates/commands/plan.md` for the execution workflow.
+## Feature Overview
+**Feature:** [FEATURE_NAME]
+**Module Alignment:** [MODULE_NAME] (One of: Introduction to Physical AI & Embodied Intelligence, The Robotic Nervous System (ROS 2), The Digital Twin, The AI-Robot Brain (NVIDIA Isaac), Vision-Language-Action (VLA), Capstone: Autonomous Humanoid Robot)
+**Dependencies:** [LIST_DEPENDENCIES]
 
-## Summary
+## Constitutional Alignment
+This plan aligns with the following constitutional principles:
+- PRINCIPLE_1: Technical Excellence and Accuracy
+- PRINCIPLE_2: Educational Pedagogy
+- PRINCIPLE_3: Accessibility and Inclusion
+- PRINCIPLE_4: Practical Application
+- PRINCIPLE_7: Module-Based Structure
+- PRINCIPLE_8: Citation and Reference Standards
 
-[Extract from feature spec: primary requirement + technical approach from research]
+## Scope and Requirements
 
-## Technical Context
+### In Scope
+- [Define specific features to be implemented]
+- [Specify technical requirements and constraints]
+- [Identify module-specific requirements]
 
-<!--
-  ACTION REQUIRED: Replace the content in this section with the technical details
-  for the project. The structure here is presented in advisory capacity to guide
-  the iteration process.
--->
+### Out of Scope
+- [Define features explicitly excluded]
+- [Identify limitations and boundaries]
 
-**Language/Version**: [e.g., Python 3.11, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION]  
-**Primary Dependencies**: [e.g., FastAPI, UIKit, LLVM or NEEDS CLARIFICATION]  
-**Storage**: [if applicable, e.g., PostgreSQL, CoreData, files or N/A]  
-**Testing**: [e.g., pytest, XCTest, cargo test or NEEDS CLARIFICATION]  
-**Target Platform**: [e.g., Linux server, iOS 15+, WASM or NEEDS CLARIFICATION]
-**Project Type**: [single/web/mobile - determines source structure]  
-**Performance Goals**: [domain-specific, e.g., 1000 req/s, 10k lines/sec, 60 fps or NEEDS CLARIFICATION]  
-**Constraints**: [domain-specific, e.g., <200ms p95, <100MB memory, offline-capable or NEEDS CLARIFICATION]  
-**Scale/Scope**: [domain-specific, e.g., 10k users, 1M LOC, 50 screens or NEEDS CLARIFICATION]
+### External Dependencies
+- [List systems, services, or teams dependencies]
+- [Specify ownership and integration points]
 
-## Constitution Check
+## Key Decisions and Rationale
 
-*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
+### Options Considered
+- [Option 1]: [Description and trade-offs]
+- [Option 2]: [Description and trade-offs]
+- [Option 3]: [Description and trade-offs]
 
-[Gates determined based on constitution file]
+### Selected Approach
+**Decision:** [Selected option]
+**Rationale:** [Justification for the decision]
+**Trade-offs:** [Acknowledge any compromises]
 
-## Project Structure
+### Principles
+- [Measurable principle 1]
+- [Measurable principle 2]
+- [Ensure reversibility where possible]
+- [Smallest viable change]
 
-### Documentation (this feature)
+## Implementation Strategy
 
-```text
-specs/[###-feature]/
-├── plan.md              # This file (/sp.plan command output)
-├── research.md          # Phase 0 output (/sp.plan command)
-├── data-model.md        # Phase 1 output (/sp.plan command)
-├── quickstart.md        # Phase 1 output (/sp.plan command)
-├── contracts/           # Phase 1 output (/sp.plan command)
-└── tasks.md             # Phase 2 output (/sp.tasks command - NOT created by /sp.plan)
-```
+### Phase 1: Foundation
+- [ ] [Task 1]
+- [ ] [Task 2]
+- [ ] [Task 3]
 
-### Source Code (repository root)
-<!--
-  ACTION REQUIRED: Replace the placeholder tree below with the concrete layout
-  for this feature. Delete unused options and expand the chosen structure with
-  real paths (e.g., apps/admin, packages/something). The delivered plan must
-  not include Option labels.
--->
+### Phase 2: Core Implementation
+- [ ] [Task 4]
+- [ ] [Task 5]
+- [ ] [Task 6]
 
-```text
-# [REMOVE IF UNUSED] Option 1: Single project (DEFAULT)
-src/
-├── models/
-├── services/
-├── cli/
-└── lib/
+### Phase 3: Integration and Testing
+- [ ] [Task 7]
+- [ ] [Task 8]
+- [ ] [Task 9]
 
-tests/
-├── contract/
-├── integration/
-└── unit/
+## Interfaces and API Contracts
 
-# [REMOVE IF UNUSED] Option 2: Web application (when "frontend" + "backend" detected)
-backend/
-├── src/
-│   ├── models/
-│   ├── services/
-│   └── api/
-└── tests/
+### Public APIs
+**Input:** [Specify input format, types, validation rules]
+**Output:** [Specify output format, types, success/failure cases]
+**Errors:** [Define error types and status codes]
 
-frontend/
-├── src/
-│   ├── components/
-│   ├── pages/
-│   └── services/
-└── tests/
+### Versioning Strategy
+[Specify versioning approach for APIs, data formats, etc.]
 
-# [REMOVE IF UNUSED] Option 3: Mobile + API (when "iOS/Android" detected)
-api/
-└── [same as backend above]
+### Implementation Requirements
+- **Idempotency:** [Specify which operations are idempotent]
+- **Timeouts:** [Define timeout values for operations]
+- **Retries:** [Specify retry logic and limits]
 
-ios/ or android/
-└── [platform-specific structure: feature modules, UI flows, platform tests]
-```
+### Error Taxonomy
+- **[ERROR_CODE_1]:** [Description and HTTP status code]
+- **[ERROR_CODE_2]:** [Description and HTTP status code]
+- **[ERROR_CODE_3]:** [Description and HTTP status code]
 
-**Structure Decision**: [Document the selected structure and reference the real
-directories captured above]
+## Non-Functional Requirements (NFRs) and Budgets
 
-## Complexity Tracking
+### Performance
+- **[METRIC_1]:** [Target value] (e.g., p95 latency < 100ms)
+- **[METRIC_2]:** [Target value] (e.g., throughput of 1000 req/s)
+- **[METRIC_3]:** [Target value] (e.g., max memory usage < 512MB)
 
-> **Fill ONLY if Constitution Check has violations that must be justified**
+### Reliability
+- **SLO:** [Define Service Level Objective]
+- **Error Budget:** [Specify acceptable error rate]
+- **Degradation Strategy:** [Define graceful degradation approach]
 
-| Violation | Why Needed | Simpler Alternative Rejected Because |
-|-----------|------------|-------------------------------------|
-| [e.g., 4th project] | [current need] | [why 3 projects insufficient] |
-| [e.g., Repository pattern] | [specific problem] | [why direct DB access insufficient] |
+### Security
+- **AuthN/AuthZ:** [Specify authentication and authorization requirements]
+- **Data Handling:** [Define data privacy and security requirements]
+- **Secrets Management:** [Specify secret storage and access patterns]
+- **Auditing:** [Define audit logging requirements]
+
+### Cost
+- **Unit Economics:** [Define cost per operation, storage, etc.]
+- **Resource Budget:** [Specify compute, storage, network limits]
+
+## Data Management and Migration
+
+### Source of Truth
+[Specify primary data store and authority]
+
+### Schema Evolution
+[Define approach for schema changes and backward compatibility]
+
+### Migration Strategy
+- **Forward Migration:** [Steps to move to new schema]
+- **Rollback Plan:** [Steps to revert if needed]
+- **Data Validation:** [How to verify data integrity]
+
+### Data Retention
+[Specify data lifecycle and retention policies]
+
+## Operational Readiness
+
+### Observability
+- **Logs:** [Specify logging requirements and formats]
+- **Metrics:** [Define key metrics to track]
+- **Traces:** [Specify distributed tracing approach]
+
+### Alerting
+- **Critical Thresholds:** [Define alerting thresholds]
+- **On-call Ownership:** [Specify responsible team/person]
+
+### Runbooks
+- **Common Tasks:** [List of routine operations]
+- **Troubleshooting:** [Common issues and solutions]
+- **Emergency Procedures:** [Critical incident response]
+
+### Deployment and Rollback
+- **Deployment Strategy:** [Blue-green, canary, etc.]
+- **Rollback Procedure:** [Steps to revert deployment]
+- **Feature Flags:** [Specify toggle configuration]
+
+## Risk Analysis and Mitigation
+
+### Top 3 Risks
+1. **[RISK_1]:** [Description, probability, impact]
+   - **Mitigation:** [Specific mitigation strategy]
+   - **Blast Radius:** [Scope of potential impact]
+   - **Kill Switch:** [How to stop/limit impact]
+
+2. **[RISK_2]:** [Description, probability, impact]
+   - **Mitigation:** [Specific mitigation strategy]
+   - **Blast Radius:** [Scope of potential impact]
+   - **Guardrails:** [Preventive controls]
+
+3. **[RISK_3]:** [Description, probability, impact]
+   - **Mitigation:** [Specific mitigation strategy]
+   - **Blast Radius:** [Scope of potential impact]
+   - **Monitoring:** [How to detect issues early]
+
+## Evaluation and Validation
+
+### Definition of Done
+- [ ] [Technical requirement 1]
+- [ ] [Technical requirement 2]
+- [ ] [Testing requirement 1]
+- [ ] [Documentation requirement 1]
+- [ ] [Security requirement 1]
+
+### Output Validation
+- **Format Validation:** [Specify format and structure checks]
+- **Requirements Validation:** [How to verify requirements are met]
+- **Safety Validation:** [How to ensure safe operation]
+
+## Architectural Decision Record (ADR)
+**Decision:** [Brief description of key architectural decision]
+**Rationale:** [Reasoning behind the decision]
+**Trade-offs:** [Considered alternatives and their trade-offs]
+**Status:** [Accepted/Superseded/Discarded]
+
+## Next Steps
+- [ ] [Immediate action item 1]
+- [ ] [Immediate action item 2]
+- [ ] [Follow-up activity 1]
+
+---
+*This plan aligns with the Physical AI & Humanoid Robotics: Embodied Intelligence in the Real World project constitution and follows the established governance procedures.*

@@ -18,6 +18,15 @@ const sidebars = {
         'modules/module-1-ros2/chapter-02-comms',
         'modules/module-1-ros2/chapter-03-urdf',
         'modules/module-1-ros2/chapter-04-ai-bridge',
+        'modules/module-1-ros2/chapter-05-sensorimotor-learning',
+        {
+          type: 'category',
+          label: 'Sensorimotor Learning Resources',
+          items: [
+            'modules/module-1-ros2/exercises-sensorimotor',
+            'modules/module-1-ros2/diagrams-sensorimotor',
+          ],
+        },
       ],
     },
     {

@@ -1,0 +1,61 @@
+# Exercise Creator Skill
+
+## Purpose
+Creates educational exercises and problems for Physical AI and Humanoid Robotics textbook modules.
+
+## Context
+- Educational levels: Undergraduate, graduate, researcher
+- Exercise types: Theoretical, computational, implementation, research-oriented
+- Integration: Links to textbook concepts and provides progressive difficulty
+- Assessment: Clear evaluation criteria and expected outcomes
+
+## Guidelines
+1. Create exercises that reinforce key concepts from the textbook
+2. Provide multiple difficulty levels within each module
+3. Include both theoretical and practical components
+4. Suggest tools, datasets, or simulation environments for implementation
+5. Provide hints and guidance for complex problems
+6. Include evaluation criteria and expected outcomes
+7. Link exercises to real-world applications in humanoid robotics
+
+## Input Format
+- Topic or concept from the textbook
+- Target difficulty level (basic/intermediate/advanced)
+- Exercise type (theoretical/computational/implementation/research)
+- Time allocation (short/medium/long assignment)
+- Required tools or prerequisites
+
+## Output Format
+- Clear problem statement
+- Learning objectives for the exercise
+- Required materials or tools
+- Step-by-step instructions
+- Expected outcomes or deliverables
+- Evaluation rubric
+- Hints and additional resources
+- Extension problems for advanced students
+
+## Exercise Categories
+- Conceptual Understanding: Explain, compare, analyze Physical AI concepts
+- Mathematical Derivation: Prove theorems, derive equations, analyze algorithms
+- Implementation: Code solutions, simulations, experiments
+- Analysis: Evaluate research papers, compare methods, analyze results
+- Design: Create robot behaviors, control systems, learning algorithms
+- Research: Literature review, proposal, experimental design
+
+## Quality Standards
+- Exercises must be technically accurate and solvable
+- Difficulty should be clearly indicated
+- Solutions should be provided for instructors
+- Exercises should promote critical thinking
+- Real-world relevance should be clear
+- Include accessibility considerations
+- Align with learning objectives of the textbook
+
+## Assessment Criteria
+- Technical correctness of solutions
+- Clarity of problem statement
+- Appropriate level of challenge
+- Educational value and learning outcomes
+- Real-world applicability
+- Diversity of problem types

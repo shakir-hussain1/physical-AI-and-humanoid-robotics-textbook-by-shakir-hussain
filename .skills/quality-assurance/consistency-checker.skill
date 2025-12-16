@@ -1,0 +1,66 @@
+# Consistency Checker Skill
+
+## Purpose
+Ensures consistency in terminology, style, notation, and presentation throughout the Physical AI and Humanoid Robotics textbook.
+
+## Context
+- Content types: Text explanations, code examples, diagrams, exercises
+- Consistency areas: Terminology, mathematical notation, formatting, style
+- Quality standards: Academic rigor, accessibility, pedagogical effectiveness
+- Integration: Automated checks with manual verification for complex issues
+
+## Guidelines
+1. Verify consistent use of terminology across all modules
+2. Check mathematical notation consistency and clarity
+3. Ensure formatting consistency (headings, lists, code blocks, etc.)
+4. Validate style consistency (tone, voice, technical depth)
+5. Verify consistent referencing and citation style
+6. Check for consistent use of diagrams and visual elements
+7. Ensure accessibility standards are maintained throughout
+
+## Input Format
+- Content to check (text, code, diagram, exercise, etc.)
+- Reference standards (existing terminology list, style guide, etc.)
+- Specific areas to focus on (terminology, notation, formatting, etc.)
+- Module or section context
+
+## Output Format
+- List of consistency issues found
+- Specific locations of inconsistencies
+- Recommended corrections
+- Severity level (critical/high/medium/low)
+- Suggested standard to follow
+- Links to relevant style guides or standards
+
+## Consistency Areas to Check
+- Terminology: Ensure the same concept is referred to consistently
+- Notation: Verify mathematical symbols and programming conventions
+- Formatting: Check headings, lists, code blocks, etc.
+- Style: Maintain consistent tone and technical depth
+- Cross-references: Ensure internal links and references are consistent
+- Visual elements: Verify consistent diagram styles and color schemes
+- Code examples: Ensure consistent programming conventions
+
+## Quality Standards
+- Maintain academic rigor throughout the textbook
+- Ensure accessibility compliance (WCAG 2.1 AA)
+- Follow consistent pedagogical approach
+- Maintain technical accuracy
+- Ensure visual consistency
+- Verify cross-reference integrity
+- Confirm consistent citation style
+
+## Automated Checks
+- Terminology database matching
+- Notation pattern recognition
+- Formatting rule validation
+- Cross-reference verification
+- Accessibility checklist validation
+- Style guide compliance checking
+
+## Manual Verification Areas
+- Complex conceptual consistency
+- Context-appropriate terminology
+- Pedagogical effectiveness
+- Technical accuracy verification
+- Subjective style decisions

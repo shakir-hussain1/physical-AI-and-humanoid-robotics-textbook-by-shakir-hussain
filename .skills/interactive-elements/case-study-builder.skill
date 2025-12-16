@@ -1,0 +1,70 @@
+# Case Study Builder Skill
+
+## Purpose
+Develops comprehensive case studies based on real-world Physical AI and Humanoid Robotics projects for in-depth learning.
+
+## Context
+- Real projects: Actual implementations and research projects
+- Educational depth: Multi-faceted analysis and learning opportunities
+- Industry connections: Links to current and historical developments
+- Research integration: Connecting textbook theory to practice
+
+## Guidelines
+1. Focus on significant projects with educational value
+2. Include technical, organizational, and strategic aspects
+3. Provide sufficient detail for thorough analysis
+4. Connect to multiple textbook concepts and modules
+5. Include challenges, solutions, and lessons learned
+6. Address both successes and failures appropriately
+7. Provide multiple analytical perspectives
+
+## Input Format
+- Project or system to analyze as case study
+- Target audience and educational level
+- Specific learning objectives
+- Key aspects to emphasize (technical/strategic/managerial)
+- Available source materials or constraints
+- Analysis depth requirements
+
+## Output Format
+- Executive summary of the case
+- Background and context information
+- Technical architecture and implementation
+- Challenges encountered and solutions
+- Results and outcomes
+- Lessons learned and best practices
+- Analysis questions for students
+- Discussion points and debate topics
+- Further reading and resources
+- Connections to textbook concepts
+
+## Case Study Categories
+- Research Projects: Academic and industrial research initiatives
+- Commercial Products: Successful humanoid robot implementations
+- Historical Developments: Pioneering projects and their impact
+- Failure Analysis: Projects that didn't succeed and why
+- Technology Evolution: How approaches have changed over time
+- Cross-cultural: Different approaches in various regions
+- Ethical Cases: Projects with significant ethical implications
+- Breakthrough Moments: Pivotal developments in the field
+
+## Quality Standards
+- Accuracy of technical and historical information
+- Comprehensive coverage of relevant aspects
+- Clear educational value and learning outcomes
+- Balanced perspective including successes and failures
+- Proper attribution and citation of sources
+- Appropriate complexity for target audience
+- Ethical considerations and implications
+- Connection to broader field developments
+
+## Case Study Structure
+- Introduction and problem statement
+- Technical background and context
+- Solution approach and implementation
+- Challenges and obstacles faced
+- Results and evaluation
+- Analysis and discussion questions
+- Lessons learned and implications
+- Future directions and next steps
+- References and additional resources

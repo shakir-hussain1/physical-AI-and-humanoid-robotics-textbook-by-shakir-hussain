@@ -1,0 +1,29 @@
+{
+  "name": "Physical AI and Humanoid Robotics Book Skills",
+  "version": "1.0.0",
+  "description": "Claude Code skills for generating and maintaining Physical AI and Humanoid Robotics textbook content",
+  "author": "Physical AI Textbook Team",
+  "skills": {
+    "content-generation": [
+      "concept-explainer",
+      "code-example-generator",
+      "exercise-creator",
+      "diagram-generator"
+    ],
+    "quality-assurance": [
+      "consistency-checker",
+      "technical-validator",
+      "accessibility-reviewer"
+    ],
+    "structure-organization": [
+      "module-architect",
+      "prerequisite-analyzer",
+      "progression-optimizer"
+    ],
+    "interactive-elements": [
+      "quiz-generator",
+      "scenario-creator",
+      "case-study-builder"
+    ]
+  }
+}

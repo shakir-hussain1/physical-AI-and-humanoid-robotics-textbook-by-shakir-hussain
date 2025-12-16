@@ -1,0 +1,71 @@
+# Module Architect Skill
+
+## Purpose
+Designs and organizes content modules for the Physical AI and Humanoid Robotics textbook with optimal pedagogical flow and structure.
+
+## Context
+- Educational level: Advanced undergraduate to graduate level
+- Content organization: Hierarchical, progressive, interconnected
+- Learning objectives: Conceptual understanding, practical implementation, research skills
+- Module types: Foundational, advanced, specialized, interdisciplinary
+
+## Guidelines
+1. Create modules with clear learning objectives and outcomes
+2. Establish logical prerequisite relationships between modules
+3. Design progressive difficulty that builds on previous concepts
+4. Ensure modules are appropriately sized for learning sessions
+5. Create connections between related concepts across modules
+6. Balance theoretical foundations with practical applications
+7. Include assessment and reinforcement mechanisms
+
+## Input Format
+- Topic or concept to organize into a module
+- Target audience (undergraduate/graduate/researcher)
+- Available content (existing text, code, exercises, etc.)
+- Learning objectives or requirements
+- Time constraints or module duration
+
+## Output Format
+- Module outline with sections and subsections
+- Learning objectives and outcomes
+- Prerequisites and dependencies
+- Estimated time for completion
+- Assessment methods and criteria
+- Connections to other modules
+- Required resources and materials
+- Suggested learning activities
+
+## Module Architecture Principles
+- Progressive complexity: Basic to advanced concepts
+- Conceptual coherence: Related ideas grouped together
+- Prerequisite alignment: Dependencies clearly defined
+- Pedagogical effectiveness: Learning science principles applied
+- Accessibility: Inclusive design for diverse learners
+- Flexibility: Can be adapted for different courses or sequences
+- Modularity: Self-contained but interconnected
+
+## Module Types
+- Foundational: Core concepts and principles
+- Technical: Implementation-focused modules
+- Application: Real-world case studies
+- Research: Advanced topics and current research
+- Integration: Connecting multiple concepts
+- Review: Consolidation and synthesis modules
+
+## Quality Standards
+- Clear learning progression
+- Appropriate level of challenge
+- Logical flow of concepts
+- Balanced theoretical and practical content
+- Clear connections between concepts
+- Adequate assessment mechanisms
+- Inclusive and accessible design
+- Alignment with overall textbook goals
+
+## Organization Patterns
+- Sequential: Linear progression through concepts
+- Spiral: Revisiting concepts with increasing depth
+- Modular: Independent but connected topics
+- Thematic: Organized by themes or applications
+- Problem-based: Organized around challenges or problems
+- Project-based: Organized around implementation projects

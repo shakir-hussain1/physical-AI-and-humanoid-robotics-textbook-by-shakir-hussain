@@ -1,218 +1,85 @@
-<!--
-=============================================================================
-SYNC IMPACT REPORT
-=============================================================================
-Version Change: 0.0.0 → 1.0.0 (initial constitution)
-Bump Rationale: MAJOR - First ratification of project governance
-
-Modified Principles: N/A (new)
-
-Added Sections:
-- Core Principles (6 principles)
-- Documentation & Content Standards
-- Development & Deployment Workflow
-- Governance
-
-Removed Sections: None (initial constitution)
-
-Templates Requiring Updates:
-- .specify/templates/plan-template.md ✅ No changes needed - Constitution Check
-  section references this file generically
-- .specify/templates/spec-template.md ✅ No changes needed - template is
-  technology-agnostic
-- .specify/templates/tasks-template.md ✅ No changes needed - task phases align
-  with constitution principles
-- .specify/templates/phr-template.prompt.md ✅ No changes needed
-
+<!-- Sync Impact Report:
+Version change: 1.0.0 → 1.1.0
+Modified principles: Updated all to align with Physical AI & Humanoid Robotics curriculum requirements
+Added sections: Module-based structure, citation requirements, technical focus areas
+Templates requiring updates: ✅ Updated all templates to reflect new module structure
 Follow-up TODOs: None
-=============================================================================
 -->
+# Physical AI & Humanoid Robotics: Embodied Intelligence in the Real World - Project Constitution
 
-# Physical AI and Humanoid Robotics Constitution
+## Version
+**Constitution Version:** 1.1.0
+**Ratification Date:** 2025-12-16
+**Last Amended Date:** 2025-12-16
 
-## Core Principles
+## Mission
+To create a comprehensive, authoritative, and accessible textbook on Physical AI and Humanoid Robotics that serves students, researchers, and practitioners by providing both theoretical foundations and practical implementations across six core modules: Introduction to Physical AI & Embodied Intelligence, The Robotic Nervous System (ROS 2), The Digital Twin, The AI-Robot Brain (NVIDIA Isaac), Vision-Language-Action (VLA), and a Capstone Autonomous Humanoid Robot project.
 
-### I. Technical Accuracy and Correctness
+## Principles
 
-All content MUST be technically accurate, especially regarding robotics frameworks
-and platforms:
+### PRINCIPLE_1: Technical Excellence and Accuracy
+All content must meet the highest standards of technical accuracy in Physical AI, robotics, and humanoid systems. This includes mathematical correctness, implementation feasibility using ROS 2, NVIDIA Isaac, Gazebo, and Unity, and alignment with peer-reviewed research. All AI-generated content must undergo rigorous technical validation before inclusion.
 
-- **ROS 2**: Nodes, topics, services, actions, and rclpy pipelines MUST follow
-  official ROS 2 Jazzy/Humble documentation and best practices
-- **Simulation**: Gazebo, Unity, and NVIDIA Isaac Sim configurations MUST be
-  runnable and produce consistent, reproducible results
-- **Standards**: URDF, SDF, and sensor models MUST conform to official schemas
-- **Navigation**: Nav2 path planning and VSLAM implementations MUST use
-  documented APIs and parameters
+### PRINCIPLE_2: Educational Pedagogy
+Content must follow evidence-based educational practices including appropriate difficulty progression across the six core modules, clear learning objectives for each module, and multiple modalities for different learning styles. AI-assisted content generation must enhance, not replace, pedagogical effectiveness with hands-on implementation focus.
 
-**Rationale**: Robotics software involves safety-critical systems. Inaccurate
-instructions can cause hardware damage, unsafe robot behavior, or student
-frustration from non-working examples.
+### PRINCIPLE_3: Accessibility and Inclusion
+All materials must be accessible to diverse learners, including those with disabilities. This encompasses WCAG 2.1 AA compliance for digital content, inclusive language, and multiple pathways for different backgrounds and learning preferences. Content must be accessible to both beginners and advanced robotics practitioners.
 
-### II. Pedagogical Clarity
+### PRINCIPLE_4: Practical Application
+The textbook must bridge theoretical concepts with practical implementation using real-world tools and frameworks: ROS 2 (nodes, topics, services, actions, rclpy), URDF for humanoid robots, Gazebo physics simulation, Unity visualization, NVIDIA Isaac Sim, Isaac ROS, Nav2, and Vision-Language-Action systems. Each module must include hands-on exercises and projects.
 
-Content MUST be written for university-level learners in AI, robotics, and
-physical computing:
+### PRINCIPLE_5: Ethical Responsibility
+All content must consider the ethical implications of humanoid robotics and AI, including safety in physical systems, privacy in perception systems, societal impact of autonomous robots, and responsible development practices. AI-assisted content generation must reflect these ethical considerations, especially for autonomous humanoid systems.
 
-- **Reading level**: Clear for technical learners (grade 10–12 comprehension)
-- **Progressive complexity**: Concepts MUST build from fundamentals to advanced
-  topics following the 13-week curriculum structure
-- **Worked examples**: Each concept MUST include concrete, annotated code
-  examples that demonstrate the principle
-- **Learning objectives**: Each module and chapter MUST state explicit learning
-  outcomes
+### PRINCIPLE_6: Collaborative Intelligence
+The project embraces human-AI collaboration, where AI tools enhance human creativity and expertise rather than replace it. Claude Code subagents and skills must augment human authorship while maintaining human oversight, particularly for complex technical content involving ROS 2, NVIDIA Isaac, and humanoid robotics implementations.
 
-**Rationale**: A textbook's primary purpose is education. Content that is
-technically correct but pedagogically unclear fails its core mission.
+### PRINCIPLE_7: Module-Based Structure
+Content must be organized around the six core modules with clear progression from Introduction to Physical AI & Embodied Intelligence through to the Capstone Autonomous Humanoid Robot project. Each module must build upon previous modules while maintaining conceptual coherence and technical continuity.
 
-### III. Modularity and Structure
-
-Content MUST be cleanly organized into modules, chapters, and weekly learning
-paths:
-
-- **Module independence**: Each module (ROS 2, Simulation, Isaac, VLA) MUST be
-  self-contained with clear prerequisites stated
-- **Chapter structure**: Chapters MUST follow: Introduction → Core Concepts →
-  Hands-on Exercises → Summary → Exercises → References
-- **Weekly alignment**: All content MUST map to the 13-week academic quarter
-  schedule
-- **Navigation**: Docusaurus sidebar MUST provide logical progression and
-  cross-references
-
-**Rationale**: Modular structure enables instructors to adapt content to their
-curricula and allows students to focus on specific topics.
-
-### IV. Reproducibility
-
-All technical steps MUST be executable by students:
-
-- **Environment specifications**: All ROS 2, Gazebo, Isaac Sim, and Unity setups
-  MUST include exact version requirements and installation commands
-- **Code completeness**: No pseudo-code or partial snippets; all code MUST be
-  copy-paste runnable
-- **Asset availability**: All URDF models, meshes, and configuration files MUST
-  be provided or clearly linked
-- **Tested workflows**: Every tutorial MUST be validated on target platforms
-  (Ubuntu 22.04, Windows 11 with WSL2 where applicable)
-
-**Rationale**: Students learn robotics by doing. Non-reproducible examples waste
-student time and undermine confidence in the material.
-
-### V. Consistency
-
-Definitions, diagrams, terminology, and model names MUST remain uniform:
-
-- **Glossary authority**: All terms MUST be defined in the glossary and used
-  consistently across chapters
-- **Naming conventions**: Robot models, ROS node names, topic names MUST follow
-  a documented naming scheme
-- **Diagram style**: All Mermaid/Markdown diagrams MUST use consistent styling
-  (colors, shapes, arrows)
-- **Version alignment**: Framework versions (ROS 2 Jazzy, Gazebo Harmonic,
-  Isaac Sim 4.0+) MUST be consistent throughout
-
-**Rationale**: Inconsistent terminology confuses learners and makes the textbook
-appear unprofessional.
-
-### VI. AI-Native Writing Standards
-
-Content produced using Spec-Kit Plus MUST be structured, traceable, and
-version-controlled:
-
-- **Feature specs**: Each major content piece MUST have a corresponding spec
-  under `specs/<feature>/`
-- **Prompt history**: All significant AI-assisted content generation MUST be
-  logged via PHR under `history/prompts/`
-- **Architectural decisions**: Technology choices (RAG stack, deployment
-  platform) MUST be documented via ADRs
-- **Original content**: All text MUST be originally generated; no plagiarism
-
-**Rationale**: Traceability enables content auditing, collaborative refinement,
-and demonstrates responsible AI-assisted authoring.
-
-## Documentation & Content Standards
-
-### Book Structure Requirements
-
-The textbook MUST include:
-
-- **Preface**: Author introduction, how to use this book, prerequisites
-- **Module chapters**: 4 core modules plus capstone per the content outline
-- **Weekly curriculum**: 13-week schedule with clear deliverables
-- **Assignments**: Graded exercises aligned with learning objectives
-- **Capstone walkthrough**: Complete autonomous humanoid robot system
-- **Glossary**: Comprehensive terminology reference
-- **Appendix**: Installation guides for ROS 2, Gazebo, Isaac Sim, Unity
-
-### Technical Documentation Rules
-
-- **Code blocks**: Use syntax-highlighted fenced code blocks with language tags
-- **Diagrams**: Prefer Mermaid for architecture and flow diagrams
-- **Commands**: All shell commands MUST specify the working directory and shell
-- **File paths**: Use relative paths from project root; indicate OS variations
-- **Error handling**: Document common errors and troubleshooting steps
-
-### RAG Chatbot Requirements
-
-The integrated chatbot MUST adhere to:
-
-- **Backend**: FastAPI with async endpoints
-- **Database**: Neon Serverless PostgreSQL for user sessions/metadata
-- **Vector store**: Qdrant Cloud Free Tier for embeddings
-- **Embeddings/LLM**: OpenAI Agents/ChatKit SDKs
-- **Grounding**: Answers MUST be sourced strictly from book content
-- **Citation**: MUST highlight or retrieve exact text snippets used
-- **Modes**: Support both global search and user-selected text querying
-- **UI integration**: MUST be embedded within the Docusaurus site
-
-## Development & Deployment Workflow
-
-### Content Development
-
-1. **Spec first**: Create feature spec before writing content
-2. **Plan review**: Technical approach reviewed before implementation
-3. **Incremental commits**: Commit logical units of work with meaningful messages
-4. **Peer review**: Major content changes require review before merge
-
-### Build and Deployment
-
-- **Framework**: Docusaurus static site generator
-- **Hosting**: GitHub Pages from `gh-pages` branch
-- **CI/CD**: GitHub Actions for build validation and deployment
-- **Preview**: Pull request previews for content review
-
-### Quality Gates
-
-- **Markdown linting**: All `.md` files MUST pass linting rules
-- **Link validation**: All internal and external links MUST be verified
-- **Code testing**: All code examples MUST be syntax-checked
-- **Build success**: Docusaurus build MUST complete without errors
+### PRINCIPLE_8: Citation and Reference Standards
+All content must include proper academic citations and references. The book must conclude with a comprehensive reference list that includes peer-reviewed papers, technical documentation, API references, and authoritative sources for all tools and frameworks covered (ROS 2, NVIDIA Isaac, Gazebo, Unity, etc.).
 
 ## Governance
 
-### Authority
+### Amendment Procedure
+Changes to this constitution require:
+1. Proposal with rationale documented in a Prompt History Record (PHR)
+2. Review by project maintainers
+3. Consensus approval for minor changes or majority for major changes
+4. Update to all dependent artifacts as per consistency requirements
 
-This constitution supersedes all other practices for the Physical AI and
-Humanoid Robotics textbook project. Conflicts with external guidelines MUST be
-resolved in favor of this constitution.
+### Versioning Policy
+- MAJOR: Changes to fundamental principles, mission, or core module structure
+- MINOR: Addition of new governance mechanisms, principle expansions, or module additions
+- PATCH: Clarifications, corrections, or non-semantic improvements
 
-### Amendment Process
+### Compliance Review
+Quarterly reviews ensure project activities align with constitutional principles, with special attention to:
+- Module progression and technical continuity
+- Implementation of ROS 2, NVIDIA Isaac, and other core frameworks
+- Citation and reference accuracy
+- AI-assisted content quality and educational effectiveness
 
-1. Propose amendment via pull request modifying this file
-2. Document rationale and impact in PR description
-3. Require author (Shakir Hussain) approval for merge
-4. Update `LAST_AMENDED_DATE` and increment version per semantic rules
+## AI-Assisted Development Framework
 
-### Version Semantics
+### Human-in-the-Loop Requirements
+- All AI-generated content requires human review and approval by robotics domain experts
+- Technical validation must be performed by practitioners experienced with ROS 2, NVIDIA Isaac, and humanoid robotics
+- Pedagogical effectiveness must be verified by education specialists familiar with robotics curriculum
 
-- **MAJOR**: Backward-incompatible principle changes or removals
-- **MINOR**: New principles, sections, or materially expanded guidance
-- **PATCH**: Clarifications, typos, non-semantic refinements
+### Quality Assurance Protocols
+- Automated consistency checking using Claude Code subagents
+- Technical validation through multiple verification methods including simulation and implementation testing
+- Accessibility review for all generated content
+- Module coherence validation to ensure progression from basic concepts to capstone project
 
-### Compliance
+### Skill and Subagent Governance
+- All Claude Code skills must align with constitutional principles and module-based structure
+- Regular auditing of AI-generated content quality with focus on technical accuracy
+- Continuous improvement of subagent performance and accuracy for robotics-specific content
+- Specialized validation for code examples, URDF files, simulation environments, and AI pipelines
 
-- All PRs MUST verify compliance with these principles
-- Content reviewers MUST check Constitution alignment
-- Violations MUST be documented and resolved before merge
-
-**Version**: 1.0.0 | **Ratified**: 2025-12-07 | **Last Amended**: 2025-12-07
+---
+*This constitution serves as the foundational governance document for the Physical AI & Humanoid Robotics: Embodied Intelligence in the Real World textbook project, ensuring alignment between human expertise and AI-assisted capabilities while maintaining technical excellence across the six core modules.*

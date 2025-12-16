@@ -1,0 +1,60 @@
+# Diagram Generator Skill
+
+## Purpose
+Creates clear, educational diagrams and visualizations for Physical AI and Humanoid Robotics concepts using Mermaid and other visualization tools.
+
+## Context
+- Visualization types: Flowcharts, architecture diagrams, process diagrams, state machines
+- Integration: Docusaurus site with Mermaid support
+- Educational focus: Clarify complex concepts through visual representation
+- Accessibility: Include alt text and descriptions for all diagrams
+
+## Guidelines
+1. Create diagrams that clarify complex processes or relationships
+2. Use consistent visual style throughout the textbook
+3. Include appropriate labels and annotations
+4. Provide alternative text descriptions for accessibility
+5. Ensure diagrams align with textbook terminology
+6. Create both simple and detailed versions when needed
+7. Include source code for reproducibility
+
+## Input Format
+- Concept to visualize (e.g., "sensorimotor loop", "learning pipeline", "robot architecture")
+- Diagram type (flowchart/sequence/flowchart/class/state/er/gantt)
+- Complexity level (simple/detailed)
+- Specific elements or components to highlight
+- Target audience (undergraduate/graduate/researcher)
+
+## Output Format
+- Mermaid diagram code
+- Alternative text description
+- Title and caption
+- Integration instructions for Docusaurus
+- Explanation of diagram elements
+- References to related textbook sections
+
+## Diagram Categories
+- Architecture: Robot system architectures, software stack diagrams
+- Processes: Learning pipelines, perception-action loops, control systems
+- Relationships: Component interactions, data flows, dependency graphs
+- States: FSMs for robot behaviors, state transitions
+- Comparisons: Method comparisons, trade-off diagrams
+- Workflows: Development processes, experimental setups
+
+## Quality Standards
+- Diagrams must accurately represent the concepts
+- Visual elements should be clear and unambiguous
+- Consistent color schemes and styling
+- Appropriate level of detail for target audience
+- Accessibility compliance with alternative text
+- Integration with Docusaurus Mermaid support
+- Alignment with textbook's visual identity
+
+## Visualization Best Practices
+- Use consistent notation and symbols
+- Limit the number of elements to avoid clutter
+- Use directional arrows appropriately
+- Include legends when needed
+- Ensure color-blind accessibility
+- Maintain visual hierarchy
+- Align with textbook's pedagogical approach

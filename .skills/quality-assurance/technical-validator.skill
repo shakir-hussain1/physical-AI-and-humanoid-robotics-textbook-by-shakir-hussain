@@ -1,0 +1,68 @@
+# Technical Validator Skill
+
+## Purpose
+Validates the technical accuracy and correctness of content in the Physical AI and Humanoid Robotics textbook.
+
+## Context
+- Content types: Explanations, code examples, mathematical derivations, diagrams
+- Technical domains: Robotics, AI, machine learning, control systems, computer vision
+- Validation levels: Conceptual accuracy, mathematical correctness, implementation feasibility
+- Expertise areas: Physical AI, humanoid robotics, machine learning, control theory
+
+## Guidelines
+1. Verify mathematical derivations and equations are correct
+2. Validate code examples are technically accurate and runnable
+3. Confirm explanations align with current research and best practices
+4. Check that diagrams accurately represent the concepts described
+5. Ensure algorithms are correctly described and implemented
+6. Validate that hardware and software descriptions are accurate
+7. Verify citations and references are correct and relevant
+
+## Input Format
+- Content to validate (text, code, equation, diagram, etc.)
+- Technical domain or area of expertise needed
+- Specific validation requirements (mathematical/implementation/algorithmic)
+- Reference standards or authoritative sources
+- Complexity level
+
+## Output Format
+- Validation status (passed/failed/partial)
+- List of technical issues found
+- Severity level of each issue (critical/high/medium/low)
+- Detailed explanation of problems
+- Recommended corrections
+- References to authoritative sources
+- Confidence level in validation
+
+## Technical Domains to Validate
+- Machine Learning: Algorithms, implementations, theoretical foundations
+- Control Systems: Stability, convergence, implementation correctness
+- Computer Vision: Algorithms, techniques, accuracy of descriptions
+- Robotics: Kinematics, dynamics, control, perception
+- Physical AI: Embodiment principles, sensorimotor integration
+- Humanoid Robotics: Specific challenges and solutions
+- Simulation: Accuracy of models and environments
+
+## Validation Standards
+- Mathematical correctness and completeness
+- Implementation feasibility and accuracy
+- Alignment with peer-reviewed research
+- Consistency with established best practices
+- Accuracy of hardware and software descriptions
+- Proper attribution and citation of sources
+- Compliance with technical standards
+
+## Automated Validation Tools
+- Code execution and testing frameworks
+- Mathematical proof assistants
+- Unit test frameworks for code examples
+- Simulation validation tools
+- Citation verification systems
+
+## Manual Validation Areas
+- Complex theoretical concepts
+- Novel research contributions
+- Subjective technical decisions
+- Cutting-edge research validation
+- Interdisciplinary connections
+- Pedagogical appropriateness of technical content

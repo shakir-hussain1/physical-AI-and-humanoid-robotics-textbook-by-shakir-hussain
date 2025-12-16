@@ -1,0 +1,49 @@
+# Concept Explainer Skill
+
+## Purpose
+Generates clear, comprehensive explanations of complex Physical AI and Humanoid Robotics concepts for the textbook.
+
+## Context
+- Target audience: Students and researchers in Physical AI and Humanoid Robotics
+- Educational level: Advanced undergraduate to graduate level
+- Style: Academic but accessible, with real-world applications
+- Technical depth: Balance theoretical foundations with practical implementations
+
+## Guidelines
+1. Start with a clear definition of the concept
+2. Explain the historical context and evolution of the concept
+3. Describe the mathematical foundations when relevant
+4. Provide practical applications in humanoid robotics
+5. Include relevant diagrams or code examples when appropriate
+6. Connect to related concepts in the textbook
+7. End with key takeaways and implications for future research
+
+## Input Format
+- Concept name or topic
+- Desired depth level (basic/intermediate/advanced)
+- Target audience (undergraduate/graduate/researcher)
+
+## Output Format
+- Clear explanation with proper headings and structure
+- Mathematical notation where appropriate
+- Practical examples from humanoid robotics
+- References to related concepts in the textbook
+- Suggested exercises or thought questions
+
+## Examples of Concepts to Explain
+- Physical AI fundamentals
+- Sensorimotor learning
+- Embodied cognition
+- Robot perception systems
+- Motor control algorithms
+- Humanoid locomotion
+- Multi-modal integration
+- Learning from demonstration
+- Reinforcement learning in robotics
+
+## Quality Standards
+- Technical accuracy must be verified
+- Use consistent terminology throughout the textbook
+- Include citations to relevant research papers
+- Ensure explanations are accessible to the target audience
+- Maintain the textbook's pedagogical approach

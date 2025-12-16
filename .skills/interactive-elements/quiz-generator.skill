@@ -1,0 +1,72 @@
+# Quiz Generator Skill
+
+## Purpose
+Creates interactive quizzes and assessments for the Physical AI and Humanoid Robotics textbook to enhance learning and engagement.
+
+## Context
+- Assessment types: Knowledge check, comprehension, application, analysis
+- Learning objectives: Reinforce key concepts, assess understanding, provide feedback
+- Integration: Docusaurus-compatible interactive elements
+- Adaptive learning: Adjust difficulty based on performance
+
+## Guidelines
+1. Create questions that test different levels of understanding
+2. Include various question types (multiple choice, short answer, code completion)
+3. Provide immediate, constructive feedback
+4. Align with learning objectives of each module
+5. Include both theoretical and practical questions
+6. Ensure questions are technically accurate
+7. Create questions that promote critical thinking
+
+## Input Format
+- Topic or concept to assess
+- Question difficulty level (basic/intermediate/advanced)
+- Question type (multiple choice/short answer/code/essay)
+- Learning objective to target
+- Number of questions needed
+- Specific concepts or skills to assess
+
+## Output Format
+- Well-formatted quiz questions
+- Answer choices with correct answer indicated
+- Explanations for correct and incorrect answers
+- Difficulty level and learning objective alignment
+- Estimated time to complete
+- Feedback for each possible answer
+- Follow-up recommendations based on performance
+
+## Question Categories
+- Factual: Basic terminology and definitions
+- Conceptual: Understanding of principles and relationships
+- Application: Applying concepts to new situations
+- Analysis: Breaking down complex concepts
+- Synthesis: Combining concepts in new ways
+- Evaluation: Assessing and critiquing approaches
+- Implementation: Practical application and coding
+
+## Assessment Levels
+- Knowledge: Recall of basic facts and concepts
+- Comprehension: Understanding of concepts and principles
+- Application: Using concepts in new situations
+- Analysis: Breaking down complex information
+- Synthesis: Creating new combinations of ideas
+- Evaluation: Making judgments about concepts
+
+## Quality Standards
+- Questions must be technically accurate
+- Clear, unambiguous wording
+- Appropriate difficulty level
+- Constructive feedback for all answers
+- Alignment with learning objectives
+- Inclusive and unbiased language
+- Proper accessibility features
+- Diverse question types and formats
+
+## Adaptive Features
+- Difficulty adjustment based on performance
+- Personalized feedback and recommendations
+- Alternative questions for different learning styles
+- Spaced repetition of key concepts
+- Progressive complexity
+- Just-in-time remediation
+- Performance tracking and analytics

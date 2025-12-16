@@ -1,0 +1,75 @@
+# Accessibility Reviewer Skill
+
+## Purpose
+Reviews and ensures the Physical AI and Humanoid Robotics textbook meets accessibility standards for all learners.
+
+## Context
+- Target audience: Diverse learners with varying abilities and needs
+- Standards: WCAG 2.1 AA compliance for digital content
+- Content types: Text, code, diagrams, videos, interactive elements
+- Educational environment: Academic and professional settings
+
+## Guidelines
+1. Ensure all text content is readable and understandable
+2. Verify alternative text for all diagrams and visual elements
+3. Check that code examples are accessible to screen readers
+4. Validate that mathematical notation is properly marked up
+5. Ensure color contrast meets accessibility standards
+6. Verify keyboard navigation for interactive elements
+7. Confirm content is structured for assistive technologies
+
+## Input Format
+- Content to review (text, code, diagram, interactive element, etc.)
+- Content type (explanation, exercise, code example, diagram, etc.)
+- Specific accessibility concerns or requirements
+- Target user profile (visual impairment, motor limitations, etc.)
+
+## Output Format
+- Accessibility compliance status
+- List of accessibility issues found
+- Severity level (critical/high/medium/low)
+- Recommended corrections
+- WCAG 2.1 guidelines violated
+- Implementation suggestions
+- Priority for fixes
+
+## Accessibility Areas to Review
+- Text alternatives: Alt text for diagrams, images, and visualizations
+- Time-based media: Captions, transcripts for videos
+- Adaptable content: Responsive design, readable fonts
+- Distinguishable: Color contrast, visual cues beyond color
+- Keyboard accessible: All functionality via keyboard
+- Enough time: Adjustable time limits, content reading
+- Seizures: No flashing content that could trigger seizures
+- Navigable: Clear headings, focus indicators, skip links
+- Input modalities: Large touch targets, multiple input methods
+
+## Content-Specific Requirements
+- Code examples: Proper semantic markup, screen reader compatibility
+- Mathematical content: Proper MathML or accessible alternatives
+- Diagrams: Detailed descriptions and alternative formats
+- Tables: Proper headers and structure markup
+- Links: Descriptive text, clear purpose
+- Forms: Proper labels and error handling
+- Interactive elements: Accessible controls and feedback
+
+## WCAG 2.1 AA Compliance
+- Perceivable: Information presented in accessible ways
+- Operable: Interface components operable by all users
+- Understandable: Information and UI operation understandable
+- Robust: Content robust enough for various assistive technologies
+
+## Automated Testing Tools
+- HTML validation for semantic markup
+- Color contrast checkers
+- Screen reader simulation tools
+- Keyboard navigation testing
+- Link and form validation tools
+
+## Manual Testing Areas
+- Screen reader compatibility
+- Keyboard navigation flow
+- Complex diagram descriptions
+- Mathematical notation accessibility
+- Interactive element usability
+- Mobile accessibility

@@ -1,0 +1,55 @@
+# Code Example Generator Skill
+
+## Purpose
+Generates high-quality, educational code examples for Physical AI and Humanoid Robotics concepts.
+
+## Context
+- Programming languages: Python, C++, ROS (Robot Operating System)
+- Frameworks: PyTorch, TensorFlow, ROS/ROS2, Gazebo, Mujoco
+- Target audience: Students learning to implement Physical AI concepts
+- Educational focus: Clear, well-documented, production-ready code
+
+## Guidelines
+1. Provide complete, runnable code examples
+2. Include comprehensive comments explaining each step
+3. Follow best practices for robotics and AI code
+4. Include error handling and edge cases
+5. Add visualization or simulation components when relevant
+6. Reference relevant sections of the textbook
+7. Include performance considerations and optimization tips
+
+## Input Format
+- Concept to implement (e.g., "inverse kinematics", "SLAM", "reinforcement learning")
+- Complexity level (simple/intermediate/advanced)
+- Target framework (PyTorch/TensorFlow/ROS/ROS2)
+- Specific requirements or constraints
+
+## Output Format
+- Complete code with imports, main function, and execution
+- Inline documentation and comments
+- Unit tests for critical functions
+- Example usage and expected output
+- Performance benchmarks if applicable
+- References to relevant research papers
+
+## Code Standards
+- Follow PEP 8 for Python, Google C++ style guide for C++
+- Use meaningful variable names that match textbook terminology
+- Include type hints where appropriate
+- Add proper error handling and logging
+- Include comprehensive docstrings
+- Use consistent naming conventions throughout examples
+
+## Example Categories
+- Perception: Computer vision, sensor fusion, SLAM
+- Control: Motor control, trajectory planning, feedback control
+- Learning: Imitation learning, reinforcement learning, neural networks
+- Simulation: Physics simulation, robot models, environment creation
+- Hardware interfaces: Sensor drivers, actuator control, real-time systems
+
+## Quality Assurance
+- Code must be tested and verified to run
+- Follow security best practices
+- Include proper licensing information
+- Ensure compatibility with common robot platforms
+- Optimize for educational clarity over performance when needed
