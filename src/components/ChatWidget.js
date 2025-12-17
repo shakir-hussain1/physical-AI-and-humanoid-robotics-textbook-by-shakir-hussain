@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 
 // Backend API URL - change this to match your backend service
-const API_URL = 'https://physical-ai-and-humanoid-robotics-textbook-by-sh-production.up.railway.app'; // Railway backend
+const API_URL = 'http://localhost:8000'; // Local backend
 
 export default function ChatWidget() {
   const [open, setOpen] = useState(false);
@@ -20,43 +20,6 @@ export default function ChatWidget() {
     setInput('');
     setLoading(true);
 
-    // Check if API_URL is available
-    if (!API_URL) {
-      // Simulate a response when API is not configured
-      setTimeout(() => {
-        setMessages(prev => [...prev, {
-          role: 'assistant',
-          content: 'Chatbot is currently disabled. The backend service is not configured.'
-        }]);
-        setLoading(false);
-      }, 500);
-      return;
-    }
-
-    // If API_URL is not available, use mock responses
-    if (!API_URL) {
-      // Simulate a response with mock data
-      setTimeout(() => {
-        let mockResponse = '';
-        const queryLower = input.toLowerCase();
-
-        if (queryLower.includes('hello') || queryLower.includes('hi')) {
-          mockResponse = "Hello! I'm your Physical AI & Humanoid Robotics textbook assistant. How can I help you with the content?";
-        } else if (queryLower.includes('ros')) {
-          mockResponse = "ROS (Robot Operating System) is a flexible framework for writing robot software. It provides services like hardware abstraction, device drivers, libraries, visualizers, message-passing, and package management for Physical AI systems.";
-        } else if (queryLower.includes('humanoid')) {
-          mockResponse = "Humanoid robots are robots with human-like form and capabilities. In Physical AI, they combine perception, decision-making, and action to operate in human environments. The textbook covers kinematics, control systems, and AI integration.";
-        } else if (queryLower.includes('physical ai')) {
-          mockResponse = "Physical AI is an interdisciplinary field combining artificial intelligence with physical systems. It focuses on creating intelligent systems that interact with the physical world, integrating machine learning, robotics, and control theory.";
-        } else {
-          mockResponse = `I understand you're asking about "${input}". This is a Physical AI & Humanoid Robotics textbook assistant. In the full implementation, this would provide specific textbook content related to your query.`;
-        }
-
-        setMessages(prev => [...prev, { role: 'assistant', content: mockResponse }]);
-      }, 500);
-      return;
-    }
-
     try {
       const res = await fetch(`${API_URL}/chat/query`, {
         method: 'POST',
@@ -72,23 +35,7 @@ export default function ChatWidget() {
       setMessages(prev => [...prev, { role: 'assistant', content: data.answer }]);
     } catch (e) {
       console.error('Chat error:', e);
-      // If the API fails, fall back to mock responses
-      let mockResponse = '';
-      const queryLower = input.toLowerCase();
-
-      if (queryLower.includes('hello') || queryLower.includes('hi')) {
-        mockResponse = "Hello! I'm your Physical AI & Humanoid Robotics textbook assistant. How can I help you with the content?";
-      } else if (queryLower.includes('ros')) {
-        mockResponse = "ROS (Robot Operating System) is a flexible framework for writing robot software. It provides services like hardware abstraction, device drivers, libraries, visualizers, message-passing, and package management for Physical AI systems.";
-      } else if (queryLower.includes('humanoid')) {
-        mockResponse = "Humanoid robots are robots with human-like form and capabilities. In Physical AI, they combine perception, decision-making, and action to operate in human environments. The textbook covers kinematics, control systems, and AI integration.";
-      } else if (queryLower.includes('physical ai')) {
-        mockResponse = "Physical AI is an interdisciplinary field combining artificial intelligence with physical systems. It focuses on creating intelligent systems that interact with the physical world, integrating machine learning, robotics, and control theory.";
-      } else {
-        mockResponse = `I understand you're asking about "${input}". This is a Physical AI & Humanoid Robotics textbook assistant. The backend is temporarily unavailable, but in the full implementation, this would provide specific textbook content related to your query.`;
-      }
-
-      setMessages(prev => [...prev, { role: 'assistant', content: mockResponse }]);
+      setMessages(prev => [...prev, { role: 'assistant', content: 'I am currently unable to connect to the backend service. Please make sure the backend server is running on http://localhost:8000.' }]);
     }
     setLoading(false);
   };
