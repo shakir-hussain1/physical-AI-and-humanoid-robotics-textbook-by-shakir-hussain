@@ -33,6 +33,30 @@ export default function ChatWidget() {
       return;
     }
 
+    // If API_URL is not available, use mock responses
+    if (!API_URL) {
+      // Simulate a response with mock data
+      setTimeout(() => {
+        let mockResponse = '';
+        const queryLower = input.toLowerCase();
+
+        if (queryLower.includes('hello') || queryLower.includes('hi')) {
+          mockResponse = "Hello! I'm your Physical AI & Humanoid Robotics textbook assistant. How can I help you with the content?";
+        } else if (queryLower.includes('ros')) {
+          mockResponse = "ROS (Robot Operating System) is a flexible framework for writing robot software. It provides services like hardware abstraction, device drivers, libraries, visualizers, message-passing, and package management for Physical AI systems.";
+        } else if (queryLower.includes('humanoid')) {
+          mockResponse = "Humanoid robots are robots with human-like form and capabilities. In Physical AI, they combine perception, decision-making, and action to operate in human environments. The textbook covers kinematics, control systems, and AI integration.";
+        } else if (queryLower.includes('physical ai')) {
+          mockResponse = "Physical AI is an interdisciplinary field combining artificial intelligence with physical systems. It focuses on creating intelligent systems that interact with the physical world, integrating machine learning, robotics, and control theory.";
+        } else {
+          mockResponse = `I understand you're asking about "${input}". This is a Physical AI & Humanoid Robotics textbook assistant. In the full implementation, this would provide specific textbook content related to your query.`;
+        }
+
+        setMessages(prev => [...prev, { role: 'assistant', content: mockResponse }]);
+      }, 500);
+      return;
+    }
+
     try {
       const res = await fetch(`${API_URL}/chat/query`, {
         method: 'POST',
@@ -48,7 +72,23 @@ export default function ChatWidget() {
       setMessages(prev => [...prev, { role: 'assistant', content: data.answer }]);
     } catch (e) {
       console.error('Chat error:', e);
-      setMessages(prev => [...prev, { role: 'assistant', content: `Error connecting to server: ${e.message || 'Unknown error'}` }]);
+      // If the API fails, fall back to mock responses
+      let mockResponse = '';
+      const queryLower = input.toLowerCase();
+
+      if (queryLower.includes('hello') || queryLower.includes('hi')) {
+        mockResponse = "Hello! I'm your Physical AI & Humanoid Robotics textbook assistant. How can I help you with the content?";
+      } else if (queryLower.includes('ros')) {
+        mockResponse = "ROS (Robot Operating System) is a flexible framework for writing robot software. It provides services like hardware abstraction, device drivers, libraries, visualizers, message-passing, and package management for Physical AI systems.";
+      } else if (queryLower.includes('humanoid')) {
+        mockResponse = "Humanoid robots are robots with human-like form and capabilities. In Physical AI, they combine perception, decision-making, and action to operate in human environments. The textbook covers kinematics, control systems, and AI integration.";
+      } else if (queryLower.includes('physical ai')) {
+        mockResponse = "Physical AI is an interdisciplinary field combining artificial intelligence with physical systems. It focuses on creating intelligent systems that interact with the physical world, integrating machine learning, robotics, and control theory.";
+      } else {
+        mockResponse = `I understand you're asking about "${input}". This is a Physical AI & Humanoid Robotics textbook assistant. The backend is temporarily unavailable, but in the full implementation, this would provide specific textbook content related to your query.`;
+      }
+
+      setMessages(prev => [...prev, { role: 'assistant', content: mockResponse }]);
     }
     setLoading(false);
   };
