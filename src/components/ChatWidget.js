@@ -1,7 +1,8 @@
+
 import React, { useState } from 'react';
 
-// Chatbot functionality temporarily disabled
-const API_URL = null; // 'https://physical-ai-and-humanoid-robotics-textbook-by-sh-production.up.railway.app' // deployed API_URL
+// Backend API URL - change this to match your backend service
+const API_URL = 'http://localhost:8000'; // Local backend
 
 export default function ChatWidget() {
   const [open, setOpen] = useState(false);
@@ -33,10 +34,10 @@ export default function ChatWidget() {
     }
 
     try {
-      const res = await fetch(`${API_URL}/chat`, {
+      const res = await fetch(`${API_URL}/chat/query`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ question: input, selected_text: selectedText })
+        body: JSON.stringify({ query: input, selected_text: selectedText })
       });
 
       if (!res.ok) {
@@ -102,3 +103,4 @@ const styles = {
   send: { padding: '8px 16px', background: '#3b82f6', color: '#fff', border: 'none', borderRadius: 4, cursor: 'pointer' },
   hint: { fontSize: 11, color: '#888', textAlign: 'center', padding: 4 }
 };
+
