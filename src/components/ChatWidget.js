@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 
 // Backend API URL - change this to match your backend service
@@ -102,3 +103,4 @@ const styles = {
   send: { padding: '8px 16px', background: '#3b82f6', color: '#fff', border: 'none', borderRadius: 4, cursor: 'pointer' },
   hint: { fontSize: 11, color: '#888', textAlign: 'center', padding: 4 }
 };
+
