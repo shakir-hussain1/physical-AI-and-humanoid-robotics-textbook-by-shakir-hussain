@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 
 // Backend API URL - change this to match your backend service
-const API_URL = 'http://localhost:8000'; // Local backend
+const API_URL = 'https://physical-ai-and-humanoid-robotics-textbook-by-sh-production.up.railway.app'; // Railway backend
 
 export default function ChatWidget() {
   const [open, setOpen] = useState(false);
