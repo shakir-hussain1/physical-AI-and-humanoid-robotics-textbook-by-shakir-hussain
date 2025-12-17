@@ -8,6 +8,7 @@ import sys
 from src.config import settings
 from src.middleware.logging_middleware import LoggingMiddleware
 from src.middleware.error_handler import setup_exception_handlers
+from src.middleware.api_key_auth import api_key_auth_middleware
 from src.api import health, query, context, content
 
 # Configure logging
@@ -33,6 +34,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Add API key authentication middleware
+app.middleware("http")(api_key_auth_middleware)
 
 # Add logging middleware
 app.add_middleware(LoggingMiddleware)
