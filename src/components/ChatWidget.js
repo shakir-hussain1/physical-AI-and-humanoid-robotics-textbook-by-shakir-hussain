@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 
 // Backend API URL - change this to match your backend service
-const API_URL = 'https://physical-ai-and-humanoid-robotics-textbook-by-sh-production.up.railway.app'; // Railway backend
+const API_URL = 'http://localhost:8000'; // Local backend
 
 export default function ChatWidget() {
   const [open, setOpen] = useState(false);
@@ -20,19 +20,6 @@ export default function ChatWidget() {
     setInput('');
     setLoading(true);
 
-    // Check if API_URL is available
-    if (!API_URL) {
-      // Simulate a response when API is not configured
-      setTimeout(() => {
-        setMessages(prev => [...prev, {
-          role: 'assistant',
-          content: 'Chatbot is currently disabled. The backend service is not configured.'
-        }]);
-        setLoading(false);
-      }, 500);
-      return;
-    }
-
     try {
       const res = await fetch(`${API_URL}/chat/query`, {
         method: 'POST',
@@ -48,7 +35,7 @@ export default function ChatWidget() {
       setMessages(prev => [...prev, { role: 'assistant', content: data.answer }]);
     } catch (e) {
       console.error('Chat error:', e);
-      setMessages(prev => [...prev, { role: 'assistant', content: `Error connecting to server: ${e.message || 'Unknown error'}` }]);
+      setMessages(prev => [...prev, { role: 'assistant', content: 'I am currently unable to connect to the backend service. Please make sure the backend server is running on http://localhost:8000.' }]);
     }
     setLoading(false);
   };
