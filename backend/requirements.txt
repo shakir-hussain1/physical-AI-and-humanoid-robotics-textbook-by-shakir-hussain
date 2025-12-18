@@ -10,6 +10,12 @@ psycopg2-binary==2.9.9
 sqlalchemy==2.0.23
 alembic==1.13.1
 
+# Authentication & Security
+bcrypt==4.1.1
+PyJWT==2.8.1
+python-jose==3.3.0
+passlib==1.7.4
+
 # Vector Database & Search
 qdrant-client==2.7.3
 
