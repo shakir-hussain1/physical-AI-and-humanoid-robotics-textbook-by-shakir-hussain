@@ -170,6 +170,7 @@ class RAGService:
                     'answer': 'I could not find relevant information about your query in the textbook. Could you rephrase your question?',
                     'sources': [],
                     'confidence': 0.0,
+                    'confidence_level': 'low',
                     'status': 'no_context'
                 }
 
@@ -247,6 +248,7 @@ QUESTION: {query}"""
                 'answer': f'An error occurred while processing your question: {str(e)}',
                 'sources': [],
                 'confidence': 0.0,
+                'confidence_level': 'low',
                 'status': 'error'
             }
 
