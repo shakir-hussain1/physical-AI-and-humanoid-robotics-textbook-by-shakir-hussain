@@ -1,19 +1,66 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-// Backend API URL - change this to match your backend service
-const API_URL = 'http://localhost:8000'; // Local backend
+// Backend API URL - auto-detect based on environment
+function getApiUrl() {
+  if (typeof window === 'undefined') {
+    return 'http://localhost:8000';
+  }
+
+  const isDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+
+  if (isDev) {
+    return 'http://localhost:8000';
+  }
+
+  // For production (GitHub Pages, Railway, etc.)
+  // Update this to your deployed backend URL
+  return 'http://localhost:8000'; // Fallback - change for production
+}
+
+const API_URL = getApiUrl();
 
 export default function ChatWidget() {
   const [open, setOpen] = useState(false);
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState([
+    { role: 'assistant', content: 'Hi! I\'m your Physical AI & Humanoid Robotics assistant. Ask me anything about the textbook. Tip: Select text on the page first to ask about it!' }
+  ]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
+  const [backendHealthy, setBackendHealthy] = useState(null);
+
+  // Check backend health on mount
+  useEffect(() => {
+    checkBackendHealth();
+  }, []);
+
+  const checkBackendHealth = async () => {
+    try {
+      const res = await fetch(`${API_URL}/health`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+      });
+      setBackendHealthy(res.ok);
+    } catch (e) {
+      console.warn('[ChatWidget] Backend health check failed:', e.message);
+      setBackendHealthy(false);
+    }
+  };
 
   const getSelectedText = () => window.getSelection()?.toString() || '';
 
   const sendMessage = async () => {
     if (!input.trim()) return;
+
+    if (!backendHealthy) {
+      setMessages(prev => [...prev, {
+        role: 'assistant',
+        content: `⚠️ Backend is not reachable at ${API_URL}.\n\n📝 Local Setup:\n1. Start backend: cd backend && uvicorn src.app:app --reload\n2. Backend should be at http://localhost:8000\n3. Check if port 8000 is in use: netstat -ano | findstr :8000\n\n🌐 For production, update API_URL in ChatWidget.js`
+      }]);
+      setInput('');
+      return;
+    }
+
     const selectedText = getSelectedText();
     const userMsg = { role: 'user', content: input };
     setMessages(prev => [...prev, userMsg]);
@@ -21,21 +68,45 @@ export default function ChatWidget() {
     setLoading(true);
 
     try {
+      // IMPORTANT: Backend expects 'user_context', not 'selected_text'
+      const payload = {
+        query: input,
+        user_context: selectedText || null,
+        conversation_history: []
+      };
+
+      console.log('[ChatWidget] Sending to:', `${API_URL}/chat/query`);
+      console.log('[ChatWidget] Payload:', payload);
+
       const res = await fetch(`${API_URL}/chat/query`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query: input, selected_text: selectedText })
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload)
       });
 
       if (!res.ok) {
-        throw new Error(`HTTP error! status: ${res.status}`);
+        const errorText = await res.text();
+        console.error('[ChatWidget] API Error:', res.status, errorText);
+        throw new Error(`HTTP ${res.status}: ${errorText}`);
       }
 
       const data = await res.json();
-      setMessages(prev => [...prev, { role: 'assistant', content: data.answer }]);
+      console.log('[ChatWidget] Response:', data);
+
+      const assistantMsg = {
+        role: 'assistant',
+        content: data.answer || 'No answer received',
+        sources: data.sources,
+        confidence: data.confidence
+      };
+
+      setMessages(prev => [...prev, assistantMsg]);
     } catch (e) {
-      console.error('Chat error:', e);
-      setMessages(prev => [...prev, { role: 'assistant', content: 'I am currently unable to connect to the backend service. Please make sure the backend server is running on http://localhost:8000.' }]);
+      console.error('[ChatWidget] Chat error:', e);
+      const errorMsg = `❌ Error: ${e.message}\n\n🔧 Troubleshooting:\n- Is backend running? (cd backend && uvicorn src.app:app --reload)\n- Check console (F12) for CORS errors\n- Verify API_URL is correct: ${API_URL}`;
+      setMessages(prev => [...prev, { role: 'assistant', content: errorMsg }]);
     }
     setLoading(false);
   };
