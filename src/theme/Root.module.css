@@ -1,0 +1,15 @@
+.navbarAuthOverlay {
+  position: fixed;
+  top: 10px;
+  right: 200px;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+}
+
+@media (max-width: 768px) {
+  .navbarAuthOverlay {
+    top: 8px;
+    right: 100px;
+  }
+}
