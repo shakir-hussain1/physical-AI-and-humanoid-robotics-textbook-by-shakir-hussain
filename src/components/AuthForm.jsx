@@ -14,7 +14,9 @@ const getAPIUrl = () => {
     return 'http://localhost:8000';
   }
 
-  return 'https://physical-ai-and-humanoid-robotics-textbook-by-sh-production.up.railway.app';
+  // GitHub Pages or production - use Hugging Face Spaces backend
+  // Replace USERNAME with your Hugging Face username
+  return 'https://shakir-rag-chatbot-backend.hf.space';
 };
 
 const API_URL = getAPIUrl();
