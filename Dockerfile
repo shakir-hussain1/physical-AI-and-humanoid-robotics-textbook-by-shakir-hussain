@@ -2,7 +2,7 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-# Install system dependencies with retries
+# Install system dependencies
 RUN apt-get update --fix-missing && \
     apt-get install -y --no-install-recommends \
     gcc \
@@ -12,7 +12,7 @@ RUN apt-get update --fix-missing && \
 # Copy requirements
 COPY backend/requirements.txt .
 
-# Install Python dependencies
+# Upgrade pip and install Python dependencies
 RUN pip install --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt
 
