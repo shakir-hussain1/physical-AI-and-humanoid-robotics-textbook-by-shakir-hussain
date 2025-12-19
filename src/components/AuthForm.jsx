@@ -14,6 +14,8 @@ const getAPIUrl = () => {
     return 'http://localhost:8000';
   }
 
+  // GitHub Pages or production - use Railway backend
+  // If Railway is down, users should run locally: npm start
   return 'https://physical-ai-and-humanoid-robotics-textbook-by-sh-production.up.railway.app';
 };
 
