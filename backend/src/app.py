@@ -1,10 +1,17 @@
 """FastAPI application - Main entry point for RAG Chatbot Backend."""
 
+import os
+import sys
+from pathlib import Path
+
+# Load environment variables FIRST before any other imports
+from dotenv import load_dotenv
+env_path = Path(__file__).parent.parent / '.env'
+load_dotenv(env_path)
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import logging
-import sys
-import os
 
 from src.api import chat, auth
 

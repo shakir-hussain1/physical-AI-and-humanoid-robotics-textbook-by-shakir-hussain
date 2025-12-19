@@ -1,10 +1,23 @@
 import React, { useState } from 'react';
 import styles from './AuthForm.module.css';
 
-const API_URL = process.env.REACT_APP_API_URL ||
-                 (typeof window !== 'undefined' && window.location.hostname === 'localhost'
-                   ? 'http://localhost:8000'
-                   : 'https://physical-ai-and-humanoid-robotics-textbook-by-sh-production.up.railway.app');
+const getAPIUrl = () => {
+  try {
+    if (typeof process !== 'undefined' && process.env && process.env.REACT_APP_API_URL) {
+      return process.env.REACT_APP_API_URL;
+    }
+  } catch (e) {
+    // process not available
+  }
+
+  if (typeof window !== 'undefined' && window.location.hostname === 'localhost') {
+    return 'http://localhost:8000';
+  }
+
+  return 'https://physical-ai-and-humanoid-robotics-textbook-by-sh-production.up.railway.app';
+};
+
+const API_URL = getAPIUrl();
 
 export default function AuthForm({ onAuthSuccess }) {
   const [authMode, setAuthMode] = useState('signin'); // signin, signup, background

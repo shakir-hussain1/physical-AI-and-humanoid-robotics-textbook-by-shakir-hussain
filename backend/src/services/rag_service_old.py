@@ -1,34 +1,35 @@
-"""RAG Service using Cohere API - Working solution without Qdrant."""
+"""RAG Service - Core retrieval and generation logic."""
 
 import os
 import json
 from typing import List, Dict, Any, Optional
-import cohere
+from openai import OpenAI
+from qdrant_client import QdrantClient
+from qdrant_client.models import Distance, VectorParams, PointStruct
 import logging
 
 logger = logging.getLogger(__name__)
 
 class RAGService:
-    """Retrieval-Augmented Generation using Cohere and local keyword search."""
+    """Retrieval-Augmented Generation Service using OpenAI and Qdrant."""
 
     def __init__(self):
-        self.cohere_api_key = os.getenv('COHERE_API_KEY')
-        self.cohere_client = None
-
-        if self.cohere_api_key:
-            try:
-                self.cohere_client = cohere.ClientV2(api_key=self.cohere_api_key)
-                logger.info("Cohere client initialized successfully")
-            except Exception as e:
-                logger.error(f"Error initializing Cohere client: {e}")
-                self.cohere_client = None
-        else:
-            logger.warning("COHERE_API_KEY not set - will use local responses only")
-
+        self.openai_client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
+        self.qdrant_client = QdrantClient(
+            url=os.getenv('QDRANT_URL'),
+            api_key=os.getenv('QDRANT_API_KEY')
+        )
+        self.embedding_model = os.getenv('OPENAI_EMBED_MODEL', 'text-embedding-3-small')
+        self.chat_model = os.getenv('OPENAI_CHAT_MODEL', 'gpt-4o-mini')
+        self.collection_name = os.getenv('QDRANT_COLLECTION', 'textbook_embeddings')
         self.top_k = int(os.getenv('RETRIEVAL_TOP_K', 5))
         self.temperature = float(os.getenv('RAG_TEMPERATURE', 0.7))
+        self.confidence_threshold = float(os.getenv('CONFIDENCE_THRESHOLD', 0.6))
 
-        # Sample textbook content for local retrieval
+        # Initialize Qdrant collection if needed
+        self._initialize_collection()
+
+        # Sample textbook content for initial data
         self.sample_content = {
             'ros': {
                 'title': 'Robot Operating System (ROS)',
@@ -68,55 +69,87 @@ class RAGService:
             }
         }
 
-    def _retrieve_context(self, query: str, user_context: Optional[str] = None) -> List[Dict[str, Any]]:
-        """Retrieve relevant documents using local keyword search."""
+    def _initialize_collection(self):
+        """Initialize Qdrant collection for embeddings."""
         try:
-            query_lower = query.lower()
-            query_words = [w.strip('?.,!;:') for w in query_lower.split() if len(w.strip('?.,!;:')) > 2]
-            matched_docs = []
+            collections = self.qdrant_client.get_collections()
+            collection_names = [c.name for c in collections.collections]
 
-            # Score each document based on keyword matches
-            for key, doc in self.sample_content.items():
-                doc_text = (doc['title'] + ' ' + doc['content']).lower()
-                doc_key_lower = key.lower()
+            if self.collection_name not in collection_names:
+                self.qdrant_client.create_collection(
+                    collection_name=self.collection_name,
+                    vectors_config=VectorParams(
+                        size=1536,  # OpenAI embedding size
+                        distance=Distance.COSINE
+                    )
+                )
+                logger.info(f"Created Qdrant collection: {self.collection_name}")
+                self._populate_initial_data()
+        except Exception as e:
+            logger.error(f"Error initializing Qdrant collection: {e}")
 
-                # Count matches:
-                # 1. Exact key match (highest priority)
-                # 2. Word-level matches
-                score = 0
-                matches = 0
-
-                # Check if key matches any query word (e.g., "ros" matches "ROS")
-                if any(q in doc_key_lower or doc_key_lower in q for q in query_words):
-                    score = 0.95
-                    matches += 1
-
-                # Check word-level matches in title and content
-                for word in query_words:
-                    if word in doc_text:
-                        score = max(score, 0.85)
-                        matches += 1
-
-                # Add document if there's any match
-                if matches > 0 or score > 0:
-                    matched_docs.append({
-                        'content': doc['content'],
+    def _populate_initial_data(self):
+        """Populate Qdrant with sample textbook content."""
+        try:
+            for idx, (key, doc) in enumerate(self.sample_content.items()):
+                embedding = self._get_embedding(doc['content'])
+                point = PointStruct(
+                    id=idx,
+                    vector=embedding,
+                    payload={
                         'title': doc['title'],
+                        'content': doc['content'],
                         'source': doc['source'],
-                        'score': score,
                         'category': doc['category'],
-                        'matches': matches
+                        'key': key
+                    }
+                )
+                self.qdrant_client.upsert(
+                    collection_name=self.collection_name,
+                    points=[point]
+                )
+            logger.info(f"Populated {len(self.sample_content)} documents to Qdrant")
+        except Exception as e:
+            logger.error(f"Error populating initial data: {e}")
+
+    def _get_embedding(self, text: str) -> List[float]:
+        """Get embedding for text using OpenAI."""
+        try:
+            response = self.openai_client.embeddings.create(
+                model=self.embedding_model,
+                input=text
+            )
+            return response.data[0].embedding
+        except Exception as e:
+            logger.error(f"Error getting embedding: {e}")
+            raise
+
+    def _retrieve_context(self, query: str, user_context: Optional[str] = None) -> List[Dict[str, Any]]:
+        """Retrieve relevant documents from Qdrant."""
+        try:
+            # Get embedding for the query
+            query_embedding = self._get_embedding(query)
+
+            # Search Qdrant
+            search_result = self.qdrant_client.search(
+                collection_name=self.collection_name,
+                query_vector=query_embedding,
+                limit=self.top_k
+            )
+
+            # Format results
+            contexts = []
+            for point in search_result:
+                if point.score >= self.confidence_threshold:
+                    contexts.append({
+                        'content': point.payload.get('content', ''),
+                        'title': point.payload.get('title', ''),
+                        'source': point.payload.get('source', ''),
+                        'score': float(point.score),
+                        'category': point.payload.get('category', '')
                     })
 
-            # Sort by matches first, then by score
-            matched_docs.sort(key=lambda x: (x['matches'], x['score']), reverse=True)
-
-            # Remove temporary fields
-            for doc in matched_docs:
-                doc.pop('matches', None)
-
-            return matched_docs[:self.top_k]
-
+            return contexts
         except Exception as e:
             logger.error(f"Error retrieving context: {e}")
             return []
@@ -127,7 +160,7 @@ class RAGService:
         user_context: Optional[str] = None,
         conversation_history: Optional[List[Dict]] = None
     ) -> Dict[str, Any]:
-        """Generate answer using Cohere and local retrieval."""
+        """Generate answer using RAG pipeline."""
         try:
             # Retrieve relevant documents
             retrieved_docs = self._retrieve_context(query, user_context)
@@ -147,13 +180,26 @@ class RAGService:
                 for doc in retrieved_docs
             ])
 
-            # Build prompt
-            system_prompt = """You are an expert assistant for a Physical AI and Humanoid Robotics textbook.
+            # Build messages
+            system_message = """You are an expert assistant for a Physical AI and Humanoid Robotics textbook.
 Your role is to answer questions based strictly on the provided textbook content.
 If the answer is not in the provided context, clearly state that the information is not available in the textbook.
 Be accurate, concise, and helpful. Cite the relevant sections when appropriate."""
 
-            user_prompt = f"""Based on the following textbook content, please answer this question:
+            messages = []
+
+            # Add conversation history if available
+            if conversation_history:
+                for msg in conversation_history:
+                    messages.append({
+                        'role': msg.get('role', 'user'),
+                        'content': msg.get('content', '')
+                    })
+
+            # Add context and current query
+            messages.append({
+                'role': 'user',
+                'content': f"""Based on the following textbook content, please answer this question:
 
 TEXTBOOK CONTENT:
 {context_text}
@@ -161,26 +207,20 @@ TEXTBOOK CONTENT:
 {f'USER SELECTED TEXT: {user_context}' if user_context else ''}
 
 QUESTION: {query}"""
+            })
 
-            # Use Cohere if available
-            if self.cohere_client:
-                try:
-                    response = self.cohere_client.chat(
-                        model="command-r-plus",
-                        messages=[
-                            {"role": "user", "content": user_prompt}
-                        ],
-                        system=system_prompt,
-                        temperature=self.temperature,
-                        max_tokens=500
-                    )
-                    answer = response.message.content[0].text
-                except Exception as e:
-                    logger.warning(f"Cohere API failed: {e}, using fallback")
-                    answer = self._generate_fallback_answer(query, retrieved_docs, context_text)
-            else:
-                logger.warning("Cohere client not available, using fallback")
-                answer = self._generate_fallback_answer(query, retrieved_docs, context_text)
+            # Get response from OpenAI
+            response = self.openai_client.chat.completions.create(
+                model=self.chat_model,
+                messages=[
+                    {'role': 'system', 'content': system_message},
+                    *messages
+                ],
+                temperature=self.temperature,
+                max_tokens=500
+            )
+
+            answer = response.choices[0].message.content
 
             # Calculate confidence
             avg_score = sum(doc['score'] for doc in retrieved_docs) / len(retrieved_docs)
@@ -211,19 +251,6 @@ QUESTION: {query}"""
                 'confidence_level': 'low',
                 'status': 'error'
             }
-
-    def _generate_fallback_answer(self, query: str, docs: List[Dict], context: str) -> str:
-        """Generate a simple fallback answer when Cohere is unavailable."""
-        if not docs:
-            return "I don't have information about that topic in the textbook."
-
-        # Extract first document for context
-        first_doc = docs[0]
-        answer = f"Based on the textbook content from '{first_doc['title']}':\n\n"
-        answer += first_doc['content'][:500] + "..."
-
-        return answer
-
 
 # Global RAG service instance
 _rag_service = None

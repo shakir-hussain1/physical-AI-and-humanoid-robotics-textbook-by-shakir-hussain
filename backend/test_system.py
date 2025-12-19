@@ -7,6 +7,7 @@ import json
 import sys
 from pathlib import Path
 from dotenv import load_dotenv
+load_dotenv()
 
 # Load environment variables from .env
 env_path = Path(__file__).parent.parent / '.env'
