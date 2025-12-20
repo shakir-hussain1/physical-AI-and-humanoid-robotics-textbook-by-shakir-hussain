@@ -18,7 +18,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import logging
 
-from src.api import chat, auth, chapter_personalization
+from src.api import chat, auth, chapter_personalization, translation
 
 # Configure logging
 logging.basicConfig(
@@ -51,6 +51,7 @@ app.add_middleware(
 app.include_router(auth.router, prefix="/auth", tags=["authentication"])
 app.include_router(chat.router, prefix="/chat", tags=["chat"])
 app.include_router(chapter_personalization.router, prefix="/personalization", tags=["chapter_personalization"])
+app.include_router(translation.router, prefix="/translation", tags=["translation"])
 
 @app.get('/')
 async def root():
