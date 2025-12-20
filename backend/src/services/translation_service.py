@@ -226,11 +226,14 @@ class TranslationService:
             Translated text
         """
         try:
-            # Get Cohere API key from environment
+            # Get Cohere API key from environment (load dynamically)
             api_key = os.getenv('COHERE_API_KEY')
+
             if not api_key:
-                logger.warning("[Translation] Cohere API key not found, returning original text")
+                logger.error(f"[Translation] Cohere API key not found in environment. Available keys: {list(os.environ.keys())[:5]}...")
                 return text
+
+            logger.info(f"[Translation] Using Cohere API key: {api_key[:10]}...")
 
             # Initialize Cohere client
             co = cohere.ClientV2(api_key=api_key)
