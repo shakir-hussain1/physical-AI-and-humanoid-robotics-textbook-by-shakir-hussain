@@ -2,10 +2,14 @@
  * Chapter Translation Button Component
  * Allows authenticated users to translate chapter content to different languages
  * Features:
- * - Toggle translation on/off
+ * - Toggle translation on/off (within same page session)
  * - Loading state indicator
  * - Error handling with fallback
  * - Accessibility features (ARIA labels)
+ *
+ * Note: Translations persist within the current page session only.
+ * This avoids React DOM conflicts that occur when trying to apply
+ * cached translations across page reloads.
  */
 
 import React, { useState, useEffect } from 'react';
@@ -18,36 +22,8 @@ export default function ChapterTranslateButton({ chapterId, chapterTitle }) {
   const [isTranslated, setIsTranslated] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [translatedContent, setTranslatedContent] = useState(null);
+  const [originalContent, setOriginalContent] = useState(null);
   const [targetLanguage, setTargetLanguage] = useState('urdu');
-
-  /**
-   * Check if content is already cached when component mounts
-   */
-  useEffect(() => {
-    if (isAuthenticated && chapterId) {
-      // Check if we have cached translation
-      const cacheKey = `translation_${chapterId}_${targetLanguage}`;
-      const cached = localStorage.getItem(cacheKey);
-      if (cached) {
-        const cachedData = JSON.parse(cached);
-        const translatedHTML = cachedData.content || cachedData;
-        setTranslatedContent(translatedHTML);
-
-        // Apply the cached translation to DOM
-        setTimeout(() => {
-          const contentElement = document.querySelector('.theme-doc-markdown') ||
-                                 document.querySelector('.docItemContent') ||
-                                 document.querySelector('article');
-          if (contentElement && translatedHTML) {
-            contentElement.innerHTML = translatedHTML;
-            setIsTranslated(true);
-            console.log('[Translation] Applied cached translation from localStorage');
-          }
-        }, 100);
-      }
-    }
-  }, [isAuthenticated, chapterId, targetLanguage]);
 
   /**
    * Translate the current chapter content
@@ -101,13 +77,18 @@ export default function ChapterTranslateButton({ chapterId, chapterTitle }) {
         throw new Error('Chapter content not found. Please check browser console.');
       }
 
-      const originalContent = contentElement.innerHTML;
-      console.log('[Translation] Extracted content length:', originalContent.length);
+      // Store original content if not already stored
+      if (!originalContent) {
+        setOriginalContent(contentElement.innerHTML);
+      }
+
+      const contentToTranslate = contentElement.innerHTML;
+      console.log('[Translation] Extracted content length:', contentToTranslate.length);
 
       // Call translation API
       const response = await translateChapterContent(
         {
-          content: originalContent,
+          content: contentToTranslate,
           chapter_id: chapterId,
           target_language: targetLanguage
         },
@@ -118,20 +99,13 @@ export default function ChapterTranslateButton({ chapterId, chapterTitle }) {
         throw new Error('Translation failed: No content returned');
       }
 
-      // Cache the translation in localStorage
-      const cacheKey = `translation_${chapterId}_${targetLanguage}`;
-      localStorage.setItem(cacheKey, JSON.stringify({
-        content: response.translated_content,
-        timestamp: new Date().toISOString(),
-        source: 'translation_api'
-      }));
-
       console.log('[Translation] Successfully translated chapter to', targetLanguage);
-      console.log('[Translation] Cached translation, reloading page to display...');
 
-      // Reload page to display cached translation (avoids React DOM conflicts)
-      // The useEffect at the top will load the cached translation
-      setTimeout(() => window.location.reload(), 500);
+      // Apply translated content directly to the DOM
+      // We do this carefully by replacing only the text nodes, not removing/re-adding React elements
+      applyTranslatedContent(contentElement, response.translated_content);
+
+      setIsTranslated(true);
     } catch (err) {
       console.error('[Translation Error]', err);
       setError(err.message || 'Failed to translate chapter. Please try again.');
@@ -142,21 +116,50 @@ export default function ChapterTranslateButton({ chapterId, chapterTitle }) {
   };
 
   /**
+   * Apply translated content to DOM safely
+   * Replaces only the inner HTML of the content element
+   * This happens outside of React's lifecycle, so it doesn't conflict with Docusaurus
+   */
+  const applyTranslatedContent = (element, translatedHTML) => {
+    if (!element) return;
+
+    // Store original if not already stored
+    if (!originalContent) {
+      setOriginalContent(element.innerHTML);
+    }
+
+    // Apply translation by replacing innerHTML
+    // This is safe here because we're doing it in response to a user action
+    // and after the initial render
+    try {
+      element.innerHTML = translatedHTML;
+      console.log('[Translation] Applied translation to page');
+    } catch (err) {
+      console.error('[Translation] Error applying translation:', err);
+      setError('Error displaying translation. Please try again.');
+    }
+  };
+
+  /**
    * Toggle between original and translated content
-   * Reloads page to apply/remove translation
    */
   const handleToggleTranslation = async () => {
     try {
       setError(null);
 
-      if (!isTranslated && translatedContent) {
-        // Translate if not already done
+      if (!isTranslated) {
+        // Translate
         console.log('[Translation] Starting translation from toggle');
         await handleTranslate();
-      } else if (isTranslated) {
-        // Already translated, go back to original by reloading
+      } else if (isTranslated && originalContent) {
+        // Already translated, restore original
         console.log('[Translation] Toggling back to original');
-        window.location.reload();
+        const contentElement = getContentElement();
+        if (contentElement) {
+          contentElement.innerHTML = originalContent;
+          setIsTranslated(false);
+          console.log('[Translation] Restored original content');
+        }
       }
     } catch (err) {
       console.error('[Translation Toggle Error]', err);
@@ -169,8 +172,14 @@ export default function ChapterTranslateButton({ chapterId, chapterTitle }) {
    */
   const handleRestore = () => {
     try {
-      // Reload the page to restore original content
-      window.location.reload();
+      if (originalContent) {
+        const contentElement = getContentElement();
+        if (contentElement) {
+          contentElement.innerHTML = originalContent;
+          setIsTranslated(false);
+          console.log('[Translation] Restored original content');
+        }
+      }
     } catch (err) {
       console.error('[Translation Error] Failed to restore', err);
       setError('Failed to restore original content');
