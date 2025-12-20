@@ -176,24 +176,43 @@ class TranslationService:
         """
         Recursively translate text nodes in BeautifulSoup element tree
 
+        Translates complete blocks (p, h1-h6, li, etc.) for better context
+
         Args:
             element: BeautifulSoup element
             target_language: Target language code
         """
-        for child in element.children:
-            # Handle text nodes
+        # Skip code blocks, scripts, etc.
+        if hasattr(element, 'name') and element.name in ['code', 'pre', 'script', 'style']:
+            return
+
+        # Handle block elements - translate the entire text content
+        if hasattr(element, 'name') and element.name in ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'li', 'blockquote', 'div']:
+            # Get all text in the element
+            full_text = element.get_text().strip()
+
+            if full_text and len(full_text) > 3:
+                # Translate the entire block
+                translated_text = self._translate_text(full_text, target_language)
+
+                # Replace all children with translated text
+                element.clear()
+                element.string = translated_text
+                return
+
+        # For other elements, recursively process children
+        for child in list(element.children):
+            # Skip text nodes at root level, handle them with parent
             if isinstance(child, str):
-                # Translate text while preserving whitespace
                 text = child.strip()
-                if text and len(text) > 3:  # Only translate meaningful text
-                    translated = self._translate_text(text, target_language)
-                    # Replace text in soup (complex due to soup structure)
-                    child.replace_with(translated)
+                if text and len(text) > 3:
+                    # Only translate if parent isn't a translatable block
+                    if not (hasattr(element, 'name') and element.name in ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'li', 'blockquote', 'div']):
+                        translated = self._translate_text(text, target_language)
+                        child.replace_with(translated)
             # Recursively handle elements
             elif hasattr(child, 'children'):
-                # Skip code blocks, scripts, etc.
-                if child.name not in ['code', 'pre', 'script', 'style']:
-                    self._translate_soup_recursive(child, target_language)
+                self._translate_soup_recursive(child, target_language)
 
     def _translate_text(self, text: str, target_language: str) -> str:
         """
