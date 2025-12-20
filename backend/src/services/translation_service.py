@@ -17,6 +17,8 @@ from datetime import datetime, timedelta
 from bs4 import BeautifulSoup
 import json
 import hashlib
+import requests
+from urllib.parse import quote
 
 logger = logging.getLogger(__name__)
 
@@ -193,49 +195,59 @@ class TranslationService:
 
     def _translate_text(self, text: str, target_language: str) -> str:
         """
-        Translate a text portion to target language
-
-        This is the main translation function that can be replaced
-        with actual translation API (Google Translate, Azure, etc.)
+        Translate a text portion to target language using MyMemory Translation API
 
         Args:
             text: Text to translate
-            target_language: Target language code
+            target_language: Target language code (urdu, spanish, french, etc.)
 
         Returns:
             Translated text
         """
         try:
-            # Mock translation using simple dictionary lookup
-            # In production, replace with actual translation API
-            translations = self._get_mock_translations(target_language)
+            # Map language names to language codes for MyMemory API
+            lang_map = {
+                'urdu': 'ur-PK',
+                'spanish': 'es-ES',
+                'french': 'fr-FR',
+                'arabic': 'ar-SA',
+                'hindi': 'hi-IN',
+            }
 
-            # Simple word-by-word translation (mock)
-            words = text.split()
-            translated_words = []
+            target_code = lang_map.get(target_language, target_language)
 
-            for word in words:
-                # Clean word (remove punctuation)
-                clean_word = re.sub(r'[^\w\s]', '', word.lower())
+            # Use MyMemory Translation API (free, no key needed)
+            api_url = "https://api.mymemory.translated.net/get"
+            params = {
+                'q': text,
+                'langpair': f'en|{target_code}'
+            }
 
-                # Look up translation
-                if clean_word in translations:
-                    # Replace word with translation, preserving punctuation
-                    translated = translations[clean_word]
-                    # Re-add punctuation
-                    if word != clean_word:
-                        punct = word.replace(clean_word, '')
-                        translated = translated + punct
-                    translated_words.append(translated)
-                else:
-                    # Keep original word if no translation found
-                    translated_words.append(word)
+            logger.info(f"[Translation] Calling MyMemory API for {target_language}: {text[:50]}...")
 
-            return ' '.join(translated_words)
+            response = requests.get(api_url, params=params, timeout=10)
+            response.raise_for_status()
 
+            data = response.json()
+
+            # Check if translation was successful
+            if data.get('responseStatus') == 200 and data.get('responseData'):
+                translated_text = data['responseData'].get('translatedText', text)
+                logger.info(f"[Translation] MyMemory API success: {translated_text[:50]}...")
+                return translated_text
+            else:
+                logger.warning(f"[Translation] MyMemory API returned status {data.get('responseStatus')}")
+                return text  # Return original text if translation fails
+
+        except requests.exceptions.Timeout:
+            logger.error(f"[Translation] API timeout for text: {text[:50]}")
+            return text
+        except requests.exceptions.RequestException as e:
+            logger.error(f"[Translation] API request failed: {e}")
+            return text
         except Exception as e:
-            logger.error(f"Error translating text: {e}")
-            return text  # Return original text on error
+            logger.error(f"[Translation] Error translating text: {e}")
+            return text  # Return original text on any error
 
     def _get_mock_translations(self, target_language: str) -> Dict[str, str]:
         """
