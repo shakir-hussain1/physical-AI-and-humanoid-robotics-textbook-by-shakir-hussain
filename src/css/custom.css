@@ -83,3 +83,154 @@ h3:has(+ p > strong:first-child) {
 [data-theme='dark'] .common-errors {
   background: #332701;
 }
+
+/* ============================================= */
+/* Chapter Personalization Styles */
+/* ============================================= */
+
+/* Difficulty Level Personalization */
+.personalized-beginner {
+  --text-complexity: 0.9;
+  --content-opacity: 0.95;
+}
+
+.personalized-beginner p {
+  line-height: 1.8;
+}
+
+.personalized-beginner pre,
+.personalized-beginner code {
+  display: none; /* Hide code for beginner level */
+}
+
+.personalized-intermediate {
+  --text-complexity: 1;
+  --content-opacity: 1;
+}
+
+.personalized-advanced {
+  --text-complexity: 1.1;
+  --content-opacity: 1;
+}
+
+.personalized-advanced p {
+  line-height: 1.6;
+}
+
+.personalized-expert {
+  --text-complexity: 1.2;
+  --content-opacity: 1;
+}
+
+.personalized-expert p {
+  line-height: 1.5;
+  font-size: 1.05rem;
+}
+
+/* Content Style Personalization */
+.content-style-text p {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  margin-bottom: 1.25rem;
+}
+
+.content-style-text h3 {
+  margin-top: 1.5rem;
+}
+
+.content-style-visual img,
+.content-style-visual .mermaid {
+  display: block;
+  max-width: 100%;
+  margin: 1.5rem auto;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+}
+
+.content-style-visual img[alt],
+.content-style-visual figure {
+  margin: 1.75rem auto;
+}
+
+.content-style-code pre {
+  font-size: 0.95rem;
+  background: var(--ifm-code-background);
+  border-radius: 8px;
+  padding: 1rem;
+  margin: 1.5rem 0;
+}
+
+.content-style-code code {
+  background: var(--ifm-code-background);
+  padding: 0.2rem 0.4rem;
+  border-radius: 3px;
+}
+
+/* Example Density Personalization */
+.example-density-minimal .admonition {
+  display: none;
+}
+
+.example-density-minimal pre:nth-of-type(n + 2) {
+  display: none;
+}
+
+.example-density-moderate {
+  /* Default number of examples shown */
+}
+
+.example-density-rich pre,
+.example-density-rich .admonition {
+  display: block !important;
+}
+
+/* Learning Pace Personalization */
+.pace-concise h3 {
+  margin-top: 2rem;
+}
+
+.pace-concise p {
+  font-size: 0.95rem;
+}
+
+.pace-standard {
+  /* Default pacing */
+}
+
+.pace-detailed p {
+  line-height: 1.9;
+  margin-bottom: 1.5rem;
+}
+
+.pace-detailed h3 {
+  margin-top: 2.5rem;
+}
+
+.pace-detailed blockquote {
+  margin: 1.5rem 0;
+  padding: 1rem 1.5rem;
+  border-left: 4px solid var(--ifm-color-primary);
+  background: var(--ifm-color-emphasis-100);
+  border-radius: 4px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .content-style-visual img,
+  .content-style-visual .mermaid {
+    margin: 1rem auto;
+  }
+
+  .personalized-beginner p,
+  .content-style-text p {
+    font-size: 1rem;
+  }
+
+  .personalized-expert p {
+    font-size: 1rem;
+  }
+
+  .pace-detailed blockquote {
+    padding: 0.75rem 1rem;
+  }
+}

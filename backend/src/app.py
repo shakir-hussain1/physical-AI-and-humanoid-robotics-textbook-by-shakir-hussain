@@ -4,6 +4,11 @@ import os
 import sys
 from pathlib import Path
 
+# Add backend directory to Python path for imports
+backend_dir = str(Path(__file__).parent.parent)
+if backend_dir not in sys.path:
+    sys.path.insert(0, backend_dir)
+
 # Load environment variables FIRST before any other imports
 from dotenv import load_dotenv
 env_path = Path(__file__).parent.parent / '.env'
@@ -13,7 +18,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import logging
 
-from src.api import chat, auth
+from src.api import chat, auth, chapter_personalization
 
 # Configure logging
 logging.basicConfig(
@@ -45,6 +50,7 @@ app.add_middleware(
 # Include routers
 app.include_router(auth.router, prefix="/auth", tags=["authentication"])
 app.include_router(chat.router, prefix="/chat", tags=["chat"])
+app.include_router(chapter_personalization.router, prefix="/personalization", tags=["chapter_personalization"])
 
 @app.get('/')
 async def root():
