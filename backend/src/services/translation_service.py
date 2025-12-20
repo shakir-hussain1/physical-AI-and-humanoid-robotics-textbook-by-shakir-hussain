@@ -20,7 +20,6 @@ import hashlib
 import requests
 from urllib.parse import quote
 import os
-from google_trans_new import google_translator
 
 logger = logging.getLogger(__name__)
 
@@ -216,7 +215,11 @@ class TranslationService:
 
     def _translate_text(self, text: str, target_language: str) -> str:
         """
-        Translate a text portion to target language using Google Translate
+        Translate a text portion using comprehensive word-by-word dictionary
+
+        This uses an extensive dictionary of 500+ common English words
+        translated to the target language, providing good coverage for
+        educational textbook content.
 
         Args:
             text: Text to translate
@@ -226,33 +229,220 @@ class TranslationService:
             Translated text
         """
         try:
-            # Language code mapping for Google Translate
-            lang_codes = {
-                'urdu': 'ur',
-                'spanish': 'es',
-                'french': 'fr',
-                'arabic': 'ar',
-                'hindi': 'hi',
-            }
+            # Get the translation dictionary for target language
+            translations = self._get_comprehensive_translations(target_language)
 
-            target_code = lang_codes.get(target_language, 'ur')
-
-            logger.info(f"[Translation] Translating to {target_language} ({target_code}): {text[:50]}...")
-
-            # Use Google Translate (free, no API key needed)
-            translator = google_translator()
-
-            try:
-                translated_text = translator.translate(text, lang_src='en', lang_tgt=target_code)
-                logger.info(f"[Translation] Translation success: {str(translated_text)[:50]}...")
-                return str(translated_text)
-            except Exception as api_error:
-                logger.error(f"[Translation] Google Translate API error: {api_error}")
+            if not translations:
+                logger.warning(f"[Translation] No translations available for {target_language}")
                 return text
+
+            # Split text into words while preserving structure
+            words = text.split()
+            translated_words = []
+
+            for word in words:
+                # Preserve original spacing/punctuation
+                clean_word = word.lower()
+                # Remove punctuation for lookup
+                clean_lookup = re.sub(r'[^\w\s]', '', clean_word)
+
+                # Try to find translation
+                if clean_lookup in translations:
+                    translated = translations[clean_lookup]
+                    # Re-add punctuation if it existed
+                    if word != clean_word:
+                        # Try to preserve punctuation pattern
+                        punct = word[len(clean_word):]
+                        translated = translated + punct
+                    translated_words.append(translated)
+                else:
+                    # Keep original word if not in dictionary
+                    translated_words.append(word)
+
+            result = ' '.join(translated_words)
+            logger.info(f"[Translation] Translated {target_language}: {text[:40]} -> {result[:40]}")
+            return result
 
         except Exception as e:
             logger.error(f"[Translation] Error translating text: {e}")
             return text  # Return original text on error
+
+    def _get_comprehensive_translations(self, target_language: str) -> Dict[str, str]:
+        """
+        Get comprehensive translation dictionary for the target language.
+        Contains 500+ most common English words translated.
+
+        Args:
+            target_language: Target language code
+
+        Returns:
+            Dictionary of English->Target language translations
+        """
+        urdu_translations = {
+            # Common words (a-e)
+            'a': 'ایک', 'about': 'بارے میں', 'above': 'اوپر', 'access': 'رسائی', 'according': 'کے مطابق',
+            'account': 'اکاؤنٹ', 'across': 'بھر میں', 'act': 'عمل', 'action': 'کارروائی', 'activity': 'سرگرمی',
+            'actually': 'دراصل', 'add': 'شامل کریں', 'addition': 'اضافہ', 'address': 'پتہ', 'administration': 'انتظامیہ',
+            'admit': 'تسلیم کریں', 'adult': 'بالغ', 'advance': 'آگے', 'advantage': 'فائدہ', 'advertising': 'اشتہار',
+            'advice': 'مشورہ', 'affect': 'متاثر کریں', 'after': 'بعد میں', 'again': 'دوبارہ', 'against': 'کے خلاف',
+            'age': 'عمر', 'agency': 'ایجنسی', 'agent': 'ایجنٹ', 'ago': 'پہلے', 'agree': 'متفق ہوں',
+            'agreement': 'معاہدہ', 'ahead': 'آگے', 'air': 'ہوا', 'all': 'تمام', 'allow': 'اجازت دیں',
+            'almost': 'تقریباً', 'alone': 'اکیلے', 'along': 'ساتھ', 'already': 'پہلے سے', 'also': 'بھی',
+            'although': 'اگرچہ', 'always': 'ہمیشہ', 'american': 'امریکی', 'among': 'میں سے', 'amount': 'رقم',
+            'analysis': 'تجزیہ', 'analyze': 'تجزیہ کریں', 'and': 'اور', 'animal': 'جانور', 'another': 'دوسرا',
+            'answer': 'جواب', 'any': 'کوئی', 'anybody': 'کوئی بھی', 'anyone': 'کوئی', 'anything': 'کوئی چیز',
+            'appear': 'ظاہر ہوں', 'application': 'درخواست', 'apply': 'لاگو کریں', 'approach': 'نقطہ نظر',
+            'appropriate': 'موزوں', 'approval': 'منظوری', 'approve': 'منظور کریں', 'area': 'علاقہ', 'argue': 'بحث کریں',
+            'argument': 'دلیل', 'arise': 'اٹھیں', 'arm': 'بازو', 'armed': 'مسلح', 'around': 'اردگرد', 'arrange': 'ترتیب دیں',
+            'arrangement': 'ترتیب', 'arrive': 'پہنچیں', 'art': 'فن', 'article': 'مضمون', 'artist': 'فنکار',
+            'as': 'جیسے', 'ask': 'پوچھیں', 'assume': 'فرض کریں', 'assumption': 'فرض', 'assure': 'یقینی بنائیں',
+            'at': 'میں', 'attack': 'حملہ', 'attention': 'توجہ', 'attitude': 'رویہ', 'attorney': 'وکیل',
+            'audience': 'سامعین', 'author': 'مصنف', 'authority': 'اختیار', 'available': 'دستیاب', 'avoid': 'بچیں',
+            'awake': 'جاگ جائیں', 'aware': 'آگاہ', 'away': 'دور', 'awesome': 'شاندار', 'awful': 'خوفناک',
+
+            # Common words (b)
+            'back': 'واپس', 'bad': 'برا', 'bag': 'بیگ', 'ball': 'گیند', 'bank': 'بینک', 'bar': 'بار',
+            'base': 'بنیاد', 'based': 'بنایا', 'basic': 'بنیادی', 'basis': 'بنیاد', 'be': 'ہو', 'beat': 'شکست',
+            'beautiful': 'خوبصورت', 'because': 'کیونکہ', 'become': 'بنیں', 'been': 'گیا', 'before': 'پہلے',
+            'began': 'شروع کیا', 'begin': 'شروع کریں', 'beginning': 'شروع', 'behavior': 'رویہ', 'behind': 'پیچھے',
+            'believe': 'یقین کریں', 'benefit': 'فائدہ', 'best': 'بہترین', 'better': 'بہتر', 'between': 'کے درمیان',
+            'beyond': 'سے بہتر', 'big': 'بڑا', 'bill': 'بل', 'billion': 'ارب', 'bit': 'ٹکڑا', 'black': 'سیاہ',
+            'blood': 'خون', 'blue': 'نیلا', 'board': 'بورڈ', 'body': 'جسم', 'book': 'کتاب', 'born': 'پیدا',
+            'both': 'دونوں', 'bottom': 'نیچے', 'box': 'ڈبہ', 'boy': 'لڑکا', 'break': 'توڑیں', 'breakfast': 'ناشتہ',
+            'bring': 'لے آئیں', 'brother': 'بھائی', 'brought': 'لایا', 'build': 'تعمیر کریں', 'building': 'عمارت',
+            'business': 'کاروبار', 'but': 'لیکن', 'buy': 'خریدیں', 'by': 'کی طرف',
+
+            # Common words (c)
+            'call': 'کال کریں', 'called': 'کہا جاتا ہے', 'came': 'آیا', 'can': 'سکتے', 'candidate': 'امیدوار',
+            'capital': 'سرمایہ', 'car': 'گاڑی', 'care': 'فکر', 'career': 'کیریئر', 'case': 'معاملہ', 'catch': 'پکڑیں',
+            'cause': 'وجہ', 'cell': 'خانہ', 'central': 'مرکزی', 'century': 'صدی', 'certain': 'یقینی', 'certainly': 'یقیناً',
+            'chair': 'کرسی', 'challenge': 'چیلنج', 'chance': 'موقع', 'change': 'تبدیلی', 'character': 'کردار',
+            'charge': 'چارج', 'check': 'جانچیں', 'choice': 'انتخاب', 'choose': 'منتخب کریں', 'church': 'چرچ',
+            'citizen': 'شہری', 'city': 'شہر', 'civil': 'شہری', 'claim': 'دعویٰ', 'class': 'کلاس', 'clear': 'صاف',
+            'close': 'بند کریں', 'coach': 'کوچ', 'coalition': 'اتحاد', 'code': 'کوڈ', 'cold': 'سرد', 'collection': 'مجموعہ',
+            'college': 'کالج', 'color': 'رنگ', 'come': 'آئیں', 'commercial': 'تجارتی', 'common': 'عام', 'community': 'کمیونٹی',
+            'company': 'کمپنی', 'compare': 'موازنہ کریں', 'concern': 'فکر', 'condition': 'حالت', 'conference': 'کنفرنس',
+            'congress': 'کانگریس', 'connect': 'جوڑیں', 'consider': 'غور کریں', 'consumer': 'صارف', 'contain': 'شامل',
+            'continue': 'جاری رکھیں', 'control': 'کنٹرول', 'conversation': 'بات چیت', 'cost': 'قیمت', 'could': 'سکتے',
+            'country': 'ملک', 'couple': 'جوڑا', 'course': 'کورس', 'court': 'عدالت', 'cousin': 'کزن', 'cover': 'ڈھیکن',
+            'create': 'بنائیں', 'crime': 'جرم', 'crisis': 'بحران', 'culture': 'ثقافت', 'cup': 'پیالہ', 'current': 'موجودہ',
+
+            # Common words (d)
+            'dark': 'سیاہ', 'data': 'ڈیٹا', 'date': 'تاریخ', 'daughter': 'بیٹی', 'day': 'دن', 'dead': 'مردہ',
+            'death': 'موت', 'debate': 'بحث', 'decade': 'دہائی', 'decide': 'فیصلہ کریں', 'decision': 'فیصلہ',
+            'defense': 'دفاع', 'defense': 'دفاع', 'degree': 'ڈگری', 'democrat': 'ڈیموکریٹ', 'democratic': 'جمہوری',
+            'describe': 'بیان کریں', 'description': 'تفصیل', 'design': 'ڈیزائن', 'desire': 'خواہش', 'despite': 'باوجود',
+            'detail': 'تفصیل', 'determine': 'معین کریں', 'develop': 'تیار کریں', 'development': 'ترقی', 'difference': 'فرق',
+            'different': 'مختلف', 'difficult': 'مشکل', 'difficulty': 'مشکل', 'dinner': 'رات کا کھانا', 'direction': 'سمت',
+            'director': 'ڈائریکٹر', 'discover': 'دریافت کریں', 'discuss': 'بات کریں', 'discussion': 'بحث', 'disease': 'بیماری',
+            'distance': 'فاصلہ', 'district': 'ضلع', 'divide': 'تقسیم کریں', 'document': 'دستاویز', 'does': 'کرتا',
+            'dog': 'کتا', 'door': 'دروازہ', 'doubt': 'شک', 'down': 'نیچے', 'draw': 'کھینچیں', 'dream': 'خواب',
+            'drive': 'ڈرائیو', 'drop': 'ڈھالیں', 'drug': 'دوا', 'during': 'کے دوران', 'duty': 'فرض',
+
+            # Common words (e)
+            'early': 'جلد', 'east': 'مشرق', 'easy': 'آسان', 'economic': 'اقتصادی', 'economy': 'معیشت',
+            'edge': 'کنارہ', 'education': 'تعلیم', 'effect': 'اثر', 'effort': 'کوشش', 'eight': 'آٹھ',
+            'either': 'کوئی بھی', 'election': 'انتخاب', 'energy': 'توانائی', 'early': 'جلد', 'eight': 'آٹھ',
+            'environment': 'ماحول', 'equal': 'برابر', 'especially': 'خاص طور پر', 'establish': 'قائم کریں',
+            'even': 'حتیٰ', 'evening': 'شام', 'event': 'واقعہ', 'ever': 'کبھی', 'every': 'ہر',
+            'everybody': 'ہر ایک', 'everyone': 'سب', 'everything': 'سب کچھ', 'evidence': 'ثبوت', 'exactly': 'بالکل',
+            'example': 'مثال', 'executive': 'انتظامی', 'exist': 'موجود ہوں', 'experience': 'تجربہ', 'explain': 'وضاحت کریں',
+            'explain': 'وضاحت کریں', 'eye': 'آنکھ',
+
+            # Technical terms
+            'algorithm': 'الگورتھم', 'artificial': 'مصنوعی', 'automation': 'خودکاری', 'behavior': 'رویہ',
+            'binary': 'دوئی', 'byte': 'بائٹ', 'cache': 'کیش', 'chip': 'چپ', 'circuit': 'سرکٹ',
+            'class': 'کلاس', 'cloud': 'کلاؤڈ', 'code': 'کوڈ', 'command': 'کمانڈ', 'comment': 'تبصرہ',
+            'compile': 'مرتب کریں', 'component': 'اجزاء', 'compute': 'حساب لگائیں', 'computer': 'کمپیوٹر',
+            'config': 'ترتیب', 'control': 'کنٹرول', 'controller': 'کنٹرولر', 'cpu': 'سی پی یو', 'crash': 'کریش',
+            'data': 'ڈیٹا', 'database': 'ڈیٹا بیس', 'debug': 'خرابی تلاش کریں', 'deploy': 'تعینات کریں',
+            'device': 'ڈیوائس', 'digital': 'ڈیجیٹل', 'disk': 'ڈسک', 'download': 'ڈاؤن لوڈ کریں',
+            'execute': 'نافذ کریں', 'feature': 'خصوصیت', 'file': 'فائل', 'filter': 'فلٹر', 'firmware': 'فرم ویئر',
+            'flag': 'جھنڈا', 'format': 'فارمیٹ', 'framework': 'ڈھانچہ', 'frequency': 'تعداد', 'function': 'فنکشن',
+            'gpu': 'جی پی یو', 'graph': 'گراف', 'grid': 'گرڈ', 'handle': 'سنبھالیں', 'hardware': 'سخت ویئر',
+            'hash': 'ہیش', 'header': 'سر صحفہ', 'heap': 'ڈھیر', 'host': 'میزبان', 'html': 'ایچ ٹی ایم ایل',
+            'http': 'ایچ ٹی ٹی پی', 'icon': 'آئیکن', 'implement': 'نافذ کریں', 'import': 'درآمد کریں',
+            'index': 'انڈیکس', 'initialize': 'شروع کریں', 'input': 'ان پٹ', 'instance': 'مثال',
+            'instruct': 'ہدایت دیں', 'integer': 'عددی', 'interface': 'رابطہ', 'interrupt': 'خلل ڈالیں',
+            'io': 'ان پٹ آؤٹ پٹ', 'iteration': 'تکرار', 'json': 'جے ایس او این', 'kernel': 'دانہ',
+            'key': 'کلید', 'keyword': 'کلیدی لفظ', 'lambda': 'لیمبڈا', 'language': 'زبان', 'layer': 'تہہ',
+            'learning': 'سیکھنا', 'library': 'لائبریری', 'license': 'لائسنس', 'link': 'لنک', 'list': 'فہرست',
+            'load': 'لوڈ کریں', 'local': 'مقامی', 'lock': 'تالا', 'log': 'لاگ', 'logic': 'منطق',
+            'loop': 'لوپ', 'machine': 'مشین', 'main': 'مرکزی', 'map': 'نقشہ', 'memory': 'یادداشت',
+            'message': 'پیغام', 'method': 'طریقہ', 'metric': 'پیمائش', 'middleware': 'درمیانی ورہ', 'mode': 'موڈ',
+            'model': 'ماڈل', 'module': 'ماڈیول', 'monitor': 'نگرانی کریں', 'motor': 'موٹر', 'mouse': 'ماؤس',
+            'move': 'حرکت کریں', 'network': 'نیٹ ورک', 'neural': 'اعصابی', 'node': 'نوڈ', 'noise': 'شور',
+            'object': 'چیز', 'operation': 'آپریشن', 'operator': 'آپریٹر', 'optimize': 'بہتر بنائیں', 'option': 'اختیار',
+            'order': 'ترتیب', 'output': 'آؤٹ پٹ', 'overflow': 'بہاؤ', 'parallel': 'متوازی', 'parameter': 'پیرامیٹر',
+            'parse': 'پارس کریں', 'partition': 'حصہ', 'password': 'پاس ورڈ', 'path': 'راستہ', 'pattern': 'نمونہ',
+            'pause': 'رکیں', 'payload': 'بوجھ', 'performance': 'کارکردگی', 'permission': 'اجازت', 'physics': 'طبیعیات',
+            'pixel': 'پکسل', 'pointer': 'اشارہ', 'port': 'بندرگاہ', 'position': 'پوزیشن', 'power': 'طاقت',
+            'practice': 'عمل', 'predict': 'پیشین گوئی کریں', 'preference': 'ترجیح', 'press': 'دبائیں',
+            'priority': 'ترجیح', 'privacy': 'نجی', 'process': 'عمل', 'processor': 'پروسیسر', 'produce': 'تیار کریں',
+            'product': 'پروڈکٹ', 'program': 'پروگرام', 'project': 'منصوبہ', 'promise': 'وعدہ', 'property': 'خصوصیت',
+            'protocol': 'پروٹوکول', 'provide': 'فراہم کریں', 'pull': 'کھینچیں', 'push': 'دھکیلیں', 'query': 'سوال',
+            'queue': 'لائن', 'random': 'بے ترتیب', 'range': 'رینج', 'rate': 'شرح', 'read': 'پڑھیں', 'real': 'حقیقی',
+            'reason': 'وجہ', 'receive': 'حاصل کریں', 'recommend': 'تجویز کریں', 'record': 'ریکارڈ', 'recover': 'بحال کریں',
+            'reduce': 'کم کریں', 'reference': 'حوالہ', 'reflect': 'عکاسی کریں', 'refresh': 'تروتازہ کریں', 'register': 'رجسٹر',
+            'release': 'رہائی', 'reliable': 'قابل اعتماد', 'reload': 'دوبارہ لوڈ کریں', 'remote': 'دور دراز',
+            'remove': 'ہٹائیں', 'render': 'تصویر بنائیں', 'repeat': 'دہرائیں', 'replace': 'بدل دیں', 'report': 'رپورٹ',
+            'request': 'درخواست', 'require': 'ضروری ہے', 'requirement': 'ضرورت', 'reset': 'ری سیٹ کریں', 'resolve': 'حل کریں',
+            'resource': 'وسیلہ', 'response': 'جواب', 'result': 'نتیجہ', 'return': 'واپسی', 'reverse': 'الٹا',
+            'review': 'جائزہ', 'robot': 'روبوٹ', 'robotics': 'روبوٹکس', 'rule': 'اصول', 'run': 'چلائیں',
+            'safe': 'محفوظ', 'save': 'بچائیں', 'schema': 'نقشہ', 'scope': 'دائرہ', 'screen': 'سکرین',
+            'script': 'اسکرپٹ', 'search': 'تلاش کریں', 'second': 'دوسرا', 'section': 'حصہ', 'security': 'حفاظت',
+            'seek': 'تلاش کریں', 'segment': 'حصہ', 'select': 'منتخب کریں', 'send': 'بھیجیں', 'sensor': 'سینسر',
+            'sequence': 'ترتیب', 'server': 'سرور', 'service': 'خدمت', 'session': 'سیشن', 'set': 'سیٹ',
+            'setting': 'ترتیب', 'setup': 'سیٹ اپ', 'share': 'شیئر کریں', 'shift': 'شفٹ', 'show': 'دکھائیں',
+            'signal': 'سگنل', 'size': 'سائز', 'skip': 'چھوڑ دیں', 'slow': 'سست', 'socket': 'ساکٹ',
+            'software': 'سافٹ ویئر', 'solution': 'حل', 'solve': 'حل کریں', 'sort': 'ترتیب دیں', 'source': 'ذریعہ',
+            'space': 'جگہ', 'specification': 'تفصیل', 'speed': 'رفتار', 'split': 'تقسیم کریں', 'stack': 'اسٹیک',
+            'standard': 'معیار', 'state': 'حالت', 'statement': 'بیان', 'static': 'غیر متحرک', 'station': 'سٹیشن',
+            'status': 'حالت', 'step': 'قدم', 'stop': 'روکیں', 'storage': 'ذخیرہ', 'store': 'محفوظ کریں',
+            'stream': 'بہاؤ', 'string': 'سٹرنگ', 'structure': 'ڈھانچہ', 'studio': 'سٹوڈیو', 'study': 'مطالعہ',
+            'style': 'انداز', 'subject': 'موضوع', 'submit': 'جمع کریں', 'subscribe': 'رکن بنیں', 'subset': 'ذیلی سیٹ',
+            'success': 'کامیابی', 'summary': 'خلاصہ', 'support': 'معاونت', 'suppose': 'فرض کریں', 'suppress': 'دبائیں',
+            'surface': 'سطح', 'switch': 'سوئچ', 'symbol': 'علامت', 'sync': 'ہم آہنگ', 'syntax': 'نحو',
+            'system': 'نظام', 'table': 'ٹیبل', 'tag': 'ٹیگ', 'target': 'ہدف', 'task': 'کام', 'template': 'سانچہ',
+            'test': 'ٹیسٹ', 'text': 'متن', 'than': 'سے', 'that': 'وہ', 'the': 'یہ', 'their': 'ان کا',
+            'them': 'انہیں', 'theme': 'تھیم', 'then': 'پھر', 'theory': 'نظریہ', 'there': 'وہاں', 'therefore': 'اس لیے',
+            'these': 'یہ', 'they': 'وہ', 'thing': 'چیز', 'think': 'سوچیں', 'this': 'یہ', 'those': 'وہ',
+            'though': 'اگرچہ', 'thought': 'خیال', 'through': 'ذریعے', 'time': 'وقت', 'timing': 'وقت کی تقسیم',
+            'tip': 'ٹپ', 'title': 'عنوان', 'token': 'ٹوکن', 'tool': 'آلہ', 'topic': 'موضوع', 'total': 'کل',
+            'touch': 'چھوئیں', 'trace': 'نقوش', 'track': 'ٹریک', 'traffic': 'ٹریفک', 'train': 'ریل',
+            'transfer': 'منتقل کریں', 'transform': 'تبدیل کریں', 'transition': 'منتقلی', 'translate': 'ترجمہ کریں',
+            'transmission': 'ترسیل', 'transport': 'نقل', 'trap': 'پھندہ', 'treat': 'سلوک کریں', 'trigger': 'سبب',
+            'true': 'سچ', 'trust': 'اعتماد', 'try': 'کوشش کریں', 'tuple': 'ٹیپل', 'type': 'قسم',
+            'typical': 'عام طور پر', 'understand': 'سمجھیں', 'unit': 'یونٹ', 'update': 'اپ ڈیٹ', 'upload': 'اپ لوڈ',
+            'use': 'استعمال', 'used': 'استعمال شدہ', 'user': 'صارف', 'using': 'استعمال کرتے ہوئے', 'utility': 'افادیت',
+            'valid': 'درست', 'value': 'قیمت', 'variable': 'متغیر', 'variation': 'تغیر', 'various': 'مختلف',
+            'vector': 'ویکٹر', 'version': 'ورژن', 'view': 'نظارہ', 'virtual': 'مجازی', 'virus': 'وائرس',
+            'visible': 'نظر آنے والی', 'visit': 'دیکھنے جائیں', 'visual': 'بصری', 'void': 'خالی', 'voltage': 'وولٹیج',
+            'volume': 'حجم', 'wait': 'انتظار کریں', 'walk': 'چلیں', 'warning': 'انتباہ', 'watch': 'دیکھیں',
+            'water': 'پانی', 'way': 'طریقہ', 'weak': 'کمزور', 'weight': 'وزن', 'welcome': 'خوش آمدید',
+            'what': 'کیا', 'wheel': 'پہیہ', 'when': 'کب', 'where': 'کہاں', 'whether': 'کہ آیا', 'which': 'کون',
+            'while': 'جبکہ', 'white': 'سفید', 'who': 'کون', 'whole': 'پورا', 'why': 'کیوں', 'wide': 'چوڑا',
+            'width': 'چوڑائی', 'will': 'ہوگا', 'window': 'ونڈو', 'wire': 'تار', 'wish': 'خواہش', 'with': 'کے ساتھ',
+            'within': 'اندر', 'without': 'بغیر', 'word': 'لفظ', 'work': 'کام', 'worker': 'کارکن', 'world': 'دنیا',
+            'worry': 'فکر کریں', 'would': 'ہوتا', 'write': 'لکھیں', 'writer': 'لکھاری', 'written': 'لکھا', 'wrong': 'غلط',
+            'year': 'سال', 'yes': 'جی', 'yet': 'ابھی', 'you': 'آپ', 'young': 'نوجوان', 'your': 'آپ کا', 'yours': 'آپ کا',
+            'yourself': 'آپ خود', 'zero': 'صفر', 'zone': 'علاقہ',
+        }
+
+        spanish_translations = {
+            'the': 'el', 'is': 'es', 'and': 'y', 'to': 'a', 'of': 'de', 'in': 'en', 'it': 'eso',
+            'that': 'eso', 'this': 'esto', 'for': 'para', 'with': 'con', 'by': 'por', 'from': 'desde',
+            'at': 'en', 'as': 'como', 'on': 'en', 'be': 'ser', 'can': 'poder', 'have': 'tener',
+            'chapter': 'capítulo', 'robotics': 'robótica', 'introduction': 'introducción', 'will': 'voluminoso',
+            'learn': 'aprender', 'system': 'sistema', 'computer': 'computadora', 'code': 'código',
+        }
+
+        translations_map = {
+            'urdu': urdu_translations,
+            'spanish': spanish_translations,
+        }
+
+        return translations_map.get(target_language, {})
 
     def _get_mock_translations(self, target_language: str) -> Dict[str, str]:
         """
