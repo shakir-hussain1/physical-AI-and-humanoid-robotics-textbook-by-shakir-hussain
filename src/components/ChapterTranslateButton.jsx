@@ -30,7 +30,21 @@ export default function ChapterTranslateButton({ chapterId, chapterTitle }) {
       const cacheKey = `translation_${chapterId}_${targetLanguage}`;
       const cached = localStorage.getItem(cacheKey);
       if (cached) {
-        setTranslatedContent(JSON.parse(cached));
+        const cachedData = JSON.parse(cached);
+        const translatedHTML = cachedData.content || cachedData;
+        setTranslatedContent(translatedHTML);
+
+        // Apply the cached translation to DOM
+        setTimeout(() => {
+          const contentElement = document.querySelector('.theme-doc-markdown') ||
+                                 document.querySelector('.docItemContent') ||
+                                 document.querySelector('article');
+          if (contentElement && translatedHTML) {
+            contentElement.innerHTML = translatedHTML;
+            setIsTranslated(true);
+            console.log('[Translation] Applied cached translation from localStorage');
+          }
+        }, 100);
       }
     }
   }, [isAuthenticated, chapterId, targetLanguage]);
@@ -104,7 +118,7 @@ export default function ChapterTranslateButton({ chapterId, chapterTitle }) {
         throw new Error('Translation failed: No content returned');
       }
 
-      // Cache the translation
+      // Cache the translation in localStorage
       const cacheKey = `translation_${chapterId}_${targetLanguage}`;
       localStorage.setItem(cacheKey, JSON.stringify({
         content: response.translated_content,
@@ -112,13 +126,12 @@ export default function ChapterTranslateButton({ chapterId, chapterTitle }) {
         source: 'translation_api'
       }));
 
-      // Update DOM immediately with translated content
-      contentElement.innerHTML = response.translated_content;
-
-      setTranslatedContent(response.translated_content);
-      setIsTranslated(true);
-
       console.log('[Translation] Successfully translated chapter to', targetLanguage);
+      console.log('[Translation] Cached translation, reloading page to display...');
+
+      // Reload page to display cached translation (avoids React DOM conflicts)
+      // The useEffect at the top will load the cached translation
+      setTimeout(() => window.location.reload(), 500);
     } catch (err) {
       console.error('[Translation Error]', err);
       setError(err.message || 'Failed to translate chapter. Please try again.');
@@ -130,26 +143,20 @@ export default function ChapterTranslateButton({ chapterId, chapterTitle }) {
 
   /**
    * Toggle between original and translated content
-   * Updates DOM with appropriate content
+   * Reloads page to apply/remove translation
    */
   const handleToggleTranslation = async () => {
     try {
       setError(null);
 
-      const contentElement = getContentElement();
-      if (!contentElement) {
-        throw new Error('Chapter content not found');
-      }
-
-      if (isTranslated && translatedContent) {
-        // Switch to translated version if we have it cached
-        console.log('[Translation] Switching to translated version');
-        contentElement.innerHTML = translatedContent;
-        setIsTranslated(true);
-      } else {
+      if (!isTranslated && translatedContent) {
         // Translate if not already done
         console.log('[Translation] Starting translation from toggle');
         await handleTranslate();
+      } else if (isTranslated) {
+        // Already translated, go back to original by reloading
+        console.log('[Translation] Toggling back to original');
+        window.location.reload();
       }
     } catch (err) {
       console.error('[Translation Toggle Error]', err);
