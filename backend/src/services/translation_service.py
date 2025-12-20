@@ -19,6 +19,8 @@ import json
 import hashlib
 import requests
 from urllib.parse import quote
+import os
+import cohere
 
 logger = logging.getLogger(__name__)
 
@@ -195,7 +197,7 @@ class TranslationService:
 
     def _translate_text(self, text: str, target_language: str) -> str:
         """
-        Translate a text portion to target language using MyMemory Translation API
+        Translate a text portion to target language using Cohere API
 
         Args:
             text: Text to translate
@@ -205,49 +207,55 @@ class TranslationService:
             Translated text
         """
         try:
-            # Map language names to language codes for MyMemory API
-            lang_map = {
-                'urdu': 'ur-PK',
-                'spanish': 'es-ES',
-                'french': 'fr-FR',
-                'arabic': 'ar-SA',
-                'hindi': 'hi-IN',
+            # Get Cohere API key from environment
+            api_key = os.getenv('COHERE_API_KEY')
+            if not api_key:
+                logger.warning("[Translation] Cohere API key not found, returning original text")
+                return text
+
+            # Initialize Cohere client
+            co = cohere.ClientV2(api_key=api_key)
+
+            # Language name mapping
+            lang_names = {
+                'urdu': 'Urdu',
+                'spanish': 'Spanish',
+                'french': 'French',
+                'arabic': 'Arabic',
+                'hindi': 'Hindi',
             }
 
-            target_code = lang_map.get(target_language, target_language)
+            target_lang_name = lang_names.get(target_language, 'Urdu')
 
-            # Use MyMemory Translation API (free, no key needed)
-            api_url = "https://api.mymemory.translated.net/get"
-            params = {
-                'q': text,
-                'langpair': f'en|{target_code}'
-            }
+            # Create prompt for translation using Cohere
+            prompt = f"""Translate the following text to {target_lang_name}.
+Only provide the translated text, nothing else.
 
-            logger.info(f"[Translation] Calling MyMemory API for {target_language}: {text[:50]}...")
+Text: {text}
 
-            response = requests.get(api_url, params=params, timeout=10)
-            response.raise_for_status()
+Translation:"""
 
-            data = response.json()
+            logger.info(f"[Translation] Calling Cohere API for {target_language}: {text[:50]}...")
 
-            # Check if translation was successful
-            if data.get('responseStatus') == 200 and data.get('responseData'):
-                translated_text = data['responseData'].get('translatedText', text)
-                logger.info(f"[Translation] MyMemory API success: {translated_text[:50]}...")
+            # Call Cohere API for translation
+            response = co.generate(
+                model="command",
+                prompt=prompt,
+                max_tokens=300,
+                temperature=0.3
+            )
+
+            if response and response.generations and len(response.generations) > 0:
+                translated_text = response.generations[0].text.strip()
+                logger.info(f"[Translation] Cohere translation success: {translated_text[:50]}...")
                 return translated_text
             else:
-                logger.warning(f"[Translation] MyMemory API returned status {data.get('responseStatus')}")
-                return text  # Return original text if translation fails
+                logger.warning("[Translation] Cohere API returned empty response")
+                return text
 
-        except requests.exceptions.Timeout:
-            logger.error(f"[Translation] API timeout for text: {text[:50]}")
-            return text
-        except requests.exceptions.RequestException as e:
-            logger.error(f"[Translation] API request failed: {e}")
-            return text
         except Exception as e:
-            logger.error(f"[Translation] Error translating text: {e}")
-            return text  # Return original text on any error
+            logger.error(f"[Translation] Cohere API error: {e}")
+            return text  # Return original text on error
 
     def _get_mock_translations(self, target_language: str) -> Dict[str, str]:
         """
