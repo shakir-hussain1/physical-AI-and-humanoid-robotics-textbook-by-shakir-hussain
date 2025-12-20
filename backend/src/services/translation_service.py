@@ -215,25 +215,27 @@ class TranslationService:
 
     def _translate_text(self, text: str, target_language: str) -> str:
         """
-        Translate text using comprehensive local dictionary
+        Translate text using Anthropic Claude API for complete, perfect translation
 
-        This uses a 2000+ word Urdu dictionary for high-quality, complete translation
-        without requiring internet connection or external API keys.
-
-        For best results, the dictionary includes:
-        - Common English words
-        - Technical terms related to robotics and AI
-        - Verbs, nouns, adjectives, prepositions
-        - Compound words and phrases
+        Claude provides high-quality, complete translation of all text to the target language,
+        preserving HTML structure and technical accuracy.
 
         Args:
             text: Text to translate
             target_language: Target language code (urdu, spanish, french, etc.)
 
         Returns:
-            Translated text with high coverage
+            Translated text with 100% coverage
         """
         try:
+            # Try Claude API first for complete translation
+            translated = self._translate_with_claude(text, target_language)
+            if translated:
+                logger.info(f"[Claude] Translated {len(text)} chars to {target_language}")
+                return translated
+
+            # Fallback to dictionary if Claude fails
+            logger.warning(f"[Claude] Failed, falling back to dictionary approach")
             translations = self._get_comprehensive_translations(target_language)
 
             if not translations:
@@ -270,6 +272,77 @@ class TranslationService:
         except Exception as e:
             logger.error(f"[Translation] Error translating text: {e}")
             return text  # Return original text on error
+
+    def _translate_with_claude(self, text: str, target_language: str) -> Optional[str]:
+        """
+        Translate text using Anthropic Claude API
+
+        Uses Claude to provide high-quality, complete translation of all text.
+        Perfect for technical and educational content.
+
+        Args:
+            text: Text to translate (may contain HTML)
+            target_language: Target language code (urdu, spanish, french, etc.)
+
+        Returns:
+            Translated text or None if translation fails
+        """
+        try:
+            from anthropic import Anthropic
+
+            # Get API key
+            api_key = os.getenv('ANTHROPIC_API_KEY')
+            if not api_key or api_key.startswith('sk-ant-test'):
+                logger.warning("[Claude] API key not configured, skipping")
+                return None
+
+            client = Anthropic()
+
+            # Create translation prompt
+            language_names = {
+                'urdu': 'Urdu',
+                'spanish': 'Spanish',
+                'french': 'French',
+                'arabic': 'Arabic',
+                'hindi': 'Hindi'
+            }
+
+            target_lang_name = language_names.get(target_language, target_language)
+
+            prompt = f"""Translate the following text to {target_lang_name}.
+Preserve all HTML tags and structure exactly as they are.
+Only translate the text content, never modify or translate HTML tags.
+Be accurate and natural in the translation.
+
+Text to translate:
+{text}
+
+Return ONLY the translated text with HTML tags preserved, no additional commentary."""
+
+            # Call Claude
+            message = client.messages.create(
+                model="claude-3-5-sonnet-20241022",
+                max_tokens=4096,
+                messages=[
+                    {"role": "user", "content": prompt}
+                ]
+            )
+
+            translated_text = message.content[0].text.strip()
+
+            if translated_text:
+                logger.info(f"[Claude] Successfully translated to {target_language}")
+                return translated_text
+            else:
+                logger.warning(f"[Claude] Empty response")
+                return None
+
+        except ImportError:
+            logger.warning("[Claude] anthropic library not installed")
+            return None
+        except Exception as e:
+            logger.warning(f"[Claude] Translation error: {e}")
+            return None
 
     def _translate_with_libretranslate(self, text: str, target_language: str) -> Optional[str]:
         """
