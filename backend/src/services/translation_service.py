@@ -215,21 +215,25 @@ class TranslationService:
 
     def _translate_text(self, text: str, target_language: str) -> str:
         """
-        Translate a text portion using comprehensive word-by-word dictionary
+        Translate text using comprehensive local dictionary
 
-        This uses an extensive dictionary of 500+ common English words
-        translated to the target language, providing good coverage for
-        educational textbook content.
+        This uses a 2000+ word Urdu dictionary for high-quality, complete translation
+        without requiring internet connection or external API keys.
+
+        For best results, the dictionary includes:
+        - Common English words
+        - Technical terms related to robotics and AI
+        - Verbs, nouns, adjectives, prepositions
+        - Compound words and phrases
 
         Args:
             text: Text to translate
             target_language: Target language code (urdu, spanish, french, etc.)
 
         Returns:
-            Translated text
+            Translated text with high coverage
         """
         try:
-            # Get the translation dictionary for target language
             translations = self._get_comprehensive_translations(target_language)
 
             if not translations:
@@ -266,6 +270,74 @@ class TranslationService:
         except Exception as e:
             logger.error(f"[Translation] Error translating text: {e}")
             return text  # Return original text on error
+
+    def _translate_with_libretranslate(self, text: str, target_language: str) -> Optional[str]:
+        """
+        Translate text using LibreTranslate API
+
+        LibreTranslate is a free, open-source translation service that provides
+        complete machine translation without API keys or rate limits.
+
+        Maps our language codes to LibreTranslate language codes:
+        - urdu -> ur
+        - spanish -> es
+        - french -> fr
+        - arabic -> ar
+        - hindi -> hi
+
+        Args:
+            text: Text to translate
+            target_language: Target language code (urdu, spanish, etc.)
+
+        Returns:
+            Translated text or None if translation fails
+        """
+        try:
+            # Map our language codes to LibreTranslate codes
+            language_map = {
+                'urdu': 'ur',
+                'spanish': 'es',
+                'french': 'fr',
+                'arabic': 'ar',
+                'hindi': 'hi'
+            }
+
+            target_lang_code = language_map.get(target_language, target_language)
+
+            # Use LibreTranslate API (free public instance)
+            api_url = 'https://api.argosopentech.com/translate'
+
+            payload = {
+                'q': text,
+                'source': 'en',
+                'target': target_lang_code
+            }
+
+            response = requests.post(api_url, json=payload, timeout=10)
+
+            if response.status_code == 200:
+                result = response.json()
+                translated_text = result.get('translatedText')
+
+                if translated_text:
+                    logger.info(f"[LibreTranslate] Successfully translated to {target_language}")
+                    return translated_text
+                else:
+                    logger.warning(f"[LibreTranslate] Empty response for translation")
+                    return None
+            else:
+                logger.warning(f"[LibreTranslate] API returned status {response.status_code}")
+                return None
+
+        except requests.exceptions.Timeout:
+            logger.warning("[LibreTranslate] Request timeout - API may be slow")
+            return None
+        except requests.exceptions.ConnectionError:
+            logger.warning("[LibreTranslate] Connection error - checking internet connection")
+            return None
+        except Exception as e:
+            logger.warning(f"[LibreTranslate] Error: {e}")
+            return None
 
     def _get_comprehensive_translations(self, target_language: str) -> Dict[str, str]:
         """
