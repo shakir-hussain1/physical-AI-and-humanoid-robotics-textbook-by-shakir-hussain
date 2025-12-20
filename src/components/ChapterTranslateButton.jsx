@@ -42,6 +42,32 @@ export default function ChapterTranslateButton({ chapterId, chapterTitle }) {
    * - Caches result
    * - Updates display
    */
+  /**
+   * Get content element from DOM using multiple selectors
+   * Docusaurus uses different class names in different versions
+   */
+  const getContentElement = () => {
+    // Try multiple selectors in order of preference
+    const selectors = [
+      '.docItemContent',           // Docusaurus default
+      '.theme-doc-markdown',       // Some versions use this
+      'article',                   // Fallback to article tag
+      '[role="main"]',             // Semantic HTML
+      '.markdown',                 // Another variant
+      '.doc-content'               // Another variant
+    ];
+
+    for (const selector of selectors) {
+      const element = document.querySelector(selector);
+      if (element && element.textContent.trim().length > 50) {
+        console.log('[Translation] Found content with selector:', selector);
+        return element;
+      }
+    }
+
+    return null;
+  };
+
   const handleTranslate = async () => {
     if (!isAuthenticated || !tokens.access_token) {
       setError('Please log in to use translation feature');
@@ -53,12 +79,16 @@ export default function ChapterTranslateButton({ chapterId, chapterTitle }) {
       setError(null);
 
       // Extract current chapter content from DOM
-      const contentElement = document.querySelector('.docItemContent');
+      const contentElement = getContentElement();
       if (!contentElement) {
-        throw new Error('Chapter content not found');
+        console.error('[Translation] Content element selectors tried:', [
+          '.docItemContent', '.theme-doc-markdown', 'article', '[role="main"]'
+        ]);
+        throw new Error('Chapter content not found. Please check browser console.');
       }
 
       const originalContent = contentElement.innerHTML;
+      console.log('[Translation] Extracted content length:', originalContent.length);
 
       // Call translation API
       const response = await translateChapterContent(
@@ -103,20 +133,23 @@ export default function ChapterTranslateButton({ chapterId, chapterTitle }) {
     try {
       setError(null);
 
-      const contentElement = document.querySelector('.docItemContent');
+      const contentElement = getContentElement();
       if (!contentElement) {
         throw new Error('Chapter content not found');
       }
 
       if (isTranslated && translatedContent) {
         // Switch to translated version if we have it cached
+        console.log('[Translation] Switching to translated version');
         contentElement.innerHTML = translatedContent;
         setIsTranslated(true);
       } else {
         // Translate if not already done
+        console.log('[Translation] Starting translation from toggle');
         await handleTranslate();
       }
     } catch (err) {
+      console.error('[Translation Toggle Error]', err);
       setError(err.message || 'Failed to toggle translation');
     }
   };
