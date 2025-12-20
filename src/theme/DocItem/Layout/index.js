@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import DocItemLayout from '@theme-original/DocItem/Layout';
 import ChapterPersonalizeButton from '../../../components/ChapterPersonalizeButton';
+import ChapterTranslateButton from '../../../components/ChapterTranslateButton';
 import { useAuth } from '../../../context/AuthContext';
 import { getChapterPersonalization } from '../../../services/personalizationApi';
 import styles from './Layout.module.css';
@@ -126,10 +127,18 @@ export default function DocItemLayoutWrapper(props) {
     <>
       {isChapter && isAuthenticated && chapterId && (
         <div className={styles.buttonContainer}>
-          <ChapterPersonalizeButton
-            chapterId={chapterId}
-            chapterTitle={chapterTitle || 'Chapter'}
-          />
+          <div className={styles.buttonRow}>
+            <ChapterPersonalizeButton
+              chapterId={chapterId}
+              chapterTitle={chapterTitle || 'Chapter'}
+            />
+          </div>
+          <div className={styles.buttonRow}>
+            <ChapterTranslateButton
+              chapterId={chapterId}
+              chapterTitle={chapterTitle || 'Chapter'}
+            />
+          </div>
         </div>
       )}
 
