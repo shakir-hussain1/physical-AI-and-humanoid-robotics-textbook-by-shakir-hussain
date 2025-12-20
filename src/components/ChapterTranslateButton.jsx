@@ -112,6 +112,9 @@ export default function ChapterTranslateButton({ chapterId, chapterTitle }) {
         source: 'translation_api'
       }));
 
+      // Update DOM immediately with translated content
+      contentElement.innerHTML = response.translated_content;
+
       setTranslatedContent(response.translated_content);
       setIsTranslated(true);
 
