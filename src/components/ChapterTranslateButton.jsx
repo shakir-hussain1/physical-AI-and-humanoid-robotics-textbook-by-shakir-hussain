@@ -10,7 +10,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { translateChapterContent, getTranslatedContent } from '../services/translationApi';
+import { translateChapterContent } from '../services/translationApi';
 import styles from './ChapterTranslateButton.module.css';
 
 export default function ChapterTranslateButton({ chapterId, chapterTitle }) {
