@@ -20,7 +20,7 @@ import hashlib
 import requests
 from urllib.parse import quote
 import os
-import cohere
+from google_trans_new import google_translator
 
 logger = logging.getLogger(__name__)
 
@@ -216,7 +216,7 @@ class TranslationService:
 
     def _translate_text(self, text: str, target_language: str) -> str:
         """
-        Translate a text portion to target language using Cohere API
+        Translate a text portion to target language using Google Translate
 
         Args:
             text: Text to translate
@@ -226,57 +226,32 @@ class TranslationService:
             Translated text
         """
         try:
-            # Get Cohere API key from environment (load dynamically)
-            api_key = os.getenv('COHERE_API_KEY')
-
-            if not api_key:
-                logger.error(f"[Translation] Cohere API key not found in environment. Available keys: {list(os.environ.keys())[:5]}...")
-                return text
-
-            logger.info(f"[Translation] Using Cohere API key: {api_key[:10]}...")
-
-            # Initialize Cohere client
-            co = cohere.ClientV2(api_key=api_key)
-
-            # Language name mapping
-            lang_names = {
-                'urdu': 'Urdu',
-                'spanish': 'Spanish',
-                'french': 'French',
-                'arabic': 'Arabic',
-                'hindi': 'Hindi',
+            # Language code mapping for Google Translate
+            lang_codes = {
+                'urdu': 'ur',
+                'spanish': 'es',
+                'french': 'fr',
+                'arabic': 'ar',
+                'hindi': 'hi',
             }
 
-            target_lang_name = lang_names.get(target_language, 'Urdu')
+            target_code = lang_codes.get(target_language, 'ur')
 
-            # Create prompt for translation using Cohere
-            prompt = f"""Translate the following text to {target_lang_name}.
-Only provide the translated text, nothing else.
+            logger.info(f"[Translation] Translating to {target_language} ({target_code}): {text[:50]}...")
 
-Text: {text}
+            # Use Google Translate (free, no API key needed)
+            translator = google_translator()
 
-Translation:"""
-
-            logger.info(f"[Translation] Calling Cohere API for {target_language}: {text[:50]}...")
-
-            # Call Cohere API for translation
-            response = co.generate(
-                model="command",
-                prompt=prompt,
-                max_tokens=300,
-                temperature=0.3
-            )
-
-            if response and response.generations and len(response.generations) > 0:
-                translated_text = response.generations[0].text.strip()
-                logger.info(f"[Translation] Cohere translation success: {translated_text[:50]}...")
-                return translated_text
-            else:
-                logger.warning("[Translation] Cohere API returned empty response")
+            try:
+                translated_text = translator.translate(text, lang_src='en', lang_tgt=target_code)
+                logger.info(f"[Translation] Translation success: {str(translated_text)[:50]}...")
+                return str(translated_text)
+            except Exception as api_error:
+                logger.error(f"[Translation] Google Translate API error: {api_error}")
                 return text
 
         except Exception as e:
-            logger.error(f"[Translation] Cohere API error: {e}")
+            logger.error(f"[Translation] Error translating text: {e}")
             return text  # Return original text on error
 
     def _get_mock_translations(self, target_language: str) -> Dict[str, str]:
