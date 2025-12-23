@@ -1,11 +1,15 @@
 import React, { useState, useRef, useEffect } from 'react';
 import styles from './ChatWidget.module.css';
 
-// Use Railway deployment or local backend
+// Use environment variable for backend URL
+// Set REACT_APP_API_URL=<your-backend-url> during deployment
 const API_URL = process.env.REACT_APP_API_URL ||
                  (typeof window !== 'undefined' && window.location.hostname === 'localhost'
                    ? 'http://localhost:8000'
-                   : 'https://physical-ai-and-humanoid-robotics-textbook-by-sh-production.up.railway.app');
+                   : (() => {
+                       console.error('Backend API URL not configured for production. Set REACT_APP_API_URL environment variable.');
+                       return 'http://localhost:8000';
+                     })());
 
 export default function ChatWidget() {
   const [isOpen, setIsOpen] = useState(false);

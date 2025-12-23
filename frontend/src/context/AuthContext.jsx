@@ -10,10 +10,13 @@ const getAPIUrl = () => {
   }
 
   if (typeof window !== 'undefined' && window.location.hostname === 'localhost') {
-    return 'http://localhost:8001';
+    return 'http://localhost:8000';
   }
 
-  return 'https://shakir-rag-chatbot-backend.hf.space';
+  // Production - use environment variable
+  // Set REACT_APP_API_URL=<your-backend-url> during deployment
+  console.error('Backend API URL not configured for production. Set REACT_APP_API_URL environment variable.');
+  return 'http://localhost:8000';
 };
 
 const API_URL = getAPIUrl();

@@ -14,9 +14,10 @@ const getAPIUrl = () => {
     return 'http://localhost:8000';
   }
 
-  // GitHub Pages or production - use Hugging Face Spaces backend
-  // Replace USERNAME with your Hugging Face username
-  return 'https://shakir-rag-chatbot-backend.hf.space';
+  // Production - use environment variable or ask user for backend URL
+  // Set REACT_APP_API_URL=<your-backend-url> during deployment
+  console.error('Backend API URL not configured for production. Set REACT_APP_API_URL environment variable.');
+  return 'http://localhost:8000';
 };
 
 const API_URL = getAPIUrl();
