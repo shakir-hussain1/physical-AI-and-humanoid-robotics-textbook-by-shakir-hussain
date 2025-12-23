@@ -352,12 +352,27 @@ Answer (keep it SHORT and TO-THE-POINT):"""
                 'status': 'error'
             }
 
+    def _clean_text(self, text: str) -> str:
+        """Clean markdown and metadata from text."""
+        import re
+        # Remove markdown headers
+        text = re.sub(r'^#+\s+', '', text, flags=re.MULTILINE)
+        # Remove bold/italic markdown
+        text = re.sub(r'\*\*([^*]+)\*\*', r'\1', text)
+        text = re.sub(r'\*([^*]+)\*', r'\1', text)
+        # Remove metadata lines like "**Week 3 of 13 | Estimated Time..."
+        text = re.sub(r'\*\*Week.*?\*\*', '', text)
+        text = re.sub(r'Week \d+ of \d+.*?hours', '', text, flags=re.IGNORECASE)
+        # Remove extra whitespace
+        text = ' '.join(text.split())
+        return text.strip()
+
     def _generate_fallback_answer(self, query: str, docs: List[Dict], context: str) -> str:
-        """Generate a fallback answer when Cohere is unavailable."""
+        """Generate a concise fallback answer - clean, to-the-point, no raw content."""
         if not docs:
             return f"I don't have information about '{query}' in the textbook. Try asking about ROS 2, Humanoid Robots, Kinematics, Perception, or Control."
 
-        # Try using Claude API as a fallback
+        # Try using Claude API first
         try:
             from anthropic import Anthropic
 
@@ -366,17 +381,17 @@ Answer (keep it SHORT and TO-THE-POINT):"""
             # Use only top document for conciseness
             context_text = "\n\n".join([
                 f"{doc['title']}: {doc['content']}"
-                for doc in docs[:2]  # Use top 2 documents
+                for doc in docs[:2]
             ])
 
-            system_prompt = """You are a concise assistant for a Robotics textbook.
-Keep answers SHORT and TO-THE-POINT:
-- Answer in 2-4 sentences maximum
-- Only include essential information
-- Cite the source chapter if relevant
-- Use simple language"""
+            system_prompt = """You are a concise robotics tutor. Answer questions using provided textbook content.
+STRICT RULES:
+- Answer in 2-3 sentences ONLY
+- No fluff, no extra details
+- Be direct and clear
+- Cite chapter name if helpful"""
 
-            user_message = f"""Answer BRIEFLY (2-4 sentences):
+            user_message = f"""Answer this question in 2-3 sentences maximum:
 
 TEXTBOOK CONTENT:
 {context_text}
@@ -385,7 +400,7 @@ QUESTION: {query}"""
 
             response = client.messages.create(
                 model="claude-3-5-sonnet-20241022",
-                max_tokens=200,  # Limit to 200 tokens for conciseness
+                max_tokens=150,
                 system=system_prompt,
                 messages=[
                     {"role": "user", "content": user_message}
@@ -395,13 +410,28 @@ QUESTION: {query}"""
             return response.content[0].text
 
         except Exception as e:
-            logger.warning(f"Claude API fallback failed: {e}, using basic extraction")
-            # Last resort: extract from top document only - concise version
+            logger.warning(f"Claude API not available: {e}")
+
+            # Fallback: Clean extraction from top document - concise and readable
             if docs:
                 first_doc = docs[0]
-                excerpt = first_doc['content'][:250].strip()
-                answer = f"From '{first_doc['title']}': {excerpt}..."
-                return answer
+                # Clean the content
+                cleaned = self._clean_text(first_doc['content'])
+                # Get just first 2 sentences (roughly 100 words)
+                sentences = cleaned.split('.')
+                answer_sentences = []
+                for sent in sentences[:3]:  # Take up to 3 sentence fragments
+                    sent = sent.strip()
+                    if sent and len(sent) > 10:  # Skip very short fragments
+                        answer_sentences.append(sent)
+                    if len(' '.join(answer_sentences)) > 150:  # Stop if we have enough
+                        break
+
+                if answer_sentences:
+                    answer = '. '.join(answer_sentences[:2]) + '.'
+                    return answer
+                else:
+                    return cleaned[:150] + '...'
             else:
                 return "I don't have information about that topic in the textbook."
 
