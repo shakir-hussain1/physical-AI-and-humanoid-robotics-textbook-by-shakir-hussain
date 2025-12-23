@@ -7,8 +7,9 @@ class Settings(BaseSettings):
     """Application settings from environment variables."""
 
     # API Keys
-    ANTHROPIC_API_KEY: str
-    COHERE_API_KEY: str
+    ANTHROPIC_API_KEY: Optional[str] = None
+    COHERE_API_KEY: Optional[str] = None
+    OPENAI_API_KEY: Optional[str] = None
 
     # Database
     DATABASE_URL: str = "postgresql://postgres:postgres@localhost:5432/ragchatbot"
@@ -16,6 +17,7 @@ class Settings(BaseSettings):
     # Vector Database
     QDRANT_URL: str = "http://localhost:6333"
     QDRANT_API_KEY: Optional[str] = None
+    QDRANT_COLLECTION: str = "textbook_embeddings"
 
     # FastAPI Configuration
     FASTAPI_ENV: str = "development"
@@ -38,6 +40,15 @@ class Settings(BaseSettings):
     COHERE_EMBED_MODEL: str = "embed-english-v3.0"
     CLAUDE_MODEL: str = "claude-3-5-sonnet-20241022"
     CLAUDE_TEMPERATURE: float = 0.2
+    OPENAI_EMBED_MODEL: str = "text-embedding-3-small"
+    OPENAI_CHAT_MODEL: str = "gpt-4o-mini"
+    RAG_TEMPERATURE: float = 0.7
+
+    # JWT Configuration
+    JWT_SECRET_KEY: str = "your-super-secret-jwt-key-change-this-in-production-12345678"
+    JWT_ALGORITHM: str = "HS256"
+    JWT_EXPIRE_MINUTES: int = 1440  # 24 hours
+    JWT_REFRESH_EXPIRE_DAYS: int = 30
 
     # Feature Flags
     ENABLE_CONTEXT_RESTRICTED_MODE: bool = True
@@ -52,6 +63,7 @@ class Settings(BaseSettings):
     class Config:
         env_file = ".env"
         case_sensitive = True
+        extra = "allow"  # Allow extra fields from .env
 
 # Global settings instance
 settings = Settings()

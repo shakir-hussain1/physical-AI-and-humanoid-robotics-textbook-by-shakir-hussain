@@ -2,7 +2,7 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-# Install system dependencies with retries
+# Install system dependencies
 RUN apt-get update --fix-missing && \
     apt-get install -y --no-install-recommends \
     gcc \
@@ -12,16 +12,19 @@ RUN apt-get update --fix-missing && \
 # Copy requirements
 COPY backend/requirements.txt .
 
-# Install Python dependencies
+# Upgrade pip and install Python dependencies
 RUN pip install --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt
 
 # Copy application code
 COPY backend/src/ src/
 COPY backend/.env* ./
+COPY space_env.txt ./
 
-# Expose port
-EXPOSE 8000
+# Expose port (7860 for Hugging Face, 8000 for others)
+EXPOSE 7860
 
 # Run the application
-CMD ["python", "-m", "uvicorn", "src.app:app", "--host", "0.0.0.0", "--port", "8000"]
+# For Hugging Face: use port 7860
+# For local/other: change to 8000
+CMD ["python", "-m", "uvicorn", "src.app:app", "--host", "0.0.0.0", "--port", "7860"]

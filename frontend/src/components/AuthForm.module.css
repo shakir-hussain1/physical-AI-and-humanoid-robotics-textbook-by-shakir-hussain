@@ -1,0 +1,305 @@
+/* Authentication Form Styles */
+
+.authContainer {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+}
+
+.authCard {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  padding: 40px;
+  width: 100%;
+  max-width: 500px;
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.title {
+  margin: 0 0 10px 0;
+  font-size: 28px;
+  font-weight: 700;
+  color: #2d3748;
+}
+
+.subtitle {
+  margin: 0 0 30px 0;
+  font-size: 14px;
+  color: #718096;
+}
+
+/* Form */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.formGroup label {
+  font-weight: 600;
+  color: #2d3748;
+  font-size: 14px;
+}
+
+.formGroup input,
+.formGroup select {
+  padding: 12px;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.formGroup input:focus,
+.formGroup select:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.formGroup input::placeholder {
+  color: #cbd5e0;
+}
+
+/* Background Form */
+.backgroundForm {
+  max-height: 70vh;
+  overflow-y: auto;
+  padding-right: 10px;
+}
+
+.backgroundForm::-webkit-scrollbar {
+  width: 6px;
+}
+
+.backgroundForm::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.backgroundForm::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 3px;
+}
+
+.backgroundForm::-webkit-scrollbar-thumb:hover {
+  background: #999;
+}
+
+.section {
+  margin-bottom: 30px;
+}
+
+.section h3 {
+  margin: 0 0 15px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #2d3748;
+}
+
+.checkboxGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+}
+
+.checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 14px;
+}
+
+.checkbox:hover {
+  border-color: #667eea;
+  background: #f7fafc;
+}
+
+.checkbox input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+.checkbox input[type="checkbox"]:checked {
+  accent-color: #667eea;
+}
+
+/* Buttons */
+.submitBtn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 10px;
+}
+
+.submitBtn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+}
+
+.submitBtn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.submitBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.toggleBtn {
+  background: none;
+  border: none;
+  color: #667eea;
+  cursor: pointer;
+  font-weight: 600;
+  text-decoration: underline;
+  padding: 0;
+  transition: color 0.2s;
+}
+
+.toggleBtn:hover {
+  color: #764ba2;
+}
+
+/* Messages */
+.error {
+  background: #fee;
+  color: #c00;
+  padding: 12px;
+  border-radius: 8px;
+  border-left: 4px solid #c00;
+  font-size: 14px;
+  animation: slideDown 0.3s ease;
+}
+
+.success {
+  background: #efe;
+  color: #0a0;
+  padding: 12px;
+  border-radius: 8px;
+  border-left: 4px solid #0a0;
+  font-size: 14px;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.toggle {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 14px;
+  color: #718096;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .authCard {
+    padding: 30px 20px;
+  }
+
+  .title {
+    font-size: 24px;
+  }
+
+  .checkboxGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .authCard {
+    background: #1a202c;
+    color: #e2e8f0;
+  }
+
+  .title {
+    color: #fff;
+  }
+
+  .subtitle {
+    color: #cbd5e0;
+  }
+
+  .formGroup label {
+    color: #e2e8f0;
+  }
+
+  .formGroup input,
+  .formGroup select {
+    background: #2d3748;
+    border-color: #4a5568;
+    color: #e2e8f0;
+  }
+
+  .formGroup input:focus,
+  .formGroup select:focus {
+    border-color: #667eea;
+  }
+
+  .formGroup input::placeholder {
+    color: #718096;
+  }
+
+  .checkbox {
+    border-color: #4a5568;
+    background: #2d3748;
+  }
+
+  .checkbox:hover {
+    border-color: #667eea;
+    background: #1a202c;
+  }
+
+  .section h3 {
+    color: #e2e8f0;
+  }
+
+  .toggle {
+    color: #cbd5e0;
+  }
+}

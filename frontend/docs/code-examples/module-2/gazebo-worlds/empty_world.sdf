@@ -1,0 +1,139 @@
+<?xml version="1.0"?>
+<!--
+Physical AI & Humanoid Robotics Textbook
+Module 2, Chapter 6: Empty World for Gazebo Harmonic
+Description: Basic simulation world with ground plane and lighting
+Usage: gz sim -r empty_world.sdf
+-->
+<sdf version="1.9">
+  <world name="empty_world">
+
+    <!-- ==================== Physics Configuration ==================== -->
+    <physics name="1ms_dart_physics" type="dart">
+      <!-- Simulation timestep: 1ms for humanoid dynamics -->
+      <max_step_size>0.001</max_step_size>
+
+      <!-- Run at real-time speed -->
+      <real_time_factor>1.0</real_time_factor>
+      <real_time_update_rate>1000</real_time_update_rate>
+
+      <!-- DART physics engine settings -->
+      <dart>
+        <collision_detector>fcl</collision_detector>
+        <solver>
+          <solver_type>dantzig</solver_type>
+        </solver>
+      </dart>
+    </physics>
+
+    <!-- ==================== Required Plugins ==================== -->
+    <!-- Physics system -->
+    <plugin
+      filename="gz-sim-physics-system"
+      name="gz::sim::systems::Physics">
+    </plugin>
+
+    <!-- Scene broadcaster for visualization -->
+    <plugin
+      filename="gz-sim-scene-broadcaster-system"
+      name="gz::sim::systems::SceneBroadcaster">
+    </plugin>
+
+    <!-- User commands (spawn, delete, etc.) -->
+    <plugin
+      filename="gz-sim-user-commands-system"
+      name="gz::sim::systems::UserCommands">
+    </plugin>
+
+    <!-- Contact sensor system -->
+    <plugin
+      filename="gz-sim-contact-system"
+      name="gz::sim::systems::Contact">
+    </plugin>
+
+    <!-- ==================== Environment ==================== -->
+    <!-- Earth gravity -->
+    <gravity>0 0 -9.81</gravity>
+
+    <!-- Magnetic field (for IMU simulation) -->
+    <magnetic_field>5.5645e-6 22.8758e-6 -42.3884e-6</magnetic_field>
+
+    <!-- Atmosphere -->
+    <atmosphere type="adiabatic"/>
+
+    <!-- ==================== Ground Plane ==================== -->
+    <model name="ground_plane">
+      <static>true</static>
+      <link name="ground_link">
+        <!-- Collision geometry -->
+        <collision name="ground_collision">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>100 100</size>
+            </plane>
+          </geometry>
+          <surface>
+            <friction>
+              <ode>
+                <!-- Friction coefficient for rubber on concrete -->
+                <mu>0.9</mu>
+                <mu2>0.9</mu2>
+              </ode>
+              <torsional>
+                <coefficient>0.5</coefficient>
+                <use_patch_radius>true</use_patch_radius>
+                <patch_radius>0.05</patch_radius>
+              </torsional>
+            </friction>
+            <contact>
+              <ode>
+                <kp>1e8</kp>
+                <kd>1.0</kd>
+              </ode>
+            </contact>
+          </surface>
+        </collision>
+
+        <!-- Visual appearance -->
+        <visual name="ground_visual">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>100 100</size>
+            </plane>
+          </geometry>
+          <material>
+            <ambient>0.7 0.7 0.7 1</ambient>
+            <diffuse>0.7 0.7 0.7 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ==================== Lighting ==================== -->
+    <!-- Sun light -->
+    <light type="directional" name="sun">
+      <cast_shadows>true</cast_shadows>
+      <pose>0 0 10 0 0 0</pose>
+      <diffuse>0.9 0.9 0.9 1</diffuse>
+      <specular>0.3 0.3 0.3 1</specular>
+      <attenuation>
+        <range>1000</range>
+        <constant>0.9</constant>
+        <linear>0.01</linear>
+        <quadratic>0.001</quadratic>
+      </attenuation>
+      <direction>-0.5 0.1 -0.9</direction>
+    </light>
+
+    <!-- Ambient light -->
+    <scene>
+      <ambient>0.4 0.4 0.4 1</ambient>
+      <background>0.7 0.8 0.9 1</background>
+      <shadows>true</shadows>
+    </scene>
+
+  </world>
+</sdf>

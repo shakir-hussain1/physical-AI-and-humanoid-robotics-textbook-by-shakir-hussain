@@ -1,0 +1,152 @@
+<?xml version="1.0"?>
+<!--
+Physical AI & Humanoid Robotics Textbook
+Module 2, Chapter 7: IMU Configuration
+Description: Inertial Measurement Unit based on typical MEMS IMU specs
+Usage: Include in humanoid model or reference in world file
+Typical specs based on: Bosch BNO055, InvenSense ICM-20948
+-->
+<sdf version="1.9">
+  <model name="imu_model">
+    <static>false</static>
+
+    <link name="imu_link">
+      <!-- Visual representation of IMU chip -->
+      <visual name="imu_visual">
+        <geometry>
+          <box>
+            <size>0.020 0.020 0.005</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.1 0.3 0.1 1</ambient>
+          <diffuse>0.2 0.5 0.2 1</diffuse>
+        </material>
+      </visual>
+
+      <collision name="imu_collision">
+        <geometry>
+          <box>
+            <size>0.020 0.020 0.005</size>
+          </box>
+        </geometry>
+      </collision>
+
+      <inertial>
+        <mass>0.005</mass>
+        <inertia>
+          <ixx>0.0000001</ixx>
+          <iyy>0.0000001</iyy>
+          <izz>0.0000001</izz>
+        </inertia>
+      </inertial>
+
+      <!-- IMU Sensor -->
+      <sensor name="imu" type="imu">
+        <pose>0 0 0 0 0 0</pose>
+
+        <!-- Update rate (Hz) - typical IMU: 100-400 Hz -->
+        <update_rate>200</update_rate>
+
+        <topic>/humanoid/imu</topic>
+
+        <always_on>true</always_on>
+        <visualize>false</visualize>
+
+        <imu>
+          <!-- ==================== Gyroscope ==================== -->
+          <!-- Measures angular velocity (rad/s) -->
+          <angular_velocity>
+            <x>
+              <noise type="gaussian">
+                <!-- Zero mean -->
+                <mean>0.0</mean>
+                <!-- Noise density: ~0.1 deg/s = 0.00175 rad/s -->
+                <stddev>0.00175</stddev>
+                <!-- Bias (constant offset) -->
+                <bias_mean>0.0001</bias_mean>
+                <!-- Bias instability -->
+                <bias_stddev>0.00001</bias_stddev>
+                <!-- Dynamic bias (random walk coefficient) -->
+                <dynamic_bias_stddev>0.00001</dynamic_bias_stddev>
+                <dynamic_bias_correlation_time>300</dynamic_bias_correlation_time>
+              </noise>
+            </x>
+            <y>
+              <noise type="gaussian">
+                <mean>0.0</mean>
+                <stddev>0.00175</stddev>
+                <bias_mean>0.0001</bias_mean>
+                <bias_stddev>0.00001</bias_stddev>
+                <dynamic_bias_stddev>0.00001</dynamic_bias_stddev>
+                <dynamic_bias_correlation_time>300</dynamic_bias_correlation_time>
+              </noise>
+            </y>
+            <z>
+              <noise type="gaussian">
+                <mean>0.0</mean>
+                <stddev>0.00175</stddev>
+                <bias_mean>0.0001</bias_mean>
+                <bias_stddev>0.00001</bias_stddev>
+                <dynamic_bias_stddev>0.00001</dynamic_bias_stddev>
+                <dynamic_bias_correlation_time>300</dynamic_bias_correlation_time>
+              </noise>
+            </z>
+          </angular_velocity>
+
+          <!-- ==================== Accelerometer ==================== -->
+          <!-- Measures linear acceleration (m/s^2) -->
+          <linear_acceleration>
+            <x>
+              <noise type="gaussian">
+                <!-- Zero mean -->
+                <mean>0.0</mean>
+                <!-- Noise density: ~150 μg/√Hz ≈ 0.015 m/s² -->
+                <stddev>0.015</stddev>
+                <!-- Bias (constant offset) -->
+                <bias_mean>0.001</bias_mean>
+                <!-- Bias instability -->
+                <bias_stddev>0.0001</bias_stddev>
+                <!-- Dynamic bias -->
+                <dynamic_bias_stddev>0.0001</dynamic_bias_stddev>
+                <dynamic_bias_correlation_time>300</dynamic_bias_correlation_time>
+              </noise>
+            </x>
+            <y>
+              <noise type="gaussian">
+                <mean>0.0</mean>
+                <stddev>0.015</stddev>
+                <bias_mean>0.001</bias_mean>
+                <bias_stddev>0.0001</bias_stddev>
+                <dynamic_bias_stddev>0.0001</dynamic_bias_stddev>
+                <dynamic_bias_correlation_time>300</dynamic_bias_correlation_time>
+              </noise>
+            </y>
+            <z>
+              <noise type="gaussian">
+                <mean>0.0</mean>
+                <stddev>0.015</stddev>
+                <bias_mean>0.001</bias_mean>
+                <bias_stddev>0.0001</bias_stddev>
+                <dynamic_bias_stddev>0.0001</dynamic_bias_stddev>
+                <dynamic_bias_correlation_time>300</dynamic_bias_correlation_time>
+              </noise>
+            </z>
+          </linear_acceleration>
+
+          <!-- Enable orientation output (computed from accel/gyro) -->
+          <enable_orientation>true</enable_orientation>
+
+          <!-- Orientation noise (if using built-in fusion) -->
+          <orientation_reference_frame>
+            <localization>ENU</localization>
+            <custom_rpy>0 0 0</custom_rpy>
+            <grav_dir_x>0</grav_dir_x>
+            <grav_dir_y>0</grav_dir_y>
+            <grav_dir_z>-1</grav_dir_z>
+          </orientation_reference_frame>
+        </imu>
+      </sensor>
+    </link>
+  </model>
+</sdf>
