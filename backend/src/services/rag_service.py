@@ -142,83 +142,84 @@ class RAGService:
         }
 
     def _retrieve_context(self, query: str, user_context: Optional[str] = None) -> List[Dict[str, Any]]:
-        """Retrieve relevant documents using improved keyword search and semantic matching."""
+        """Retrieve relevant documents using phrase matching and synonyms."""
         try:
             query_lower = query.lower()
-            query_words = [w.strip('?.,!;:') for w in query_lower.split() if len(w.strip('?.,!;:')) > 2]
-            matched_docs = []
+
+            # Synonym mapping for better matching
+            synonyms = {
+                'robot operating system': 'ros',
+                'ros2': 'ros',
+                'ros 2': 'ros',
+                'kinematics': ['forward kinematics', 'inverse kinematics'],
+                'perception': ['sensor', 'vision', 'camera'],
+                'control': ['controller', 'actuator'],
+                'humanoid': ['biped', 'bipedal'],
+            }
+
+            # Expand query with synonyms
+            expanded_query = query_lower
+            for key, value in synonyms.items():
+                if key in query_lower:
+                    if isinstance(value, list):
+                        expanded_query += ' ' + ' '.join(value)
+                    else:
+                        expanded_query += ' ' + value
+
+            query_words = [w.strip('?.,!;:') for w in expanded_query.split() if len(w.strip('?.,!;:')) > 2]
 
             if not query_words:
                 logger.warning("Query has no meaningful words")
                 return []
 
-            # Score each document based on multiple factors
+            matched_docs = []
+
+            # Score each document
             for key, doc in self.sample_content.items():
                 doc_text = (doc['title'] + ' ' + doc['content']).lower()
-                doc_key_lower = key.lower()
+                doc_title_lower = doc['title'].lower()
 
                 score = 0.0
-                matches = 0
                 title_matches = 0
 
-                # 1. Check title for query words (highest weight)
-                for word in query_words:
-                    if word in doc['title'].lower():
-                        title_matches += 1
-                        score += 0.4
-                        matches += 1
+                # CRITICAL: Check exact phrase match in title first
+                if 'robot operating system' in query_lower or 'ros' in query_lower:
+                    if 'introduction' in doc_title_lower and 'ros' in doc_title_lower:
+                        score += 2.0  # Highest priority for ROS chapters
+                        title_matches += 5
 
-                # 2. Check content for query words with different scoring
+                # Check for phrase match in title (not just words)
+                for word in query_words:
+                    if word in doc_title_lower:
+                        title_matches += 1
+                        score += 0.5  # Higher weight for title matches
+
+                # Content match (lower weight)
                 for word in query_words:
                     word_count = doc_text.count(word)
                     if word_count > 0:
-                        # More occurrences = higher confidence
-                        occurrence_score = min(0.3, word_count * 0.05)
-                        score += occurrence_score
-                        matches += 1
+                        score += min(0.1, word_count * 0.01)
 
-                # 3. Boost score for key phrase matches (e.g., "ros", "humanoid", etc.)
-                if any(q in doc_key_lower or doc_key_lower in q for q in query_words):
-                    score += 0.25
-
-                # 4. Consider category relevance
-                if 'ros' in query_lower and 'ros' in doc_key_lower:
-                    score += 0.2
-                if 'humanoid' in query_lower and 'humanoid' in doc['title'].lower():
-                    score += 0.2
-
-                # Add document if there's any match
-                if matches > 0 and score > 0:
+                # Add document if there's relevant match
+                if score > 0:
                     matched_docs.append({
                         'content': doc['content'],
                         'title': doc['title'],
                         'source': doc['source'],
-                        'score': min(score, 1.0),  # Cap at 1.0
+                        'score': min(score, 1.0),
                         'category': doc['category'],
-                        'matches': matches,
                         'title_matches': title_matches
                     })
 
-            # If no matches found, return all docs with lower scores
             if not matched_docs:
-                logger.warning(f"No matches found for query: {query}")
-                for key, doc in self.sample_content.items():
-                    matched_docs.append({
-                        'content': doc['content'],
-                        'title': doc['title'],
-                        'source': doc['source'],
-                        'score': 0.3,  # Low default score
-                        'category': doc['category'],
-                        'matches': 0,
-                        'title_matches': 0
-                    })
+                logger.warning(f"No good matches for query: {query}")
+                return []
 
-            # Sort by title_matches first, then by matches, then by score
-            matched_docs.sort(key=lambda x: (x['title_matches'], x['matches'], x['score']), reverse=True)
+            # Sort by title_matches first (most important), then by score
+            matched_docs.sort(key=lambda x: (x['title_matches'], x['score']), reverse=True)
 
-            # Remove temporary fields
+            # Remove temporary field
             for doc in matched_docs:
-                doc.pop('matches', None)
                 doc.pop('title_matches', None)
 
             return matched_docs[:self.top_k]
