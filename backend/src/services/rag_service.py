@@ -1,15 +1,17 @@
-"""RAG Service using Cohere API - Working solution without Qdrant."""
+"""RAG Service using Cohere API - Enhanced with actual chapter content."""
 
 import os
 import json
 from typing import List, Dict, Any, Optional
 import cohere
 import logging
+from pathlib import Path
+import re
 
 logger = logging.getLogger(__name__)
 
 class RAGService:
-    """Retrieval-Augmented Generation using Cohere and local keyword search."""
+    """Retrieval-Augmented Generation using Cohere and comprehensive chapter content."""
 
     def __init__(self):
         self.cohere_api_key = os.getenv('COHERE_API_KEY')
@@ -23,13 +25,84 @@ class RAGService:
                 logger.error(f"Error initializing Cohere client: {e}")
                 self.cohere_client = None
         else:
-            logger.warning("COHERE_API_KEY not set - will use local responses only")
+            logger.warning("COHERE_API_KEY not set - will use local responses with Claude")
 
         self.top_k = int(os.getenv('RETRIEVAL_TOP_K', 5))
         self.temperature = float(os.getenv('RAG_TEMPERATURE', 0.7))
 
-        # Sample textbook content for local retrieval
-        self.sample_content = {
+        # Load actual chapter content from files
+        self.sample_content = self._load_chapter_content()
+        logger.info(f"Loaded {len(self.sample_content)} chapters into RAG service")
+
+    def _load_chapter_content(self) -> Dict[str, Dict[str, str]]:
+        """Load actual chapter content from markdown files."""
+        chapters = {}
+
+        # Try multiple possible paths for chapter files
+        possible_paths = [
+            Path('/app/frontend/docs/modules'),  # Production
+            Path('./frontend/docs/modules'),      # Local dev
+            Path('../frontend/docs/modules'),     # Alternative local
+        ]
+
+        chapter_dir = None
+        for path in possible_paths:
+            if path.exists():
+                chapter_dir = path
+                logger.info(f"Found chapters at {chapter_dir}")
+                break
+
+        if not chapter_dir:
+            logger.warning("Chapter directory not found, using default sample content")
+            return self._get_default_content()
+
+        try:
+            # Find all chapter markdown files
+            chapter_files = sorted(chapter_dir.glob('**/chapter-*.md'))
+            logger.info(f"Found {len(chapter_files)} chapter files")
+
+            for chapter_file in chapter_files:
+                try:
+                    with open(chapter_file, 'r', encoding='utf-8') as f:
+                        content = f.read()
+
+                    # Extract title from markdown
+                    title_match = re.search(r'title:\s*"([^"]+)"', content)
+                    title = title_match.group(1) if title_match else chapter_file.stem
+
+                    # Extract first 2000 chars of meaningful content (skip frontmatter)
+                    parts = content.split('---')
+                    body = parts[2] if len(parts) > 2 else content
+
+                    # Remove markdown headers and clean up
+                    body = re.sub(r'^#+\s+', '', body, flags=re.MULTILINE)
+                    body = re.sub(r'\[([^\]]+)\]\([^\)]+\)', r'\1', body)  # Remove links
+
+                    # Get first meaningful paragraphs
+                    text_content = ' '.join([p.strip() for p in body.split('\n') if p.strip() and not p.startswith('-')])[:2000]
+
+                    module_name = chapter_file.parent.name
+                    chapters[chapter_file.stem] = {
+                        'title': title,
+                        'content': text_content,
+                        'source': f'{module_name}/{chapter_file.stem}',
+                        'category': module_name.replace('module-', 'Module ')
+                    }
+                    logger.info(f"Loaded chapter: {title}")
+                except Exception as e:
+                    logger.warning(f"Error loading chapter {chapter_file}: {e}")
+
+            if chapters:
+                return chapters
+            else:
+                return self._get_default_content()
+        except Exception as e:
+            logger.error(f"Error loading chapters: {e}")
+            return self._get_default_content()
+
+    def _get_default_content(self) -> Dict[str, Dict[str, str]]:
+        """Fallback to default sample content."""
+        return {
             'ros': {
                 'title': 'Robot Operating System (ROS)',
                 'content': 'ROS (Robot Operating System) is a flexible framework for writing robot software. It is a collection of tools and libraries that aim to simplify the task of creating complex and robust robot behavior across a wide variety of robotic platforms. ROS provides: hardware abstraction, device drivers, message-passing between processes, package management, visualization tools, and more.',
@@ -69,51 +142,84 @@ class RAGService:
         }
 
     def _retrieve_context(self, query: str, user_context: Optional[str] = None) -> List[Dict[str, Any]]:
-        """Retrieve relevant documents using local keyword search."""
+        """Retrieve relevant documents using improved keyword search and semantic matching."""
         try:
             query_lower = query.lower()
             query_words = [w.strip('?.,!;:') for w in query_lower.split() if len(w.strip('?.,!;:')) > 2]
             matched_docs = []
 
-            # Score each document based on keyword matches
+            if not query_words:
+                logger.warning("Query has no meaningful words")
+                return []
+
+            # Score each document based on multiple factors
             for key, doc in self.sample_content.items():
                 doc_text = (doc['title'] + ' ' + doc['content']).lower()
                 doc_key_lower = key.lower()
 
-                # Count matches:
-                # 1. Exact key match (highest priority)
-                # 2. Word-level matches
-                score = 0
+                score = 0.0
                 matches = 0
+                title_matches = 0
 
-                # Check if key matches any query word (e.g., "ros" matches "ROS")
-                if any(q in doc_key_lower or doc_key_lower in q for q in query_words):
-                    score = 0.95
-                    matches += 1
-
-                # Check word-level matches in title and content
+                # 1. Check title for query words (highest weight)
                 for word in query_words:
-                    if word in doc_text:
-                        score = max(score, 0.85)
+                    if word in doc['title'].lower():
+                        title_matches += 1
+                        score += 0.4
                         matches += 1
 
+                # 2. Check content for query words with different scoring
+                for word in query_words:
+                    word_count = doc_text.count(word)
+                    if word_count > 0:
+                        # More occurrences = higher confidence
+                        occurrence_score = min(0.3, word_count * 0.05)
+                        score += occurrence_score
+                        matches += 1
+
+                # 3. Boost score for key phrase matches (e.g., "ros", "humanoid", etc.)
+                if any(q in doc_key_lower or doc_key_lower in q for q in query_words):
+                    score += 0.25
+
+                # 4. Consider category relevance
+                if 'ros' in query_lower and 'ros' in doc_key_lower:
+                    score += 0.2
+                if 'humanoid' in query_lower and 'humanoid' in doc['title'].lower():
+                    score += 0.2
+
                 # Add document if there's any match
-                if matches > 0 or score > 0:
+                if matches > 0 and score > 0:
                     matched_docs.append({
                         'content': doc['content'],
                         'title': doc['title'],
                         'source': doc['source'],
-                        'score': score,
+                        'score': min(score, 1.0),  # Cap at 1.0
                         'category': doc['category'],
-                        'matches': matches
+                        'matches': matches,
+                        'title_matches': title_matches
                     })
 
-            # Sort by matches first, then by score
-            matched_docs.sort(key=lambda x: (x['matches'], x['score']), reverse=True)
+            # If no matches found, return all docs with lower scores
+            if not matched_docs:
+                logger.warning(f"No matches found for query: {query}")
+                for key, doc in self.sample_content.items():
+                    matched_docs.append({
+                        'content': doc['content'],
+                        'title': doc['title'],
+                        'source': doc['source'],
+                        'score': 0.3,  # Low default score
+                        'category': doc['category'],
+                        'matches': 0,
+                        'title_matches': 0
+                    })
+
+            # Sort by title_matches first, then by matches, then by score
+            matched_docs.sort(key=lambda x: (x['title_matches'], x['matches'], x['score']), reverse=True)
 
             # Remove temporary fields
             for doc in matched_docs:
                 doc.pop('matches', None)
+                doc.pop('title_matches', None)
 
             return matched_docs[:self.top_k]
 
@@ -213,16 +319,56 @@ QUESTION: {query}"""
             }
 
     def _generate_fallback_answer(self, query: str, docs: List[Dict], context: str) -> str:
-        """Generate a simple fallback answer when Cohere is unavailable."""
+        """Generate a fallback answer when Cohere is unavailable."""
         if not docs:
-            return "I don't have information about that topic in the textbook."
+            return f"I don't have specific information about '{query}' in the textbook. Please try asking about ROS 2, Humanoid Robotics, Kinematics, Perception, or Control Systems."
 
-        # Extract first document for context
-        first_doc = docs[0]
-        answer = f"Based on the textbook content from '{first_doc['title']}':\n\n"
-        answer += first_doc['content'][:500] + "..."
+        # Try using Claude API as a fallback
+        try:
+            from anthropic import Anthropic
 
-        return answer
+            client = Anthropic()
+
+            # Build a comprehensive prompt with all retrieved documents
+            context_text = "\n\n".join([
+                f"Source: {doc['title']} ({doc['source']})\n{doc['content']}"
+                for doc in docs[:3]  # Use top 3 documents
+            ])
+
+            system_prompt = """You are an expert assistant for a Physical AI and Humanoid Robotics textbook.
+Your role is to answer questions based strictly on the provided textbook content.
+Be accurate, concise, and helpful. Cite the relevant sections when appropriate.
+If the answer is not in the provided context, clearly state that the information is not available in the textbook."""
+
+            user_message = f"""Based on the following textbook content, please answer this question:
+
+TEXTBOOK CONTENT:
+{context_text}
+
+QUESTION: {query}"""
+
+            response = client.messages.create(
+                model="claude-3-5-sonnet-20241022",
+                max_tokens=500,
+                system=system_prompt,
+                messages=[
+                    {"role": "user", "content": user_message}
+                ]
+            )
+
+            return response.content[0].text
+
+        except Exception as e:
+            logger.warning(f"Claude API fallback failed: {e}, using basic extraction")
+            # Last resort: extract and summarize from top documents
+            if docs:
+                answer = f"Based on the textbook:\n\n"
+                for i, doc in enumerate(docs[:2], 1):
+                    excerpt = doc['content'][:400].strip()
+                    answer += f"{i}. From '{doc['title']}':\n{excerpt}...\n\n"
+                return answer
+            else:
+                return "I don't have information about that topic in the textbook."
 
 
 # Global RAG service instance
