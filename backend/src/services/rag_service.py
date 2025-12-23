@@ -227,6 +227,29 @@ class RAGService:
             logger.error(f"Error retrieving context: {e}")
             return []
 
+    def _is_greeting(self, query: str) -> bool:
+        """Detect if query is a greeting."""
+        greetings = ['hi', 'hello', 'hey', 'greetings', 'good morning', 'good afternoon',
+                     'good evening', 'howdy', 'what\'s up', 'sup', 'namaste', 'salam']
+        query_lower = query.lower().strip()
+        return any(greeting in query_lower for greeting in greetings)
+
+    def _get_greeting_response(self) -> Dict[str, Any]:
+        """Generate a friendly greeting response."""
+        responses = [
+            "Hello! I'm your Physical AI & Humanoid Robotics textbook assistant. How can I help you today? Feel free to ask me questions about ROS 2, humanoid robots, kinematics, perception, or any other topic from the textbook.",
+            "Hi there! Welcome to the Physical AI & Humanoid Robotics textbook assistant. What would you like to know about robotics, AI, or humanoid systems?",
+            "Greetings! I'm here to help you learn about Physical AI and Humanoid Robotics. Ask me anything about the textbook chapters!",
+        ]
+        import random
+        return {
+            'answer': random.choice(responses),
+            'sources': [],
+            'confidence': 1.0,
+            'confidence_level': 'high',
+            'status': 'greeting'
+        }
+
     def generate_answer(
         self,
         query: str,
@@ -235,6 +258,10 @@ class RAGService:
     ) -> Dict[str, Any]:
         """Generate answer using Cohere and local retrieval."""
         try:
+            # Check if it's a greeting first
+            if self._is_greeting(query):
+                return self._get_greeting_response()
+
             # Retrieve relevant documents
             retrieved_docs = self._retrieve_context(query, user_context)
 
@@ -253,20 +280,26 @@ class RAGService:
                 for doc in retrieved_docs
             ])
 
-            # Build prompt
-            system_prompt = """You are an expert assistant for a Physical AI and Humanoid Robotics textbook.
-Your role is to answer questions based strictly on the provided textbook content.
-If the answer is not in the provided context, clearly state that the information is not available in the textbook.
-Be accurate, concise, and helpful. Cite the relevant sections when appropriate."""
+            # Build prompt - optimized for concise answers
+            system_prompt = """You are a concise expert assistant for a Physical AI and Humanoid Robotics textbook.
+IMPORTANT - Keep answers SHORT and TO-THE-POINT:
+- Answer in 2-4 sentences maximum
+- Only include essential information
+- Be direct and clear
+- Cite the source chapter if relevant
+- Use simple language
+If information is not in the provided context, say so clearly."""
 
-            user_prompt = f"""Based on the following textbook content, please answer this question:
+            user_prompt = f"""Based on the following textbook content, answer this question BRIEFLY (2-4 sentences):
 
 TEXTBOOK CONTENT:
 {context_text}
 
-{f'USER SELECTED TEXT: {user_context}' if user_context else ''}
+{f'USER CONTEXT: {user_context}' if user_context else ''}
 
-QUESTION: {query}"""
+QUESTION: {query}
+
+Answer (keep it SHORT and TO-THE-POINT):"""
 
             # Use Cohere if available
             if self.cohere_client:
@@ -321,7 +354,7 @@ QUESTION: {query}"""
     def _generate_fallback_answer(self, query: str, docs: List[Dict], context: str) -> str:
         """Generate a fallback answer when Cohere is unavailable."""
         if not docs:
-            return f"I don't have specific information about '{query}' in the textbook. Please try asking about ROS 2, Humanoid Robotics, Kinematics, Perception, or Control Systems."
+            return f"I don't have information about '{query}' in the textbook. Try asking about ROS 2, Humanoid Robots, Kinematics, Perception, or Control."
 
         # Try using Claude API as a fallback
         try:
@@ -329,18 +362,20 @@ QUESTION: {query}"""
 
             client = Anthropic()
 
-            # Build a comprehensive prompt with all retrieved documents
+            # Use only top document for conciseness
             context_text = "\n\n".join([
-                f"Source: {doc['title']} ({doc['source']})\n{doc['content']}"
-                for doc in docs[:3]  # Use top 3 documents
+                f"{doc['title']}: {doc['content']}"
+                for doc in docs[:2]  # Use top 2 documents
             ])
 
-            system_prompt = """You are an expert assistant for a Physical AI and Humanoid Robotics textbook.
-Your role is to answer questions based strictly on the provided textbook content.
-Be accurate, concise, and helpful. Cite the relevant sections when appropriate.
-If the answer is not in the provided context, clearly state that the information is not available in the textbook."""
+            system_prompt = """You are a concise assistant for a Robotics textbook.
+Keep answers SHORT and TO-THE-POINT:
+- Answer in 2-4 sentences maximum
+- Only include essential information
+- Cite the source chapter if relevant
+- Use simple language"""
 
-            user_message = f"""Based on the following textbook content, please answer this question:
+            user_message = f"""Answer BRIEFLY (2-4 sentences):
 
 TEXTBOOK CONTENT:
 {context_text}
@@ -349,7 +384,7 @@ QUESTION: {query}"""
 
             response = client.messages.create(
                 model="claude-3-5-sonnet-20241022",
-                max_tokens=500,
+                max_tokens=200,  # Limit to 200 tokens for conciseness
                 system=system_prompt,
                 messages=[
                     {"role": "user", "content": user_message}
@@ -360,12 +395,11 @@ QUESTION: {query}"""
 
         except Exception as e:
             logger.warning(f"Claude API fallback failed: {e}, using basic extraction")
-            # Last resort: extract and summarize from top documents
+            # Last resort: extract from top document only - concise version
             if docs:
-                answer = f"Based on the textbook:\n\n"
-                for i, doc in enumerate(docs[:2], 1):
-                    excerpt = doc['content'][:400].strip()
-                    answer += f"{i}. From '{doc['title']}':\n{excerpt}...\n\n"
+                first_doc = docs[0]
+                excerpt = first_doc['content'][:250].strip()
+                answer = f"From '{first_doc['title']}': {excerpt}..."
                 return answer
             else:
                 return "I don't have information about that topic in the textbook."
