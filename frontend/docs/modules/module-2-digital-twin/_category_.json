@@ -1,0 +1,8 @@
+{
+  "label": "Module 2: The Digital Twin",
+  "position": 2,
+  "link": {
+    "type": "generated-index",
+    "description": "Learn to create digital twins of humanoid robots using Gazebo for physics simulation and Unity for visualization. Master sensor simulation, physics modeling, and sim-to-real transfer concepts."
+  }
+}

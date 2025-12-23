@@ -1,6 +1,6 @@
 """SQLAlchemy ORM models for RAG Chatbot Backend database."""
 
-from sqlalchemy import Column, String, Text, Integer, Float, Boolean, DateTime, ForeignKey, ARRAY, JSON
+from sqlalchemy import Column, String, Text, Integer, Float, Boolean, DateTime, ForeignKey, ARRAY, JSON, UniqueConstraint
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.ext.declarative import declarative_base
 from datetime import datetime
@@ -22,7 +22,7 @@ class Document(Base):
     page_range = Column(String(20), nullable=True)
     start_page = Column(Integer, nullable=True)
     end_page = Column(Integer, nullable=True)
-    metadata = Column(JSON, nullable=True)
+    doc_metadata = Column(JSON, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow, index=True)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     status = Column(String(20), default="active")
@@ -141,3 +141,26 @@ class FactCheckGrade(Base):
     approved_for_production = Column(Boolean, nullable=False)
     reviewed_at = Column(DateTime, default=datetime.utcnow, index=True)
     review_duration_minutes = Column(Integer, nullable=True)
+
+
+class UserChapterTranslation(Base):
+    """Cached translations for chapters, per user and language."""
+    __tablename__ = "user_chapter_translations"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
+    chapter_id = Column(String(100), nullable=False, index=True)
+    target_language = Column(String(20), nullable=False)
+    original_content = Column(Text, nullable=False)
+    translated_content = Column(Text, nullable=False)
+    confidence_score = Column(Float, default=0.9)
+    from_cache = Column(Boolean, default=False)
+    created_at = Column(DateTime, default=datetime.utcnow, index=True)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    expires_at = Column(DateTime, nullable=True, index=True)  # For 30-day TTL
+
+    # Composite unique key: (user_id, chapter_id, target_language)
+    # This ensures one cached translation per user per chapter per language
+    __table_args__ = (
+        UniqueConstraint('user_id', 'chapter_id', 'target_language', name='uq_user_chapter_language'),
+    )

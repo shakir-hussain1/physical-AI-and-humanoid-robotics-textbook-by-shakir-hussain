@@ -1,0 +1,84 @@
+# Physical AI & Humanoid Robotics Textbook
+# Module 1, Chapter 4: Behavior Execution Action
+# Description: Action for executing complex, multi-step robot behaviors
+# Usage: AI orchestrator sends behaviors; robot executes with feedback
+
+# ==================== Goal ====================
+# Behavior identification
+string behavior_id         # Unique ID for this behavior instance
+string behavior_type       # Type: "locomotion", "manipulation", "interaction", "composite"
+string behavior_name       # Name (e.g., "walk_to_goal", "pick_and_place", "greet_person")
+
+# Parameters
+string[] parameter_names   # Parameter names
+string[] parameter_values  # Corresponding values (as strings)
+
+# Target information (for goal-directed behaviors)
+geometry_msgs/PoseStamped target_pose    # Target pose if applicable
+string target_frame        # Reference frame for target
+
+# Execution constraints
+float64 timeout_sec        # Maximum execution time (0 = no limit)
+bool allow_recovery        # Allow automatic recovery on failure
+uint8 priority             # Priority level (0-3)
+
+# Safety settings
+float32 max_velocity       # Maximum velocity limit (m/s)
+float32 safety_distance    # Minimum distance to obstacles (m)
+
+---
+# ==================== Result ====================
+# Completion status
+bool success               # Whether behavior completed successfully
+uint8 termination_reason   # Why behavior ended (see constants)
+string message             # Human-readable result description
+
+# Outcome data
+string[] outcome_keys      # Keys for outcome data
+string[] outcome_values    # Corresponding values
+
+# Performance metrics
+float64 actual_duration_sec      # Actual execution time
+float64 path_length              # Distance traveled (if applicable)
+float32 energy_consumed          # Energy used (if available)
+
+# Error information (if failed)
+uint32 error_code          # Error code (0 = no error)
+string error_details       # Detailed error description
+string recovery_suggestion # Suggested recovery action
+
+# Termination reason constants
+uint8 REASON_SUCCESS = 0
+uint8 REASON_FAILURE = 1
+uint8 REASON_CANCELLED = 2
+uint8 REASON_PREEMPTED = 3
+uint8 REASON_TIMEOUT = 4
+uint8 REASON_SAFETY_STOP = 5
+
+---
+# ==================== Feedback ====================
+# Progress information
+float32 progress           # Overall progress [0.0, 1.0]
+string current_phase       # Current execution phase name
+uint32 phase_number        # Current phase index
+uint32 total_phases        # Total number of phases
+
+# Status
+string status_message      # Current status description
+uint8 execution_state      # Current state (see constants)
+
+# Real-time data
+geometry_msgs/Pose current_pose   # Current robot pose
+float64 elapsed_time_sec   # Time since behavior started
+float64 estimated_remaining_sec  # Estimated time to completion
+
+# Health indicators
+float32 confidence         # Current confidence in success [0.0, 1.0]
+string[] active_warnings   # Current active warnings
+
+# Execution state constants
+uint8 STATE_INITIALIZING = 0
+uint8 STATE_EXECUTING = 1
+uint8 STATE_RECOVERING = 2
+uint8 STATE_PAUSED = 3
+uint8 STATE_FINALIZING = 4

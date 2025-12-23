@@ -1,0 +1,27 @@
+
+> physical-ai-humanoid-robotics@1.0.0 start
+> docusaurus start
+
+[INFO] Starting the development server...
+[SUCCESS] Docusaurus website is running at: http://localhost:3001/physical-AI-and-humanoid-robotics-textbook-by-shakir-hussain/
+[90m[[90mwebpackbar[90m][39m [36mℹ[39m Compiling Client
+[90m[[90mwebpackbar[90m][39m [32m✔[39m Client: Compiled successfully in 30.98s
+[1mclient[39m[22m (webpack 5.103.0) compiled [1m[32msuccessfully[39m[22m
+[90m[[90mwebpackbar[90m][39m [36mℹ[39m Compiling Client
+[90m[[90mwebpackbar[90m][39m [32m✔[39m Client: Compiled successfully in 5.10s
+[1mclient[39m[22m (webpack 5.103.0) compiled [1m[32msuccessfully[39m[22m
+[90m[[90mwebpackbar[90m][39m [36mℹ[39m Compiling Client
+[90m[[90mwebpackbar[90m][39m [32m✔[39m Client: Compiled successfully in 10.95s
+[1mclient[39m[22m (webpack 5.103.0) compiled [1m[32msuccessfully[39m[22m
+[90m[[90mwebpackbar[90m][39m [36mℹ[39m Compiling Client
+[90m[[90mwebpackbar[90m][39m [32m✔[39m Client: Compiled successfully in 3.08s
+[1mclient[39m[22m (webpack 5.103.0) compiled [1m[32msuccessfully[39m[22m
+[90m[[90mwebpackbar[90m][39m [36mℹ[39m Compiling Client
+[90m[[90mwebpackbar[90m][39m [32m✔[39m Client: Compiled successfully in 10.48s
+[1mclient[39m[22m (webpack 5.103.0) compiled [1m[32msuccessfully[39m[22m
+[90m[[90mwebpackbar[90m][39m [36mℹ[39m Compiling Client
+[90m[[90mwebpackbar[90m][39m [32m✔[39m Client: Compiled successfully in 3.01s
+[1mclient[39m[22m (webpack 5.103.0) compiled [1m[32msuccessfully[39m[22m
+[90m[[90mwebpackbar[90m][39m [36mℹ[39m Compiling Client
+[90m[[90mwebpackbar[90m][39m [32m✔[39m Client: Compiled successfully in 3.23s
+[1mclient[39m[22m (webpack 5.103.0) compiled [1m[32msuccessfully[39m[22m
