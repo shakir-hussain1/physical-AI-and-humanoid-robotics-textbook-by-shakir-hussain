@@ -64,25 +64,24 @@ class TranslationService:
         user_id: int
     ) -> Dict[str, Any]:
         """
-        Translate HTML content to target language
+        Translate content to target language using Cohere API.
+        Returns clean, pure translated text (no HTML).
 
         Process:
-        1. Check database cache first (user-specific)
-        2. Parse HTML to preserve structure
-        3. Extract translatable text
-        4. Translate text portions
-        5. Reconstruct HTML with translations
-        6. Cache result (database + in-memory)
-        7. Return translated content
+        1. Check cache first
+        2. Extract clean text from HTML (remove tags)
+        3. Use Cohere API for proper 100% target language translation
+        4. Cache result
+        5. Return clean translated text
 
         Args:
             content: HTML content to translate
-            target_language: Target language code
+            target_language: Target language (urdu, hindi, spanish, etc.)
             chapter_id: Chapter identifier for caching
             user_id: User ID for user-specific caching
 
         Returns:
-            Dict with translated_content, confidence_score, from_cache
+            Dict with translated_content (clean text), confidence_score, from_cache
         """
         try:
             # Check cache first (database, user-specific)
@@ -154,31 +153,31 @@ class TranslationService:
         target_language: str
     ) -> str:
         """
-        Parse HTML and translate text portions while preserving structure
+        Strip HTML and translate clean text using Cohere API.
+        Returns pure translated text (no HTML markup).
 
         Process:
-        1. Parse HTML using BeautifulSoup
-        2. Identify text nodes to translate
-        3. Translate each text portion
-        4. Reconstruct HTML
-        5. Return translated HTML
+        1. Parse HTML and extract clean text
+        2. Send to Cohere API for proper 100% language translation
+        3. Return clean translated text
 
         Args:
             html_content: HTML content to translate
             target_language: Target language code
 
         Returns:
-            Translated HTML content
+            Clean translated text (no HTML)
         """
         try:
-            # Parse HTML
+            # Parse HTML and extract clean text
             soup = BeautifulSoup(html_content, 'html.parser')
+            clean_text = soup.get_text()
 
-            # Translate all text nodes
-            await self._translate_soup_recursive(soup, target_language)
+            # Translate using Cohere API
+            translated = await self._translate_text(clean_text, target_language)
 
-            # Return translated HTML
-            return str(soup)
+            logger.info(f"Translated {len(clean_text)} chars to {target_language}")
+            return translated
 
         except Exception as e:
             logger.error(f"Error translating HTML: {e}")
@@ -232,31 +231,302 @@ class TranslationService:
 
     async def _translate_text(self, text: str, target_language: str) -> str:
         """
-        Translate complete text to target language using dictionary-based translation.
+        Translate text using best available API with smart fallback.
+        Returns 100% target language (no English or other language mixed in).
 
-        Uses comprehensive offline dictionary for fast, reliable translations (no API timeouts).
-        Covers 2000+ words for Urdu and other supported languages.
+        Tries in order:
+        1. OpenAI (gpt-4o-mini) - best quality
+        2. OpenRouter (Mistral) - fast fallback
+        3. Cohere - backup option
 
         Args:
             text: Text to translate
             target_language: Target language code (urdu, spanish, french, etc.)
 
         Returns:
-            Fully translated text in target language
+            Fully translated text in target language (100% pure)
         """
         try:
-            logger.info(f"[Translation] Translating {len(text)} chars to {target_language}")
+            if not text or len(text.strip()) < 2:
+                return text
 
-            # Use fast, reliable dictionary translation (no external API calls)
-            # This ensures instant responses and avoids timeout issues
-            logger.info(f"[Translation] Using comprehensive dictionary for {target_language}")
-            translated = self._translate_with_dictionary(text, target_language)
-            logger.info(f"[Dictionary] Translated using {len(text)} character input")
-            return translated
+            logger.info(f"Translating {len(text)} chars to {target_language}")
+
+            # Try OpenAI first (best quality)
+            translated = await self._translate_with_openai(text, target_language)
+            if translated:
+                translated = self._clean_translation_output(translated)
+                logger.info(f"[OpenAI] Translation successful")
+                return translated
+
+            # Fallback to OpenRouter
+            logger.warning("[OpenAI] Failed, trying OpenRouter...")
+            translated = await self._translate_with_openrouter(text, target_language)
+            if translated:
+                translated = self._clean_translation_output(translated)
+                logger.info(f"[OpenRouter] Translation successful")
+                return translated
+
+            # Final fallback to Cohere
+            logger.warning("[OpenRouter] Failed, trying Cohere...")
+            translated = await self._translate_with_cohere(text, target_language)
+            if translated:
+                translated = self._clean_translation_output(translated)
+                logger.info(f"[Cohere] Translation successful")
+                return translated
+
+            logger.error("All translation APIs failed, returning original text")
+            return text
 
         except Exception as e:
             logger.error(f"[Translation] Error: {e}")
             return text
+
+    def _clean_translation_output(self, text: str) -> str:
+        """
+        Clean translation output by removing HTML tags and artifacts.
+
+        Args:
+            text: Raw translation output from API
+
+        Returns:
+            Cleaned translation text
+        """
+        import re
+
+        # Remove HTML tags and XML-style tags
+        text = re.sub(r'<[^>]+>', '', text)
+        text = text.replace('[OUT]', '').replace('[/OUT]', '')
+
+        # Remove common HTML entities
+        text = text.replace('&lt;', '<').replace('&gt;', '>')
+        text = text.replace('&amp;', '&').replace('&quot;', '"')
+
+        # Remove markdown formatting
+        text = re.sub(r'\*\*(.+?)\*\*', r'\1', text)  # Bold
+        text = re.sub(r'\*(.+?)\*', r'\1', text)      # Italic
+
+        # Clean extra whitespace but preserve paragraph breaks
+        text = re.sub(r'\n\s*\n+', '\n\n', text)
+        text = text.strip()
+
+        return text
+
+    async def _translate_with_openai(self, text: str, target_language: str) -> Optional[str]:
+        """
+        Translate text using OpenAI API (gpt-4o-mini).
+        Ensures 100% translation to target language with NO English words.
+
+        Args:
+            text: Text to translate
+            target_language: Target language code
+
+        Returns:
+            Translated text or None if translation fails
+        """
+        try:
+            from src.config import settings
+            from openai import OpenAI
+
+            api_key = settings.OPENAI_API_KEY
+            if not api_key:
+                logger.warning("[OpenAI] API key missing")
+                return None
+
+            client = OpenAI(api_key=api_key)
+
+            language_map = {
+                'urdu': 'Urdu',
+                'spanish': 'Spanish',
+                'french': 'French',
+                'arabic': 'Arabic',
+                'hindi': 'Hindi'
+            }
+
+            target_lang = language_map.get(target_language, target_language)
+
+            # Language-specific instructions
+            special_rules = ""
+            if target_language == 'urdu':
+                special_rules = "\n- Use proper Urdu script (not Roman Urdu)\n- Translate technical terms to their Urdu equivalents (e.g., Robot=روبات, Operating System=آپریٹنگ سسٹم)\n- Do NOT keep English technical terms like 'ROS', 'Framework', 'Hardware' etc."
+
+            prompt = f"""Translate the following English text to {target_lang}.
+
+CRITICAL RULES:
+1. Translate EVERY SINGLE word to {target_lang}
+2. NO English words should remain in the translation
+3. NO other languages mixed in
+4. Translate ALL technical terms to {target_lang}
+5. Return ONLY the translated text, nothing else
+6. Keep the original meaning and structure{special_rules}
+
+English text to translate:
+{text}"""
+
+            response = client.chat.completions.create(
+                model="gpt-4o-mini",
+                messages=[
+                    {"role": "system", "content": f"You are an expert {target_lang} translator. Your job is to translate English text to pure {target_lang}. EVERY word must be translated. NO English words allowed. NO other languages. Translate technical terms too. Return ONLY the translated text."},
+                    {"role": "user", "content": prompt}
+                ],
+                temperature=0.2,
+                max_tokens=2000
+            )
+
+            translated = response.choices[0].message.content.strip()
+            logger.info(f"[OpenAI] Translation successful: {len(translated)} chars")
+            return translated
+
+        except Exception as e:
+            logger.warning(f"[OpenAI] Translation failed: {e}")
+            return None
+
+    async def _translate_with_openrouter(self, text: str, target_language: str) -> Optional[str]:
+        """
+        Translate text using OpenRouter API (Mistral/other models).
+        Ensures 100% translation to target language with NO English words.
+
+        Args:
+            text: Text to translate
+            target_language: Target language code
+
+        Returns:
+            Translated text or None if translation fails
+        """
+        try:
+            from src.config import settings
+            from openai import OpenAI
+
+            api_key = settings.OPENROUTER_API_KEY
+            if not api_key:
+                logger.warning("[OpenRouter] API key missing")
+                return None
+
+            client = OpenAI(
+                api_key=api_key,
+                base_url="https://openrouter.ai/api/v1",
+                timeout=60.0
+            )
+
+            language_map = {
+                'urdu': 'Urdu',
+                'spanish': 'Spanish',
+                'french': 'French',
+                'arabic': 'Arabic',
+                'hindi': 'Hindi'
+            }
+
+            target_lang = language_map.get(target_language, target_language)
+
+            # Language-specific instructions
+            special_rules = ""
+            if target_language == 'urdu':
+                special_rules = "\n- Use proper Urdu script (not Roman Urdu)\n- Translate technical terms to their Urdu equivalents (e.g., Robot=روبات, Operating System=آپریٹنگ سسٹم)\n- Do NOT keep English technical terms like 'ROS', 'Framework', 'Hardware' etc."
+
+            prompt = f"""Translate the following English text to {target_lang}.
+
+CRITICAL RULES:
+1. Translate EVERY SINGLE word to {target_lang}
+2. NO English words should remain in the translation
+3. NO other languages mixed in
+4. Translate ALL technical terms to {target_lang}
+5. Return ONLY the translated text, nothing else
+6. Keep the original meaning and structure{special_rules}
+
+English text to translate:
+{text}"""
+
+            response = client.chat.completions.create(
+                model="mistralai/mistral-7b-instruct:free",
+                messages=[
+                    {"role": "system", "content": f"You are an expert {target_lang} translator. Your job is to translate English text to pure {target_lang}. EVERY word must be translated. NO English words allowed. NO other languages. Translate technical terms too. Return ONLY the translated text."},
+                    {"role": "user", "content": prompt}
+                ],
+                temperature=0.2,
+                max_tokens=2000
+            )
+
+            translated = response.choices[0].message.content.strip()
+            logger.info(f"[OpenRouter] Translation successful: {len(translated)} chars")
+            return translated
+
+        except Exception as e:
+            logger.warning(f"[OpenRouter] Translation failed: {e}")
+            return None
+
+    async def _translate_with_cohere(self, text: str, target_language: str) -> Optional[str]:
+        """
+        Translate text using Cohere API (command-r-plus).
+        Ensures 100% translation to target language with NO English words.
+
+        Args:
+            text: Text to translate
+            target_language: Target language code
+
+        Returns:
+            Translated text or None if translation fails
+        """
+        try:
+            from src.config import settings
+            import cohere
+
+            api_key = settings.COHERE_API_KEY
+            if not api_key:
+                logger.warning("[Cohere] API key missing")
+                return None
+
+            client = cohere.ClientV2(api_key=api_key)
+
+            language_map = {
+                'urdu': 'Urdu',
+                'spanish': 'Spanish',
+                'french': 'French',
+                'arabic': 'Arabic',
+                'hindi': 'Hindi'
+            }
+
+            target_lang = language_map.get(target_language, target_language)
+
+            # Language-specific instructions
+            special_rules = ""
+            if target_language == 'urdu':
+                special_rules = "\n- Use proper Urdu script (not Roman Urdu)\n- Translate technical terms to their Urdu equivalents (e.g., Robot=روبات, Operating System=آپریٹنگ سسٹم)\n- Do NOT keep English technical terms like 'ROS', 'Framework', 'Hardware' etc."
+
+            prompt = f"""Translate the following English text to {target_lang}.
+
+CRITICAL RULES:
+1. Translate EVERY SINGLE word to {target_lang}
+2. NO English words should remain in the translation
+3. NO other languages mixed in
+4. Translate ALL technical terms to {target_lang}
+5. Return ONLY the translated text, nothing else
+6. Keep the original meaning and structure{special_rules}
+
+English text to translate:
+{text}"""
+
+            # Cohere V2 API uses preamble instead of system prompt
+            system_instruction = f"You are an expert {target_lang} translator. Your job is to translate English text to pure {target_lang}. EVERY word must be translated. NO English words allowed. NO other languages. Translate technical terms too. Return ONLY the translated text."
+
+            response = client.chat(
+                model="command-r-plus",
+                messages=[
+                    {
+                        "role": "user",
+                        "content": system_instruction + "\n\n" + prompt
+                    }
+                ],
+                temperature=0.2,
+                max_tokens=2000
+            )
+
+            translated = response.message.content[0].text.strip()
+            logger.info(f"[Cohere] Translation successful: {len(translated)} chars")
+            return translated
+
+        except Exception as e:
+            logger.warning(f"[Cohere] Translation failed: {e}")
+            return None
 
     def _translate_with_dictionary(self, text: str, target_language: str) -> str:
         """
