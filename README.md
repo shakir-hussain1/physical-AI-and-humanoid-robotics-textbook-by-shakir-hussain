@@ -102,28 +102,47 @@ Physical-AI-and-Humanoid-Robotics/
 │   │   │   ├── rag_service.py             # Cohere RAG integration
 │   │   │   └── ...
 │   │   └── app.py                         # FastAPI main app
+│   ├── tests/                             # Test suite (organized)
+│   │   ├── test_app.py
+│   │   ├── test_personalization_api.py
+│   │   ├── test_translation_chapters.py
+│   │   └── ...
+│   ├── AUTH_IMPLEMENTATION.md             # Auth setup guide
+│   ├── PERSONALIZATION_FEATURE_STATUS.md  # Personalization guide
 │   └── requirements.txt
 │
 ├── src/
 │   ├── components/
-│   │   ├── ChapterPersonalizeButton.jsx   # NEW: Personalization button
-│   │   ├── PersonalizationModal.jsx       # NEW: Preferences modal
+│   │   ├── ChapterPersonalizeButton.jsx   # Personalization button
+│   │   ├── PersonalizationModal.jsx       # Preferences modal
 │   │   ├── ChatWidget.jsx                 # Chatbot widget
 │   │   ├── AuthForm.jsx                   # Login/Signup forms
 │   │   └── ...
 │   ├── services/
-│   │   ├── personalizationApi.js          # NEW: Personalization API client
+│   │   ├── personalizationApi.js          # Personalization API client
 │   │   ├── chatApi.js                     # Chatbot API client
 │   │   ├── authApi.js                     # Auth API client
 │   │   └── ...
 │   ├── context/
 │   │   └── AuthContext.jsx                # User auth state
 │   ├── theme/
-│   │   └── DocItem/Layout/                # NEW: Swizzled Docusaurus component
+│   │   └── DocItem/Layout/                # Swizzled Docusaurus component
 │   ├── css/
 │   │   └── custom.css                     # Personalization CSS classes
 │   └── docs/
 │       └── chapters/                      # Textbook content
+│
+├── history/
+│   ├── prompts/
+│   │   ├── general/                       # General PHRs
+│   │   ├── 1-rag-chatbot-backend/         # Feature-specific PHRs
+│   │   └── urdu-translation/
+│   ├── ARCHIVED/
+│   │   └── backend/                       # Legacy prompts
+│   └── adr/                               # Architecture Decision Records
+│
+├── specs/
+│   └── 1-rag-chatbot-backend/             # Feature specifications
 │
 ├── .specify/
 │   ├── memory/
@@ -131,10 +150,10 @@ Physical-AI-and-Humanoid-Robotics/
 │   ├── templates/                         # SDD templates
 │   └── ...
 │
+├── .gitignore                             # Git ignore patterns
 ├── package.json                           # Frontend dependencies
 ├── docusaurus.config.js                   # Docusaurus configuration
-├── README.md                              # This file
-└── test_personalization_api.py            # Test suite
+└── README.md                              # This file
 
 ```
 
@@ -188,11 +207,28 @@ npm start
 ## 🧪 Testing
 
 ### Run Backend Test Suite
+
+All tests are organized in `backend/tests/` directory:
+
 ```bash
-python test_personalization_api.py
+# Run specific test file
+python backend/tests/test_personalization_api.py
+
+# Run all tests
+python -m pytest backend/tests/ -v
 ```
 
-**Tests Include:**
+**Available Tests:**
+- `test_app.py` - Basic app functionality
+- `test_personalization_api.py` - Personalization CRUD operations
+- `test_system.py` - System integration tests
+- `test_translation_chapters.py` - Translation feature tests
+- `test_urdu_translation.py` - Urdu-specific translation tests
+- `test_concurrent_endpoints.py` - Concurrency tests
+- `verify_setup.py` - Setup verification
+- `verify_translation_feature.py` - Translation feature verification
+
+**Personalization Tests Include:**
 - User signup & authentication
 - Save personalization settings
 - Retrieve personalization
@@ -200,7 +236,7 @@ python test_personalization_api.py
 - Delete/reset personalization
 - Get all user personalizations
 
-**Result:** ✅ 8/8 tests passing
+**Result:** ✅ All tests passing
 
 ### Manual Testing
 1. Open `http://localhost:3000` in browser
@@ -240,9 +276,29 @@ python test_personalization_api.py
 | Chapter Personalization | ✅ Complete | 4 dimensions, persistent storage |
 | RAG Chatbot | ✅ Complete | Cohere-powered, confidence scoring |
 | Textbook Platform | ✅ Complete | Docusaurus integrated, responsive |
-| Local Testing | ✅ Complete | All 8 tests passing |
+| Local Testing | ✅ Complete | All tests organized and passing |
 | API Documentation | ✅ Complete | Swagger docs at `/api/docs` |
 | Error Handling | ✅ Complete | Comprehensive logging & messages |
+| Code Organization | ✅ Complete | Tests organized, docs consolidated |
+
+---
+
+## 🧹 Recent Cleanup & Refactoring (Dec 24, 2025)
+
+**Codebase Optimization:**
+- ✅ **Consolidated Documentation:** Merged duplicate docs into single sources of truth
+  - `PERSONALIZATION_SETUP.md` → `backend/PERSONALIZATION_FEATURE_STATUS.md`
+  - `SETUP_AUTH.md` → `backend/AUTH_IMPLEMENTATION.md`
+- ✅ **Test Organization:** Moved 10 test files to `backend/tests/` directory
+- ✅ **Removed Redundant Files:** Deleted obsolete docs and demo files (~9 files, 1.5MB)
+- ✅ **Improved .gitignore:** Added Python cache patterns and organized by category
+- ✅ **Archived Legacy:** Moved old prompt history to `history/ARCHIVED/`
+
+**Impact:**
+- Cleaner repository structure
+- Easier test discovery and execution
+- Single source of truth for documentation
+- Better git hygiene
 
 ---
 
@@ -277,10 +333,18 @@ REACT_APP_API_URL=https://your-backend-url
 
 ## 📚 Documentation
 
-- **[Personalization Feature](./PERSONALIZATION_FEATURE_STATUS.md)** - Complete feature overview
-- **[Setup Guide](./PERSONALIZATION_SETUP.md)** - Detailed setup instructions
-- **[Project Constitution](./.specify/memory/constitution.md)** - Project principles
-- **[API Docs](http://127.0.0.1:8000/api/docs)** - Interactive Swagger documentation
+### Feature Guides
+- **[Personalization Feature](./backend/PERSONALIZATION_FEATURE_STATUS.md)** - Complete feature overview & testing guide
+- **[Authentication Implementation](./backend/AUTH_IMPLEMENTATION.md)** - Auth setup & API integration guide
+
+### Project Documentation
+- **[Project Constitution](./.specify/memory/constitution.md)** - Project principles & development guidelines
+- **[API Docs](http://127.0.0.1:8000/api/docs)** - Interactive Swagger documentation (when backend running)
+
+### Development
+- **[Specification Files](./specs/)** - Feature specifications and requirements
+- **[Architecture Decisions](./history/adr/)** - ADRs for significant decisions
+- **[Prompt History](./history/prompts/)** - Development session records
 
 ---
 
