@@ -32,6 +32,8 @@ jobs:
         run: npm ci
 
       - name: Build website
+        env:
+          REACT_APP_API_URL: https://shakir-rag-chatbot-backend.hf.space
         run: npm run build
 
       - name: Upload artifact
