@@ -50,6 +50,8 @@ htmlcov/
 
 # Logging
 *.log
+logs/
+!logs/.gitkeep
 
 # Database
 *.db
