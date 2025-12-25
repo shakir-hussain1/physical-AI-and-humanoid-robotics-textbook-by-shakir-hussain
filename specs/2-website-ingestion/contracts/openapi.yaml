@@ -1,0 +1,500 @@
+openapi: 3.0.0
+info:
+  title: Website URL Ingestion & Vector Storage API
+  description: FastAPI endpoints for RAG document ingestion, chunking, embedding generation, and Qdrant storage
+  version: 1.0.0
+  contact:
+    name: Physical AI & Humanoid Robotics Project
+  license:
+    name: MIT
+
+servers:
+  - url: http://localhost:8000
+    description: Local development server
+  - url: https://api.example.com
+    description: Production server
+
+paths:
+  /health:
+    get:
+      summary: Health check endpoint
+      description: Verifies API is running and dependencies are available (Cohere, Qdrant)
+      operationId: getHealth
+      tags:
+        - System
+      responses:
+        '200':
+          description: System is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ["healthy", "degraded"]
+                  timestamp:
+                    type: string
+                    format: date-time
+                  dependencies:
+                    type: object
+                    properties:
+                      cohere_api:
+                        type: string
+                        enum: ["available", "unavailable"]
+                      qdrant:
+                        type: string
+                        enum: ["available", "unavailable"]
+                required:
+                  - status
+                  - timestamp
+        '503':
+          description: Critical dependency unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /ingest:
+    post:
+      summary: Start URL ingestion pipeline
+      description: Accept a batch of URLs, initiate crawling, chunking, embedding, and storage pipeline
+      operationId: ingestUrls
+      tags:
+        - Ingestion
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IngestRequest'
+      responses:
+        '202':
+          description: Ingestion started successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IngestResponse'
+        '400':
+          description: Invalid request (missing URLs, invalid format)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Collection already exists or quota exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error during ingestion start
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /ingest/{session_id}/status:
+    get:
+      summary: Get ingestion session status
+      description: Retrieve current progress of an ongoing or completed ingestion session
+      operationId: getIngestStatus
+      tags:
+        - Ingestion
+      parameters:
+        - name: session_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: Session UUID returned from POST /ingest
+      responses:
+        '200':
+          description: Session status retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IngestionSession'
+        '404':
+          description: Session not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error retrieving status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /verify:
+    post:
+      summary: Verify vector storage integrity
+      description: Query stored vectors by ID and validate metadata matches original chunks
+      operationId: verifyVectors
+      tags:
+        - Verification
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerifyRequest'
+      responses:
+        '200':
+          description: Verification completed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerifyResponse'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error during verification
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /collections:
+    get:
+      summary: List Qdrant collections
+      description: Retrieve all active collections and their vector counts
+      operationId: listCollections
+      tags:
+        - Collections
+      responses:
+        '200':
+          description: Collections retrieved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  collections:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/QdrantCollection'
+                  total:
+                    type: integer
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /collections/{collection_name}/quota:
+    get:
+      summary: Check collection quota usage
+      description: Get current vector count and remaining quota for a collection
+      operationId: getQuota
+      tags:
+        - Collections
+      parameters:
+        - name: collection_name
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Collection name
+      responses:
+        '200':
+          description: Quota retrieved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  collection_name:
+                    type: string
+                  vector_count:
+                    type: integer
+                  max_vectors:
+                    type: integer
+                  remaining_quota:
+                    type: integer
+                  percent_used:
+                    type: number
+                    format: float
+        '404':
+          description: Collection not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    IngestRequest:
+      type: object
+      required:
+        - urls
+        - collection_name
+      properties:
+        urls:
+          type: array
+          minItems: 1
+          maxItems: 100
+          items:
+            type: string
+            format: uri
+          description: List of Docusaurus URLs to ingest (http/https only)
+        collection_name:
+          type: string
+          minLength: 3
+          maxLength: 32
+          pattern: '^[a-z0-9_-]+$'
+          description: Qdrant collection name (lowercase alphanumeric, underscore, hyphen)
+        max_chunk_tokens:
+          type: integer
+          default: 1024
+          minimum: 50
+          maximum: 2048
+          description: Maximum tokens per chunk (semantic splitting will respect this)
+        batch_size:
+          type: integer
+          default: 10
+          minimum: 1
+          maximum: 100
+          description: Number of URLs to process in parallel
+
+    IngestResponse:
+      type: object
+      properties:
+        session_id:
+          type: string
+          format: uuid
+          description: Unique session identifier for tracking progress
+        status:
+          type: string
+          enum: ["running", "queued"]
+          description: Ingestion has been started
+        collection_name:
+          type: string
+          description: Qdrant collection being populated
+        total_urls:
+          type: integer
+          description: Total URLs to ingest
+        estimated_completion:
+          type: string
+          format: date-time
+          description: Estimated completion time
+        status_endpoint:
+          type: string
+          format: uri
+          description: URL to poll for status updates (e.g., /ingest/{session_id}/status)
+      required:
+        - session_id
+        - status
+        - collection_name
+
+    IngestionSession:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        session_name:
+          type: string
+        collection_name:
+          type: string
+        status:
+          type: string
+          enum: ["running", "completed", "failed"]
+        total_urls:
+          type: integer
+        urls_processed:
+          type: integer
+        urls_succeeded:
+          type: integer
+        urls_failed:
+          type: integer
+        total_chunks_created:
+          type: integer
+        total_chunks_embedded:
+          type: integer
+        total_vectors_stored:
+          type: integer
+        started_at:
+          type: string
+          format: date-time
+        completed_at:
+          type: string
+          format: date-time
+          nullable: true
+        progress_percent:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 100
+        error_summary:
+          type: string
+          nullable: true
+      required:
+        - id
+        - status
+        - total_urls
+        - urls_processed
+
+    VerifyRequest:
+      type: object
+      required:
+        - collection_name
+      properties:
+        collection_name:
+          type: string
+          description: Collection to verify
+        sample_size:
+          type: integer
+          default: 100
+          minimum: 1
+          maximum: 1000
+          description: Number of random vectors to verify
+
+    VerifyResponse:
+      type: object
+      properties:
+        collection_name:
+          type: string
+        total_vectors_checked:
+          type: integer
+        vectors_found:
+          type: integer
+        metadata_matches:
+          type: integer
+        verification_passed:
+          type: boolean
+        details:
+          type: array
+          items:
+            type: object
+            properties:
+              vector_id:
+                type: string
+              found:
+                type: boolean
+              metadata_valid:
+                type: boolean
+              error:
+                type: string
+                nullable: true
+      required:
+        - collection_name
+        - verification_passed
+
+    QdrantCollection:
+      type: object
+      properties:
+        name:
+          type: string
+        vector_dimension:
+          type: integer
+        distance_metric:
+          type: string
+          enum: ["cosine", "euclidean"]
+        vector_count:
+          type: integer
+        max_vectors:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+        last_updated_at:
+          type: string
+          format: date-time
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error code or type
+        message:
+          type: string
+          description: Detailed error message
+        details:
+          type: object
+          nullable: true
+          description: Additional context (e.g., failed URLs, specific API errors)
+        timestamp:
+          type: string
+          format: date-time
+        request_id:
+          type: string
+          nullable: true
+          description: Correlation ID for logging
+      required:
+        - error
+        - message
+
+  responses:
+    BadRequest:
+      description: Invalid request parameters
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+
+    ServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: API key for authentication (future use)
+
+tags:
+  - name: System
+    description: System health and status endpoints
+  - name: Ingestion
+    description: URL ingestion and pipeline management
+  - name: Verification
+    description: Vector storage verification and validation
+  - name: Collections
+    description: Qdrant collection management and quota tracking
+
+externalDocs:
+  description: RAG Chatbot Documentation
+  url: https://docs.example.com
+
+---
+# Error Codes Reference
+
+## HTTP Status Codes
+- **200 OK:** Request succeeded
+- **202 Accepted:** Async operation started (ingestion)
+- **400 Bad Request:** Invalid input (missing fields, malformed URLs)
+- **404 Not Found:** Resource not found (session, collection)
+- **409 Conflict:** Resource conflict (collection exists, quota exceeded)
+- **500 Internal Server Error:** Server error
+- **503 Service Unavailable:** Dependency unavailable (Cohere, Qdrant)
+
+## Application Error Codes
+- **INVALID_URL:** URL format invalid or unreachable
+- **EXTRACTION_FAILED:** HTML extraction or parsing failed
+- **CHUNKING_FAILED:** Semantic chunking failed
+- **EMBEDDING_FAILED:** Cohere API call failed
+- **STORAGE_FAILED:** Qdrant vector insertion failed
+- **QUOTA_EXCEEDED:** Collection reached max vectors
+- **INVALID_COLLECTION:** Collection name format invalid
+- **DEPENDENCY_UNAVAILABLE:** Cohere or Qdrant unavailable
