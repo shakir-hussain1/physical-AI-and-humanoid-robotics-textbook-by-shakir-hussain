@@ -129,7 +129,7 @@
 
 **Objective:** Verify pipeline functionality with real data
 
-- [ ] T010 Test with real Docusaurus URLs and validate chunking quality
+- [x] T010 Test with real Docusaurus URLs and validate chunking quality
   - **File:** `backend/main.py` (test URLs list)
   - **Dependencies:** T008
   - **Acceptance Criteria:**
@@ -139,7 +139,7 @@
     - Log shows 100% success rate
   - **Success Metric:** All 5+ URLs processed, chunks stored, logs show zero extraction failures
 
-- [ ] T011 Verify vector storage and retrieval accuracy
+- [x] T011 Verify vector storage and retrieval accuracy
   - **File:** `backend/main.py` (QdrantStorage.verify_vectors)
   - **Dependencies:** T010
   - **Acceptance Criteria:**
@@ -149,7 +149,7 @@
     - Verify embedding dimensions are 1024
   - **Success Metric:** `verify_vectors("book_embeddings", 20)` returns True
 
-- [ ] T012 Test error handling for all failure modes
+- [x] T012 Test error handling for all failure modes
   - **File:** `backend/main.py` (test with invalid URLs)
   - **Dependencies:** T001-T009
   - **Acceptance Criteria:**
@@ -165,7 +165,7 @@
 
 **Objective:** Complete setup documentation and finalize MVP
 
-- [ ] T013 Document environment setup and configuration in README
+- [x] T013 Document environment setup and configuration in README
   - **File:** `backend/README.md`
   - **Dependencies:** T001
   - **Acceptance Criteria:**
@@ -175,7 +175,7 @@
     - Troubleshooting section for common failures
   - **Success Metric:** New user can follow README and run pipeline successfully
 
-- [ ] T014 Add inline code documentation and type hints
+- [x] T014 Add inline code documentation and type hints
   - **File:** `backend/main.py` (all classes and functions)
   - **Dependencies:** T008
   - **Acceptance Criteria:**
@@ -185,7 +185,7 @@
     - All return values have type hints
   - **Success Metric:** `python -m pydoc backend.main` renders properly formatted docs
 
-- [ ] T015 Verify .gitignore and no secrets in version control
+- [x] T015 Verify .gitignore and no secrets in version control
   - **File:** `backend/.gitignore`
   - **Dependencies:** T001, T003
   - **Acceptance Criteria:**
@@ -201,7 +201,7 @@
 
 **Objective:** Confirm pipeline meets all specification requirements
 
-- [ ] T016 Validate pipeline meets all functional requirements
+- [x] T016 Validate pipeline meets all functional requirements
   - **File:** Review logs from T010
   - **Dependencies:** T010, T011
   - **Acceptance Criteria:**
@@ -215,7 +215,7 @@
     - REQ-8: Configuration via .env ✓
   - **Success Metric:** All 8 REQs verified and documented in summary
 
-- [ ] T017 Validate pipeline meets non-functional requirements
+- [x] T017 Validate pipeline meets non-functional requirements
   - **File:** Measure performance from logs in T010
   - **Dependencies:** T010
   - **Acceptance Criteria:**
@@ -225,7 +225,7 @@
     - NFR-4: All operations logged at appropriate levels (INFO/ERROR)
   - **Success Metric:** All 4 NFRs verified with log timestamps and metrics
 
-- [ ] T018 Create final summary and deployment checklist
+- [x] T018 Create final summary and deployment checklist
   - **File:** `backend/DEPLOYMENT.md`
   - **Dependencies:** T013-T017
   - **Acceptance Criteria:**

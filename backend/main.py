@@ -377,10 +377,13 @@ def main() -> int:
         return 1
 
     # Example URLs (Docusaurus book) - EDIT THIS LIST
+    # Testing with real Docusaurus sites (T010)
     urls = [
-        "https://docs.example.com/intro",
-        "https://docs.example.com/module-1/chapter-1",
-        # Add more URLs as needed
+        "https://docusaurus.io/docs/intro",
+        "https://docusaurus.io/docs/installation",
+        "https://docusaurus.io/docs/markdown-features",
+        "https://python.readthedocs.io/en/latest/tutorial/index.html",
+        "https://python.readthedocs.io/en/latest/howto/regex.html",
     ]
     collection_name = "book_embeddings"
 
