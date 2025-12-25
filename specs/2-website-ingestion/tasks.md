@@ -23,7 +23,7 @@
 
 **Objective:** Initialize backend project and configure environment
 
-- [ ] T001 Initialize backend project with UV and create project structure
+- [x] T001 Initialize backend project with UV and create project structure
   - **File:** `backend/pyproject.toml`, `backend/.env.example`
   - **Dependencies:** None
   - **Acceptance Criteria:**
@@ -33,7 +33,7 @@
     - Virtual environment created and verified with `uv venv`
   - **Success Metric:** `uv pip install -e .` succeeds without errors
 
-- [ ] T002 Create logging configuration and directory structure
+- [x] T002 Create logging configuration and directory structure
   - **File:** `backend/logs/.gitkeep`
   - **Dependencies:** T001
   - **Acceptance Criteria:**
@@ -41,7 +41,7 @@
     - `.gitkeep` allows directory tracking without log files
   - **Success Metric:** Directory created and verified with `ls -la backend/logs/`
 
-- [ ] T003 Create configuration loader from environment variables
+- [x] T003 Create configuration loader from environment variables
   - **File:** `backend/main.py` (IngestionConfig class)
   - **Dependencies:** T001
   - **Acceptance Criteria:**
@@ -56,7 +56,7 @@
 
 **Objective:** Implement individual service classes (can be done in parallel)
 
-- [ ] T004 [P] Implement WebCrawler class for URL content extraction
+- [x] T004 [P] Implement WebCrawler class for URL content extraction
   - **File:** `backend/main.py` (WebCrawler class)
   - **Dependencies:** T001, T003
   - **Acceptance Criteria:**
@@ -66,7 +66,7 @@
     - Returns None for empty or unparseable content
   - **Success Metric:** Successfully fetch 3 sample URLs and extract text > 100 chars
 
-- [ ] T005 [P] Implement SemanticChunker class for text splitting
+- [x] T005 [P] Implement SemanticChunker class for text splitting
   - **File:** `backend/main.py` (SemanticChunker class)
   - **Dependencies:** T001
   - **Acceptance Criteria:**
@@ -76,7 +76,7 @@
     - Token count computed with tiktoken, no mid-sentence breaks
   - **Success Metric:** Chunk a 5KB text sample into 5-10 chunks, verify tokens <= 1024 each
 
-- [ ] T006 [P] Implement EmbeddingService class with retry logic
+- [x] T006 [P] Implement EmbeddingService class with retry logic
   - **File:** `backend/main.py` (EmbeddingService class)
   - **Dependencies:** T001, T003
   - **Acceptance Criteria:**
@@ -86,7 +86,7 @@
     - Returns None after max 3 retries, logs all attempts
   - **Success Metric:** Generate embeddings for 50 sample chunks with Cohere API (uses real API key)
 
-- [ ] T007 [P] Implement QdrantStorage class with vector persistence
+- [x] T007 [P] Implement QdrantStorage class with vector persistence
   - **File:** `backend/main.py` (QdrantStorage class)
   - **Dependencies:** T001, T003
   - **Acceptance Criteria:**
@@ -102,7 +102,7 @@
 
 **Objective:** Integrate all components into executable pipeline
 
-- [ ] T008 Implement main() function orchestrating full pipeline
+- [x] T008 Implement main() function orchestrating full pipeline
   - **File:** `backend/main.py` (main function)
   - **Dependencies:** T001-T007
   - **Acceptance Criteria:**
@@ -114,7 +114,7 @@
     - All errors caught and logged, no unhandled exceptions
   - **Success Metric:** Run `python main.py` end-to-end with 3+ URLs, produces summary log
 
-- [ ] T009 Add script entry point and CLI interface
+- [x] T009 Add script entry point and CLI interface
   - **File:** `backend/main.py` (__name__ == "__main__" block)
   - **Dependencies:** T008
   - **Acceptance Criteria:**
