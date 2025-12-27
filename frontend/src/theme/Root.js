@@ -1,5 +1,5 @@
 import React from 'react';
-import ChatbotWidget from '../../frontend/src/components/ChatbotWidget';
+import ChatbotWidget from '../components/ChatbotWidget';
 
 export default function Root({ children }) {
   return (
