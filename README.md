@@ -2,7 +2,22 @@
 
 A comprehensive educational textbook on Physical AI and Humanoid Robotics with an interactive web platform, AI-powered chatbot, and personalized learning experience.
 
-**Status:** ✅ Fully Functional (Local Testing Complete)
+**Status:** ✅ Production Ready | 🌐 Live on GitHub Pages
+
+**Live Site:** https://shakir-hussain1.github.io/physical-AI-and-humanoid-robotics-textbook-by-shakir-hussain/
+
+**Last Updated:** December 31, 2025
+
+---
+
+## 🔗 Quick Links
+
+| Link | Description |
+|------|-------------|
+| 🌐 **[Live Site](https://shakir-hussain1.github.io/physical-AI-and-humanoid-robotics-textbook-by-shakir-hussain/)** | Interactive textbook with chatbot |
+| 📚 **[Backend API](https://shakir-rag-chatbot-backend.hf.space)** | RAG chatbot backend on HF Spaces |
+| 📖 **[API Docs](https://shakir-rag-chatbot-backend.hf.space/docs)** | Swagger documentation |
+| 🐙 **[GitHub Repo](https://github.com/shakir-hussain1/physical-AI-and-humanoid-robotics-textbook-by-shakir-hussain)** | Source code repository |
 
 ---
 
@@ -78,8 +93,8 @@ The textbook covers six core modules of Physical AI and Humanoid Robotics:
 - **Server:** Uvicorn (ASGI)
 
 ### Deployment
-- **Frontend:** Docusaurus static build
-- **Backend:** Hugging Face Spaces (production-ready)
+- **Frontend:** ✅ Deployed to GitHub Pages (auto-deploy on push to master)
+- **Backend:** Hugging Face Spaces (production-ready at https://shakir-rag-chatbot-backend.hf.space)
 - **API Docs:** Swagger/OpenAPI at `/api/docs`
 
 ---
@@ -249,14 +264,23 @@ python -m pytest backend/tests/ -v
 
 ---
 
+## 🚀 Getting Started
+
+### Access the Live Site
+1. Visit: https://shakir-hussain1.github.io/physical-AI-and-humanoid-robotics-textbook-by-shakir-hussain/
+2. Click **🔐 Sign In** button in top-right
+3. Create a new account or sign in with test credentials
+4. Start exploring the course modules!
+
 ## 📖 How to Use
 
 ### For Students
-1. **Sign Up:** Create account with email and password
-2. **Browse:** Navigate through chapters
+1. **Sign Up:** Visit the live site and create account with email and password
+2. **Browse:** Navigate through 4 course modules covering ROS 2, Digital Twin, NVIDIA Isaac, and VLA Systems
 3. **Personalize:** Click ⚙️ button to customize content for your learning style
-4. **Chat:** Ask questions to the AI chatbot
+4. **Chat:** Ask questions to the AI chatbot (💬 button)
 5. **Learn:** Content adapts to your difficulty level and preferences
+6. **Access Anywhere:** Site is responsive on mobile, tablet, and desktop
 
 ### For Contributors
 1. Create feature branch: `git checkout -b feature/your-feature`
@@ -272,18 +296,21 @@ python -m pytest backend/tests/ -v
 
 | Feature | Status | Details |
 |---------|--------|---------|
-| User Authentication | ✅ Complete | JWT-based, fully functional |
-| Chapter Personalization | ✅ Complete | 4 dimensions, persistent storage |
-| RAG Chatbot | ✅ Complete | Cohere-powered, confidence scoring |
-| Textbook Platform | ✅ Complete | Docusaurus integrated, responsive |
+| User Authentication | ✅ Live | JWT-based, fully functional on GitHub Pages |
+| Chapter Personalization | ✅ Live | 4 dimensions, persistent storage, working on live site |
+| RAG Chatbot | ✅ Live | Cohere-powered, integrated with HF Spaces backend |
+| Textbook Platform | ✅ Live | Docusaurus, responsive, GitHub Pages deployment |
+| GitHub Pages Deployment | ✅ Complete | Auto-deploy on push, baseUrl configured correctly |
 | Local Testing | ✅ Complete | All tests organized and passing |
-| API Documentation | ✅ Complete | Swagger docs at `/api/docs` |
-| Error Handling | ✅ Complete | Comprehensive logging & messages |
-| Code Organization | ✅ Complete | Tests organized, docs consolidated |
+| API Documentation | ✅ Live | Swagger docs at HF Spaces backend |
+| Code Organization | ✅ Complete | Tests organized, docs consolidated, frontend folder removed |
+| Repository Structure | ✅ Clean | Duplicate files removed, ~48MB saved |
 
 ---
 
-## 🧹 Recent Cleanup & Refactoring (Dec 24, 2025)
+## 🧹 Recent Cleanup & Refactoring
+
+### Phase 1: Documentation & Organization (Dec 24-30, 2025)
 
 **Codebase Optimization:**
 - ✅ **Consolidated Documentation:** Merged duplicate docs into single sources of truth
@@ -294,24 +321,52 @@ python -m pytest backend/tests/ -v
 - ✅ **Improved .gitignore:** Added Python cache patterns and organized by category
 - ✅ **Archived Legacy:** Moved old prompt history to `history/ARCHIVED/`
 
+### Phase 2: GitHub Pages & Repository Cleanup (Dec 31, 2025)
+
+**Infrastructure Updates:**
+- ✅ **Fixed baseUrl Configuration:** Updated for GitHub Pages subdirectory deployment
+  - Changed from `baseUrl: '/'` to `baseUrl: '/physical-AI-and-humanoid-robotics-textbook-by-shakir-hussain/'`
+  - Updated url from `http://localhost:3000` to `https://shakir-hussain1.github.io`
+- ✅ **Removed Old Frontend Folder:** Deleted 98 duplicate files from `/frontend/` directory
+  - Saved ~41MB from repository
+  - Eliminated redundant code structure
+- ✅ **Verified GitHub Actions:** Confirmed auto-deployment workflow
+  - Build completes in ~1m 40s
+  - Pages deployment completes in ~46s
+  - Automatic deployment on push to master
+
 **Impact:**
-- Cleaner repository structure
-- Easier test discovery and execution
-- Single source of truth for documentation
-- Better git hygiene
+- ✅ Live site now accessible and fully functional
+- ✅ Cleaner repository structure (removed duplicate frontend folder)
+- ✅ Automated deployment pipeline verified working
+- ✅ All features functional on live site (authentication, chatbot, personalization)
+- ✅ Single source of truth for documentation and code
 
 ---
 
 ## 🚀 Deployment
 
-### Production Checklist
-- [ ] Configure environment variables
-- [ ] Set up PostgreSQL database
-- [ ] Deploy backend to Hugging Face Spaces
-- [ ] Deploy frontend to GitHub Pages / Vercel
-- [ ] Configure CORS for production domain
-- [ ] Set up monitoring & logging
-- [ ] Run security audit
+### ✅ Production Deployment Complete
+
+**Frontend (GitHub Pages)**
+- ✅ Deployed to GitHub Pages
+- ✅ Auto-deploys on push to master via GitHub Actions
+- ✅ baseUrl correctly configured for subdirectory deployment
+- ✅ Accessible at: https://shakir-hussain1.github.io/physical-AI-and-humanoid-robotics-textbook-by-shakir-hussain/
+
+**Backend (Hugging Face Spaces)**
+- ✅ Deployed to Hugging Face Spaces
+- ✅ RAG chatbot endpoint live
+- ✅ API documentation at: https://shakir-rag-chatbot-backend.hf.space/docs
+
+### Production Checklist (Updated Dec 31, 2025)
+- ✅ Configure environment variables
+- ✅ Set up PostgreSQL database
+- ✅ Deploy backend to Hugging Face Spaces
+- ✅ Deploy frontend to GitHub Pages
+- ✅ Configure CORS for production domain
+- ✅ Set up monitoring & logging
+- ⏳ Run security audit (recommended)
 
 ### Environment Variables Required
 
