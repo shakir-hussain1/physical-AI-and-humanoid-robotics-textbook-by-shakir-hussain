@@ -1,120 +1,22 @@
-/**
- * Custom CSS for Physical AI & Humanoid Robotics Textbook
- */
+/* Root Layout Styles - Enhanced Design */
 
-:root {
-  --ifm-color-primary: #2e8555;
-  --ifm-color-primary-dark: #29784c;
-  --ifm-color-primary-darker: #277148;
-  --ifm-color-primary-darkest: #205d3b;
-  --ifm-color-primary-light: #33925d;
-  --ifm-color-primary-lighter: #359962;
-  --ifm-color-primary-lightest: #3cad6e;
-  --ifm-code-font-size: 95%;
-  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
-}
-
-[data-theme='dark'] {
-  --ifm-color-primary: #25c2a0;
-  --ifm-color-primary-dark: #21af90;
-  --ifm-color-primary-darker: #1fa588;
-  --ifm-color-primary-darkest: #1a8870;
-  --ifm-color-primary-light: #29d5b0;
-  --ifm-color-primary-lighter: #32d8b4;
-  --ifm-color-primary-lightest: #4fddbf;
-  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
-}
-
-/* Mermaid diagram styling */
-.mermaid {
-  text-align: center;
-  margin: 1.5rem 0;
-}
-
-/* Code block enhancements */
-.prism-code {
-  font-size: 0.9rem;
-}
-
-/* Table styling */
-table {
-  display: table;
-  width: 100%;
-}
-
-th, td {
-  padding: 0.75rem;
-}
-
-/* Exercise styling */
-h3:has(+ p > strong:first-child) {
-  color: var(--ifm-color-primary);
-}
-
-/* Module card styling */
-.module-card {
-  border: 1px solid var(--ifm-color-emphasis-300);
-  border-radius: 8px;
-  padding: 1.5rem;
-  margin: 1rem 0;
-  transition: box-shadow 0.2s;
-}
-
-.module-card:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-/* Learning objectives */
-.learning-objectives {
-  background: var(--ifm-color-emphasis-100);
-  border-left: 4px solid var(--ifm-color-primary);
-  padding: 1rem;
-  margin: 1rem 0;
-}
-
-/* Common errors section */
-.common-errors {
-  background: #fff3cd;
-  border-left: 4px solid #ffc107;
-  padding: 1rem;
-  margin: 1rem 0;
-}
-
-[data-theme='dark'] .common-errors {
-  background: #332701;
-}
-
-/* Hide Docusaurus's default navbar - we have our own in Layout */
-nav.navbar {
-  display: none !important;
-  visibility: hidden !important;
-  height: 0 !important;
-  margin: 0 !important;
-  padding: 0 !important;
-}
-
-/* Ensure our navbar is visible */
-.top-navbar {
-  display: flex !important;
-}
-
-/* Custom Layout and Navbar Styles */
 .root-container {
   display: flex;
   flex-direction: column;
-  width: 100%;
-  background-color: #f5f7fa;
+  min-height: 100vh;
+  background: linear-gradient(180deg, #f5f7fa 0%, #ffffff 100%);
 }
 
+/* Top Navigation Bar - Premium Design */
 .top-navbar {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
-  padding: 1rem 0;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  padding: 0.75rem 0;
+  box-shadow: 0 8px 32px rgba(102, 126, 234, 0.25);
   position: sticky;
   top: 0;
   z-index: 100;
-  width: 100%;
+  backdrop-filter: blur(8px);
 }
 
 .navbar-content {
@@ -155,62 +57,87 @@ nav.navbar {
 }
 
 .nav-button {
-  padding: 0.6rem 1.2rem;
+  padding: 0.65rem 1.4rem;
   border: none;
-  border-radius: 6px;
-  font-weight: 600;
+  border-radius: 8px;
+  font-weight: 700;
   font-size: 0.9rem;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.5rem;
   white-space: nowrap;
+  backdrop-filter: blur(4px);
 }
 
 .login-btn {
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: rgba(255, 255, 255, 0.15);
   color: white;
-  border: 2px solid white;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .login-btn:hover {
-  background-color: white;
-  color: #667eea;
+  background-color: rgba(255, 255, 255, 0.25);
+  border-color: white;
   transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.login-btn:active {
+  transform: translateY(0);
 }
 
 .personalization-btn,
 .translation-btn {
-  background-color: rgba(255, 255, 255, 0.15);
+  background-color: rgba(255, 255, 255, 0.12);
   color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .personalization-btn:hover,
 .translation-btn:hover {
-  background-color: rgba(255, 255, 255, 0.3);
+  background-color: rgba(255, 255, 255, 0.22);
+  border-color: rgba(255, 255, 255, 0.4);
   transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.personalization-btn:active,
+.translation-btn:active {
+  transform: translateY(0);
 }
 
 .logout-btn {
-  background-color: rgba(255, 107, 107, 0.3);
+  background-color: rgba(255, 107, 107, 0.25);
   color: white;
+  border: 1px solid rgba(255, 107, 107, 0.4);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .logout-btn:hover {
-  background-color: rgba(255, 107, 107, 0.6);
+  background-color: rgba(255, 107, 107, 0.4);
+  border-color: rgba(255, 107, 107, 0.6);
   transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
 }
 
+.logout-btn:active {
+  transform: translateY(0);
+}
+
+/* Main Content Area */
 .main-content {
-  flex: none;
-  width: 100%;
+  flex: 1;
   display: flex;
   flex-direction: column;
 }
 
+/* Panel Overlay & Container */
 .panel-overlay {
-  position: fixed;
+  position:fixed;
   top: 0;
   left: 0;
   right: 0;
@@ -272,6 +199,7 @@ nav.navbar {
   margin: 0 0 1.5rem 0;
 }
 
+/* Animations */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -292,6 +220,7 @@ nav.navbar {
   }
 }
 
+/* Responsive Design */
 @media (max-width: 768px) {
   .navbar-content {
     padding: 0 1rem;
@@ -346,6 +275,7 @@ nav.navbar {
   }
 }
 
+/* Dark Mode Support */
 @media (prefers-color-scheme: dark) {
   .root-container {
     background-color: #1a1a1a;

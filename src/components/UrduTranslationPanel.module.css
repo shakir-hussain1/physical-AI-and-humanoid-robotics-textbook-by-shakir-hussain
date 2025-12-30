@@ -1,0 +1,343 @@
+/* Urdu Translation Panel - Beautiful & Functional */
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.panel::-webkit-scrollbar {
+  width: 6px;
+}
+
+.panel::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.panel::-webkit-scrollbar-thumb {
+  background: rgba(102, 126, 234, 0.3);
+  border-radius: 3px;
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: -2rem -2rem 0 -2rem;
+  padding: 1.5rem 2rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 12px 12px 0 0;
+}
+
+.header h2 {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.closeBtn {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+.closeBtn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.05);
+}
+
+/* Content */
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* Section */
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.label {
+  font-weight: 700;
+  color: #222;
+  font-size: 0.95rem;
+}
+
+/* Textarea */
+.textarea {
+  padding: 1rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-family: inherit;
+  resize: vertical;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  background-color: #f8f9fa;
+}
+
+.textarea:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15);
+  background-color: white;
+}
+
+.textarea:disabled {
+  background-color: #f0f0f0;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Character Count */
+.charCount {
+  font-size: 0.85rem;
+  color: #999;
+  text-align: right;
+}
+
+/* Error Box */
+.errorBox {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  background-color: #fee;
+  border: 1px solid #fcc;
+  border-left: 4px solid #c00;
+  border-radius: 8px;
+  color: #c00;
+  font-size: 0.95rem;
+  animation: slideIn 0.3s ease-out;
+}
+
+.errorIcon {
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+/* Success Box */
+.successBox {
+  padding: 0.875rem 1rem;
+  background-color: #d4edda;
+  border: 1px solid #c3e6cb;
+  border-left: 4px solid #155724;
+  border-radius: 8px;
+  color: #155724;
+  font-size: 0.95rem;
+  font-weight: 600;
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Translate Button */
+.translateBtn {
+  padding: 1rem 1.5rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.translateBtn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.translateBtn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.translateBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.spinner {
+  display: inline-block;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Translation Header */
+.translationHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Accuracy Badge */
+.accuracyBadge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.accuracyLabel {
+  opacity: 0.9;
+}
+
+.accuracyValue {
+  font-size: 1.1rem;
+}
+
+/* Urdu Box */
+.urduBox {
+  padding: 1.25rem;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+  border: 2px solid rgba(102, 126, 234, 0.2);
+  border-radius: 8px;
+  min-height: 80px;
+  display: flex;
+  align-items: center;
+}
+
+.urduText {
+  margin: 0;
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: #333;
+  font-family: 'Urdu Typesetting', 'Noto Naskh Arabic', 'Traditional Arabic', serif;
+}
+
+/* Copy Button */
+.copyBtn {
+  padding: 0.75rem 1.25rem;
+  background-color: #f0f0f0;
+  color: #333;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.copyBtn:hover {
+  background-color: #e0e0e0;
+  border-color: #667eea;
+  color: #667eea;
+  transform: translateY(-1px);
+}
+
+/* Info Box */
+.infoBox {
+  padding: 1rem;
+  background-color: #f0f6ff;
+  border-left: 4px solid #667eea;
+  border-radius: 8px;
+}
+
+.infoTitle {
+  margin: 0 0 0.75rem 0;
+  color: #667eea;
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.infoList {
+  margin: 0;
+  padding-left: 1.5rem;
+  color: #555;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.infoList li {
+  margin-bottom: 0.5rem;
+}
+
+/* Clear Button */
+.clearBtn {
+  padding: 0.75rem 1.25rem;
+  background-color: #fff3cd;
+  color: #856404;
+  border: 2px solid #ffc107;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.clearBtn:hover {
+  background-color: #ffc107;
+  color: white;
+  transform: translateY(-1px);
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .panel {
+    gap: 1rem;
+  }
+
+  .header {
+    margin: -1.5rem -1.5rem 0 -1.5rem;
+    padding: 1rem 1.5rem;
+  }
+
+  .header h2 {
+    font-size: 1.1rem;
+  }
+
+  .translateBtn {
+    flex-wrap: wrap;
+  }
+
+  .accuracyBadge {
+    padding: 0.4rem 0.75rem;
+    font-size: 0.8rem;
+  }
+}

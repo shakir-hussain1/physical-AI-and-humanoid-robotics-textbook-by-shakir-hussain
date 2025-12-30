@@ -1,11 +1,9 @@
 import React from 'react';
-import ChatbotWidget from '../../frontend/src/components/ChatbotWidget';
 
+/**
+ * Root component - top-level wrapper for Docusaurus
+ * The Layout component (in Layout/index.js) handles all the custom UI
+ */
 export default function Root({ children }) {
-  return (
-    <>
-      {children}
-      <ChatbotWidget />
-    </>
-  );
+  return children;
 }

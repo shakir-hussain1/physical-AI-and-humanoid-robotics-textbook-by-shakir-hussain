@@ -7,8 +7,8 @@ const config = {
   tagline: 'A comprehensive textbook for building intelligent humanoid robots',
   favicon: 'img/favicon.ico',
 
-  url: 'https://shakir-hussain1.github.io',
-  baseUrl: '/physical-AI-and-humanoid-robotics-textbook-by-shakir-hussain/',
+  url: 'http://localhost:3000',
+  baseUrl: '/',
 
   organizationName: 'shakir-hussain1',
   projectName: 'physical-AI-and-humanoid-robotics-textbook-by-shakir-hussain',
@@ -50,24 +50,9 @@ const config = {
     ({
       image: 'img/social-card.jpg',
       navbar: {
-        title: 'Physical AI & Humanoid Robotics',
-        logo: {
-          alt: 'Robotics Logo',
-          src: 'img/logo.svg',
-        },
-        items: [
-          {
-            type: 'docSidebar',
-            sidebarId: 'tutorialSidebar',
-            position: 'left',
-            label: 'Textbook',
-          },
-          {
-            href: 'https://github.com/shakir-hussain1/physical-AI-and-humanoid-robotics-textbook-by-shakir-hussain',
-            label: 'GitHub',
-            position: 'right',
-          },
-        ],
+        title: '',
+        hideOnScroll: true,
+        items: [],
       },
       footer: {
         style: 'dark',
