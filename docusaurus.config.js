@@ -7,8 +7,8 @@ const config = {
   tagline: 'A comprehensive textbook for building intelligent humanoid robots',
   favicon: 'img/favicon.ico',
 
-  url: 'http://localhost:3000',
-  baseUrl: '/',
+  url: 'https://shakir-hussain1.github.io',
+  baseUrl: '/physical-AI-and-humanoid-robotics-textbook-by-shakir-hussain/',
 
   organizationName: 'shakir-hussain1',
   projectName: 'physical-AI-and-humanoid-robotics-textbook-by-shakir-hussain',
