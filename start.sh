@@ -10,4 +10,4 @@ cd backend
 pip install -r requirements.txt
 
 # Start backend
-python -m uvicorn src.app:app --host 0.0.0.0 --port 7860
+python -m uvicorn src.app:app --host 0.0.0.0 --port 8000

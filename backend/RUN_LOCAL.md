@@ -409,7 +409,7 @@ Project Root
 1. **Explore API**: Visit http://localhost:8000/api/docs
 2. **Test More Queries**: Try different questions about Physical AI and Robotics
 3. **Modify Content**: Edit sample textbook content in `backend/src/services/rag_service.py`
-4. **Deploy**: When ready, see `FINAL_SETUP.md` for Railway deployment
+4. **Deploy**: When ready, choose your preferred hosting platform (Heroku, AWS, Azure, etc.)
 
 ## Performance Notes
 
@@ -454,5 +454,5 @@ npm start
 
 **You now have a complete working RAG Chatbot running locally!**
 
-For production deployment, see `FINAL_SETUP.md` and deployment guides.
+For production deployment, configure your chosen hosting platform with the environment variables from `.env`.
 

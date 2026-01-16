@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useAuth } from '../context/AuthContext';
 import styles from './AuthForm.module.css';
 
 const getAPIUrl = () => {
@@ -14,14 +15,14 @@ const getAPIUrl = () => {
     return 'http://localhost:8000';
   }
 
-  // GitHub Pages or production - use Hugging Face Spaces backend
-  // Replace USERNAME with your Hugging Face username
-  return 'https://shakir-rag-chatbot-backend.hf.space';
+  // TODO: Add your production backend URL here when deployed
+  return 'http://localhost:8000';
 };
 
 const API_URL = getAPIUrl();
 
 export default function AuthForm({ onAuthSuccess }) {
+  const { login } = useAuth();
   const [authMode, setAuthMode] = useState('signin'); // signin, signup, background
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -76,9 +77,12 @@ export default function AuthForm({ onAuthSuccess }) {
       }
 
       const data = await res.json();
-      localStorage.setItem('access_token', data.access_token);
-      localStorage.setItem('refresh_token', data.refresh_token);
-      localStorage.setItem('user', JSON.stringify(data.user));
+
+      // Update AuthContext state
+      login(data.user, {
+        access_token: data.access_token,
+        refresh_token: data.refresh_token
+      });
 
       onAuthSuccess(data.user);
     } catch (err) {
@@ -136,8 +140,6 @@ export default function AuthForm({ onAuthSuccess }) {
       }
 
       const tokens = await signInRes.json();
-      localStorage.setItem('access_token', tokens.access_token);
-      localStorage.setItem('refresh_token', tokens.refresh_token);
 
       // Save background profile
       const profileRes = await fetch(`${API_URL}/auth/profile/background`, {
@@ -154,7 +156,12 @@ export default function AuthForm({ onAuthSuccess }) {
       }
 
       const profileData = await profileRes.json();
-      localStorage.setItem('user', JSON.stringify(profileData.user));
+
+      // Update AuthContext state
+      login(profileData.user, {
+        access_token: tokens.access_token,
+        refresh_token: tokens.refresh_token
+      });
 
       setSuccess('Profile complete! Redirecting...');
       setTimeout(() => onAuthSuccess(profileData.user), 1000);

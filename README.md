@@ -15,8 +15,6 @@ A comprehensive educational textbook on Physical AI and Humanoid Robotics with a
 | Link | Description |
 |------|-------------|
 | 🌐 **[Live Site](https://shakir-hussain1.github.io/physical-AI-and-humanoid-robotics-textbook-by-shakir-hussain/)** | Interactive textbook with chatbot |
-| 📚 **[Backend API](https://shakir-rag-chatbot-backend.hf.space)** | RAG chatbot backend on HF Spaces |
-| 📖 **[API Docs](https://shakir-rag-chatbot-backend.hf.space/docs)** | Swagger documentation |
 | 🐙 **[GitHub Repo](https://github.com/shakir-hussain1/physical-AI-and-humanoid-robotics-textbook-by-shakir-hussain)** | Source code repository |
 
 ---
@@ -94,8 +92,8 @@ The textbook covers six core modules of Physical AI and Humanoid Robotics:
 
 ### Deployment
 - **Frontend:** ✅ Deployed to GitHub Pages (auto-deploy on push to master)
-- **Backend:** Hugging Face Spaces (production-ready at https://shakir-rag-chatbot-backend.hf.space)
-- **API Docs:** Swagger/OpenAPI at `/api/docs`
+- **Backend:** Runs locally on `http://localhost:8000` (deployment coming soon)
+- **API Docs:** Available at `http://localhost:8000/api/docs` when backend is running
 
 ---
 
@@ -354,18 +352,18 @@ python -m pytest backend/tests/ -v
 - ✅ baseUrl correctly configured for subdirectory deployment
 - ✅ Accessible at: https://shakir-hussain1.github.io/physical-AI-and-humanoid-robotics-textbook-by-shakir-hussain/
 
-**Backend (Hugging Face Spaces)**
-- ✅ Deployed to Hugging Face Spaces
-- ✅ RAG chatbot endpoint live
-- ✅ API documentation at: https://shakir-rag-chatbot-backend.hf.space/docs
+**Backend (Local Development)**
+- ✅ Backend runs on local machine
+- ✅ RAG chatbot endpoint available locally
+- ✅ API documentation available at: http://localhost:8000/api/docs
 
-### Production Checklist (Updated Dec 31, 2025)
+### Production Checklist (Updated Jan 16, 2026)
 - ✅ Configure environment variables
 - ✅ Set up PostgreSQL database
-- ✅ Deploy backend to Hugging Face Spaces
+- ⏳ Deploy backend (pending)
 - ✅ Deploy frontend to GitHub Pages
-- ✅ Configure CORS for production domain
-- ✅ Set up monitoring & logging
+- ⏳ Configure CORS for production domain
+- ⏳ Set up monitoring & logging
 - ⏳ Run security audit (recommended)
 
 ### Environment Variables Required

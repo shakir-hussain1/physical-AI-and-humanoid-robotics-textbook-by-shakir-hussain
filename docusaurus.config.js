@@ -8,7 +8,8 @@ const config = {
   favicon: 'img/favicon.ico',
 
   url: 'https://shakir-hussain1.github.io',
-  baseUrl: '/physical-AI-and-humanoid-robotics-textbook-by-shakir-hussain/',
+  // Development: baseUrl: '/', Production: baseUrl: '/physical-AI-and-humanoid-robotics-textbook-by-shakir-hussain/'
+  baseUrl: '/',
 
   organizationName: 'shakir-hussain1',
   projectName: 'physical-AI-and-humanoid-robotics-textbook-by-shakir-hussain',

@@ -16,8 +16,8 @@ const getAPIUrl = () => {
     return 'http://localhost:8000';
   }
 
-  // Production - use Hugging Face backend
-  return 'https://shakir-rag-chatbot-backend.hf.space';
+  // TODO: Add your production backend URL here when deployed
+  return 'http://localhost:8000';
 };
 
 const API_URL = getAPIUrl();
