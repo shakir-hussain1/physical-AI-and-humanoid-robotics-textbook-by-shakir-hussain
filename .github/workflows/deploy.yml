@@ -33,7 +33,8 @@ jobs:
 
       - name: Build website
         env:
-          REACT_APP_API_URL: https://shakir-rag-chatbot-backend.hf.space
+          BASE_URL: /physical-AI-and-humanoid-robotics-textbook-by-shakir-hussain/
+          REACT_APP_API_URL: https://shakirhussain1-book-backend.hf.space
         run: npm run build
 
       - name: Upload artifact

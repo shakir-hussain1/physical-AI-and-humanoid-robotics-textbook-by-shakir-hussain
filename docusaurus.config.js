@@ -8,8 +8,9 @@ const config = {
   favicon: 'img/favicon.ico',
 
   url: 'https://shakir-hussain1.github.io',
-  // Development: baseUrl: '/', Production: baseUrl: '/physical-AI-and-humanoid-robotics-textbook-by-shakir-hussain/'
-  baseUrl: '/',
+  // GitHub Pages needs the repo name as baseUrl; Vercel and local use '/'.
+  // Set BASE_URL env var in the build environment to override.
+  baseUrl: process.env.BASE_URL || '/',
 
   organizationName: 'shakir-hussain1',
   projectName: 'physical-AI-and-humanoid-robotics-textbook-by-shakir-hussain',
