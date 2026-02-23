@@ -248,6 +248,7 @@
   font-size: 14px;
   line-height: 1.5;
   margin: 0 0 8px 0;
+  color: inherit;
 }
 
 .message.assistant .messageText {
@@ -482,39 +483,58 @@
   }
 }
 
-/* Dark mode support (if site has dark mode) */
+/* -----------------------------------------------------------------------
+   Dark mode: supports both OS preference and Docusaurus [data-theme="dark"]
+   ----------------------------------------------------------------------- */
 @media (prefers-color-scheme: dark) {
-  .chatWindow {
-    background: #1a202c;
-    color: #e2e8f0;
-  }
-
-  .header {
-    border-bottom-color: rgba(255, 255, 255, 0.1);
-  }
-
-  .messagesContainer {
-    background: #0f1419;
-  }
+  .chatWindow          { background: #1e2433; color: #e8eaf0; }
+  .messagesContainer   { background: #141824; }
+  .inputArea           { background: #1e2433; border-top-color: #3a4055; }
 
   .message.assistant .messageContent {
-    background: #2d3748;
-    color: #e2e8f0;
-    border-color: #4a5568;
+    background: #2a3147;
+    color: #e8eaf0;
+    border-color: #3a4055;
   }
+  .message.assistant .messageText { color: #e8eaf0; }
 
   .input {
-    background: #2d3748;
-    color: #e2e8f0;
-    border-color: #4a5568;
+    background: #2a3147;
+    color: #e8eaf0;
+    border-color: #3a4055;
   }
+  .input::placeholder          { color: #7a8299; }
+  .input:focus                 { border-color: #667eea; }
+  .input:disabled              { background: #1e2433; color: #5a6280; }
 
-  .input:focus {
-    border-color: #667eea;
-  }
-
-  .selectedTextBanner {
-    background: #2d3748;
-    border-bottom-color: #667eea;
-  }
+  .selectedTextBanner          { background: #2a3147; border-bottom-color: #667eea; }
+  .selectedTextContent p       { color: #b0b8d0; }
+  .sourceItem                  { background: rgba(255,255,255,0.06); color: #c8d0e0; }
+  .helperText                  { color: #7a8299; }
 }
+
+/* Docusaurus uses [data-theme="dark"] on <html> instead of media query */
+:global([data-theme='dark']) .chatWindow        { background: #1e2433; color: #e8eaf0; }
+:global([data-theme='dark']) .messagesContainer { background: #141824; }
+:global([data-theme='dark']) .inputArea         { background: #1e2433; border-top-color: #3a4055; }
+
+:global([data-theme='dark']) .message.assistant .messageContent {
+  background: #2a3147;
+  color: #e8eaf0;
+  border-color: #3a4055;
+}
+:global([data-theme='dark']) .message.assistant .messageText { color: #e8eaf0; }
+
+:global([data-theme='dark']) .input {
+  background: #2a3147;
+  color: #e8eaf0;
+  border-color: #3a4055;
+}
+:global([data-theme='dark']) .input::placeholder { color: #7a8299; }
+:global([data-theme='dark']) .input:focus        { border-color: #667eea; }
+:global([data-theme='dark']) .input:disabled     { background: #1e2433; color: #5a6280; }
+
+:global([data-theme='dark']) .selectedTextBanner     { background: #2a3147; border-bottom-color: #667eea; }
+:global([data-theme='dark']) .selectedTextContent p  { color: #b0b8d0; }
+:global([data-theme='dark']) .sourceItem             { background: rgba(255,255,255,0.06); color: #c8d0e0; }
+:global([data-theme='dark']) .helperText             { color: #7a8299; }
