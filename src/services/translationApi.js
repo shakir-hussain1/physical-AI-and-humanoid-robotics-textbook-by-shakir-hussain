@@ -22,8 +22,7 @@ const getAPIUrl = () => {
     return 'http://localhost:8000';
   }
 
-  // TODO: Add your production backend URL here when deployed
-  return 'http://localhost:8000';
+  return 'https://shakirhussain1-book-backend.hf.space';
 };
 
 const API_URL = getAPIUrl();

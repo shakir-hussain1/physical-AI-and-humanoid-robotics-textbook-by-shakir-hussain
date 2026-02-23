@@ -34,7 +34,10 @@ export function AuthProvider({ children }) {
 
   const fetchPersonalizationData = async (accessToken) => {
     try {
-      const response = await fetch('http://localhost:8000/auth/personalization', {
+      const backendUrl = (typeof process !== 'undefined' && process.env && process.env.REACT_APP_API_URL)
+        ? process.env.REACT_APP_API_URL
+        : 'https://shakirhussain1-book-backend.hf.space';
+      const response = await fetch(`${backendUrl}/auth/personalization`, {
         headers: {
           'Authorization': `Bearer ${accessToken}`
         }

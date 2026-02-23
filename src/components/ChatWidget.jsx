@@ -2,9 +2,18 @@ import React, { useState, useRef, useEffect } from 'react';
 import styles from './ChatWidget.module.css';
 
 // API URL configuration
-const API_URL = typeof window !== 'undefined' && window.location.hostname === 'localhost'
-  ? 'http://localhost:8000'
-  : 'http://localhost:8000'; // TODO: Add production backend URL when deployed
+const getAPIUrl = () => {
+  try {
+    if (typeof process !== 'undefined' && process.env && process.env.REACT_APP_API_URL) {
+      return process.env.REACT_APP_API_URL;
+    }
+  } catch (e) {}
+  if (typeof window !== 'undefined' && window.location.hostname === 'localhost') {
+    return 'http://localhost:8000';
+  }
+  return 'https://shakirhussain1-book-backend.hf.space';
+};
+const API_URL = getAPIUrl();
 
 export default function ChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
